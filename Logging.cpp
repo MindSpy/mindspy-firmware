@@ -6,7 +6,8 @@ void Logging::init(int level, Print* stream){
 }
 
 void Logging::error(const String & msg, ...){
-    if (LOG_LEVEL_ERRORS <= _level) {   
+    if (LOG_LEVEL_ERRORS <= _level) {
+        _stream->print("ERROR:");
         va_list args;
         va_start(args, msg);
         print(msg,args);
@@ -16,6 +17,7 @@ void Logging::error(const String & msg, ...){
 
 void Logging::info(const String & msg, ...){
     if (LOG_LEVEL_INFOS <= _level) {
+        _stream->print("INFO:");
         va_list args;
         va_start(args, msg);
         print(msg,args);
@@ -24,6 +26,7 @@ void Logging::info(const String & msg, ...){
 
 void Logging::debug(const String & msg, ...){
     if (LOG_LEVEL_DEBUG <= _level) {
+        _stream->print("DEBUG:");
         va_list args;
         va_start(args, msg);
         print(msg,args);
@@ -33,6 +36,7 @@ void Logging::debug(const String & msg, ...){
 
 void Logging::verbose(const String & msg, ...){
     if (LOG_LEVEL_VERBOSE <= _level) {
+        //_stream->print("VERBOSE:");
         va_list args;
         va_start(args, msg);
         print(msg,args);

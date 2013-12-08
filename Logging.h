@@ -77,7 +77,7 @@ public:
 	* \return void
 	*
 	*/
-	void init(int level, Print* stream);
+	void init(int, Print*);
 	
     /**
 	* Output an error message. Output message contains
