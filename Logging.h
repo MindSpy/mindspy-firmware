@@ -64,7 +64,7 @@
 class Logging {
 private:
     int _level;
-    HardwareSerial _stream;
+    Print* _stream;
 public:
     /*! 
 	 * default Constructor
@@ -77,7 +77,7 @@ public:
 	* \return void
 	*
 	*/
-	void init(int level, HardwareSerial stream);
+	void init(int level, Print* stream);
 	
     /**
 	* Output an error message. Output message contains
@@ -88,7 +88,7 @@ public:
 	* \param ... any number of variables
 	* \return void
 	*/
-    void error(char* msg, ...);
+    void error(const String &, ...);
 	
     /**
 	* Output an info message. Output message contains
@@ -100,7 +100,7 @@ public:
 	* \return void
 	*/
 
-   void info(char* msg, ...);
+   void info(const String &, ...);
 	
     /**
 	* Output an debug message. Output message contains
@@ -112,7 +112,7 @@ public:
 	* \return void
 	*/
 
-    void debug(char* msg, ...);
+    void debug(const String &, ...);
 	
     /**
 	* Output an verbose message. Output message contains
@@ -124,11 +124,11 @@ public:
 	* \return void
 	*/
 
-    void verbose(char* msg, ...);   
+    void verbose(const String &, ...);   
 
     
 private:
-    void print(const char *format, va_list args);
+    void print(const String &, va_list );
 };
 
 extern Logging Log;
