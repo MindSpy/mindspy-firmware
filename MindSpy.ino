@@ -77,7 +77,6 @@ bool get_state_callback(pb_ostream_t *stream, const pb_field_t *field, void * co
 
 bool set_state_callback(pb_ostream_t *stream, const pb_field_t *field, void * const *arg) {
   Request* req = (Request*)*arg;
-  State state;
   Sensor.WREG(req->start, req->payload.size, req->payload.bytes);
   req->count = req->payload.size;
   return get_state_callback(stream, field, arg);
@@ -89,7 +88,6 @@ bool samples_callback(pb_ostream_t *stream, const pb_field_t *field, void * cons
 
   Request* req = (Request*)*arg;
   Sample samp;
-  State state;
   
   uint8_t channels = Sensor.getChannelCount();
   uint8_t bytes = Sensor.getSampleBytes();
