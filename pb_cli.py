@@ -22,6 +22,14 @@ def get_state(start, count):
   request.start = start
   pb_invoke(request, response)
 
+def set_state(start, payload):
+  request = regs_pb2.Request()
+  response = regs_pb2.Response()
+  request.action=regs_pb2.Request.SET_STATE
+  request.payload = payload
+  request.start = start
+  pb_invoke(request, response)
+
 def get_samples(count):
   request = regs_pb2.Request()
   response = regs_pb2.Response()
