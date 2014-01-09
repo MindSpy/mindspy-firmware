@@ -76,11 +76,11 @@ bool get_state_callback(pb_ostream_t *stream, const pb_field_t *field, void * co
 }
 
 bool set_state_callback(pb_ostream_t *stream, const pb_field_t *field, void * const *arg) {
-
   Request* req = (Request*)*arg;
   State state;
   Sensor.WREG(req->start, req->payload.size, req->payload.bytes);
-  return true;
+  req->count = req->payload.size;
+  return get_state_callback(stream, field, arg);
 }
 
 uint64_t sequence = 0;
