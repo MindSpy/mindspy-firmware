@@ -126,7 +126,7 @@ void ADS1x9y::WREG(uint8_t reg,uint8_t count,uint8_t* buffer) {
   delayMicroseconds(2); 
   transfer(0x1f & (count-1), true); // send count
   for (uint8_t i = 0, j = count-1; i < count; i++,j--) {
-    buffer[i] = transfer(0, !!j);
+    transfer(buffer[i], !!j);
   }
   deactivate();
 }
