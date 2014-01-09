@@ -59,9 +59,7 @@ void StreamWrapper::handle(void) {
     response.has_error = true;
     response.error = Response_ErrNo_HANDLER_MISSING;
     response.has_error_msg = true;
-    sprintf(response.error_msg, "Missing handler for action #.");
-     // this will add another 18kB of source code
-    //sprintf(response.error_msg, "Missing handler for action #%d.", request.action);
+    sprintf(response.error_msg, "Missing handler for action #%d.", request.action);
   }
   
   // serialize response message
