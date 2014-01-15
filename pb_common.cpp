@@ -38,10 +38,33 @@ void StreamWrapper::handle(void) {
   response.state.funcs.encode = NULL;
   
   // determine handler based on request
-  bool has_handler = false;    
+  response_handler_t* handler = NULL;
   for (int i = 0; i < _handler_count; i++) {
     if (_handlers[i].action == request.action) {
-      if (!(*_handlers[i].handler)(&request, &response)) {
+      handler = &_handlers[i];
+      break;
+    }
+  }
+  if (handler == NULL) {
+    response.has_error = true;
+    response.error = Response_ErrNo_HANDLER_MISSING;
+    response.has_error_msg = true;
+    sprintf(response.error_msg, "Missing handler for action #%d.", request.action);
+    // serialize response message
+    if (!pb_encode(output(), Response_fields, &response)) {
+      return;
+    }
+  } else {
+    Separator sep;
+    sep.has_last = true;
+    sep.last = false;
+    for (bool first = true; first || (request.repeat && (!_serial->available())); first = false) {
+      if (!first) {
+        if (!pb_encode(output(), Separator_fields, &sep)) {
+          return;
+        }
+      }
+      if (!(*handler->handler)(&request, &response)) {
         if (!response.has_error){
           response.has_error = true;
           response.error = Response_ErrNo_HANDLER_FAILED;
@@ -51,20 +74,11 @@ void StreamWrapper::handle(void) {
           }
         }
       }
-      has_handler = true;
-      break;
+      // serialize response message
+      if (!pb_encode(output(), Response_fields, &response)) {
+        return;
+      }
     }
-  }
-  if (!has_handler) {
-    response.has_error = true;
-    response.error = Response_ErrNo_HANDLER_MISSING;
-    response.has_error_msg = true;
-    sprintf(response.error_msg, "Missing handler for action #%d.", request.action);
-  }
-  
-  // serialize response message
-  if (!pb_encode(output(), Response_fields, &response)) {
-    return;
   }
 }
 

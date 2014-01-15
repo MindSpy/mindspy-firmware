@@ -11,7 +11,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = descriptor.FileDescriptor(
   name='regs.proto',
   package='',
-  serialized_pb='\n\nregs.proto\"\xcd\x01\n\x07Request\x12\x1f\n\x06\x61\x63tion\x18\x01 \x02(\x0e\x32\x0f.Request.Action\x12\x11\n\ttimestamp\x18\x02 \x02(\x04\x12\r\n\x05start\x18\x03 \x01(\r\x12\r\n\x05\x63ount\x18\x04 \x01(\r\x12\x0f\n\x07payload\x18\x05 \x01(\x0c\"_\n\x06\x41\x63tion\x12\x08\n\x04\x45\x43HO\x10\x00\x12\r\n\tGET_STATE\x10\x02\x12\r\n\tSET_STATE\x10\x03\x12\x0b\n\x07SAMPLES\x10\x01\x12\x08\n\x04TEST\x10\x04\x12\x07\n\x03LED\x10\x05\x12\r\n\tSTIMULATE\x10\x06\")\n\x05State\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x02(\r\x12\x0f\n\x07payload\x18\x02 \x02(\r\"+\n\x06Sample\x12\x10\n\x08sequence\x18\x01 \x02(\x04\x12\x0f\n\x07payload\x18\x02 \x03(\x05\"\xca\x01\n\x08Response\x12(\n\x05\x65rror\x18\x01 \x01(\x0e\x32\x0f.Response.ErrNo:\x08NO_ERROR\x12\x11\n\terror_msg\x18\x02 \x01(\t\x12\x11\n\ttimestamp\x18\x03 \x02(\x04\x12\x15\n\x05state\x18\x04 \x03(\x0b\x32\x06.State\x12\x17\n\x06sample\x18\x05 \x03(\x0b\x32\x07.Sample\">\n\x05\x45rrNo\x12\x0c\n\x08NO_ERROR\x10\x00\x12\x13\n\x0fHANDLER_MISSING\x10\x01\x12\x12\n\x0eHANDLER_FAILED\x10\x02')
+  serialized_pb='\n\nregs.proto\"\x19\n\tSeparator\x12\x0c\n\x04last\x18\x01 \x01(\x08\"\xe4\x01\n\x07Request\x12\x1f\n\x06\x61\x63tion\x18\x01 \x02(\x0e\x32\x0f.Request.Action\x12\x11\n\ttimestamp\x18\x02 \x02(\x04\x12\x15\n\x06repeat\x18\x06 \x01(\x08:\x05\x66\x61lse\x12\r\n\x05start\x18\x03 \x01(\r\x12\r\n\x05\x63ount\x18\x04 \x01(\r\x12\x0f\n\x07payload\x18\x05 \x01(\x0c\"_\n\x06\x41\x63tion\x12\x08\n\x04\x45\x43HO\x10\x00\x12\r\n\tGET_STATE\x10\x02\x12\r\n\tSET_STATE\x10\x03\x12\x0b\n\x07SAMPLES\x10\x01\x12\x08\n\x04TEST\x10\x04\x12\x07\n\x03LED\x10\x05\x12\r\n\tSTIMULATE\x10\x06\")\n\x05State\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x02(\r\x12\x0f\n\x07payload\x18\x02 \x02(\r\"+\n\x06Sample\x12\x10\n\x08sequence\x18\x01 \x02(\x04\x12\x0f\n\x07payload\x18\x02 \x03(\x05\"\xca\x01\n\x08Response\x12(\n\x05\x65rror\x18\x01 \x01(\x0e\x32\x0f.Response.ErrNo:\x08NO_ERROR\x12\x11\n\terror_msg\x18\x02 \x01(\t\x12\x11\n\ttimestamp\x18\x03 \x02(\x04\x12\x15\n\x05state\x18\x04 \x03(\x0b\x32\x06.State\x12\x17\n\x06sample\x18\x05 \x03(\x0b\x32\x07.Sample\">\n\x05\x45rrNo\x12\x0c\n\x08NO_ERROR\x10\x00\x12\x13\n\x0fHANDLER_MISSING\x10\x01\x12\x12\n\x0eHANDLER_FAILED\x10\x02')
 
 
 
@@ -52,8 +52,8 @@ _REQUEST_ACTION = descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=125,
-  serialized_end=220,
+  serialized_start=175,
+  serialized_end=270,
 )
 
 _RESPONSE_ERRNO = descriptor.EnumDescriptor(
@@ -77,8 +77,36 @@ _RESPONSE_ERRNO = descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=451,
-  serialized_end=513,
+  serialized_start=501,
+  serialized_end=563,
+)
+
+
+_SEPARATOR = descriptor.Descriptor(
+  name='Separator',
+  full_name='Separator',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    descriptor.FieldDescriptor(
+      name='last', full_name='Separator.last', index=0,
+      number=1, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  extension_ranges=[],
+  serialized_start=14,
+  serialized_end=39,
 )
 
 
@@ -104,21 +132,28 @@ _REQUEST = descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     descriptor.FieldDescriptor(
-      name='start', full_name='Request.start', index=2,
+      name='repeat', full_name='Request.repeat', index=2,
+      number=6, type=8, cpp_type=7, label=1,
+      has_default_value=True, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    descriptor.FieldDescriptor(
+      name='start', full_name='Request.start', index=3,
       number=3, type=13, cpp_type=3, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     descriptor.FieldDescriptor(
-      name='count', full_name='Request.count', index=3,
+      name='count', full_name='Request.count', index=4,
       number=4, type=13, cpp_type=3, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     descriptor.FieldDescriptor(
-      name='payload', full_name='Request.payload', index=4,
+      name='payload', full_name='Request.payload', index=5,
       number=5, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value="",
       message_type=None, enum_type=None, containing_type=None,
@@ -134,8 +169,8 @@ _REQUEST = descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=15,
-  serialized_end=220,
+  serialized_start=42,
+  serialized_end=270,
 )
 
 
@@ -169,8 +204,8 @@ _STATE = descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=222,
-  serialized_end=263,
+  serialized_start=272,
+  serialized_end=313,
 )
 
 
@@ -204,8 +239,8 @@ _SAMPLE = descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=265,
-  serialized_end=308,
+  serialized_start=315,
+  serialized_end=358,
 )
 
 
@@ -261,8 +296,8 @@ _RESPONSE = descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=311,
-  serialized_end=513,
+  serialized_start=361,
+  serialized_end=563,
 )
 
 _REQUEST.fields_by_name['action'].enum_type = _REQUEST_ACTION
@@ -271,10 +306,17 @@ _RESPONSE.fields_by_name['error'].enum_type = _RESPONSE_ERRNO
 _RESPONSE.fields_by_name['state'].message_type = _STATE
 _RESPONSE.fields_by_name['sample'].message_type = _SAMPLE
 _RESPONSE_ERRNO.containing_type = _RESPONSE;
+DESCRIPTOR.message_types_by_name['Separator'] = _SEPARATOR
 DESCRIPTOR.message_types_by_name['Request'] = _REQUEST
 DESCRIPTOR.message_types_by_name['State'] = _STATE
 DESCRIPTOR.message_types_by_name['Sample'] = _SAMPLE
 DESCRIPTOR.message_types_by_name['Response'] = _RESPONSE
+
+class Separator(message.Message):
+  __metaclass__ = reflection.GeneratedProtocolMessageType
+  DESCRIPTOR = _SEPARATOR
+  
+  # @@protoc_insertion_point(class_scope:Separator)
 
 class Request(message.Message):
   __metaclass__ = reflection.GeneratedProtocolMessageType

@@ -1,4 +1,8 @@
 
+message Separator {
+  optional bool last = 1;
+}
+
 message Request {
   enum Action {
     ECHO = 0;
@@ -11,6 +15,7 @@ message Request {
   }
   required Action action = 1;
   required uint64 timestamp = 2;
+  optional bool repeat = 6 [default = false];
   optional uint32 start = 3;
   optional uint32 count = 4;
   optional bytes payload = 5; // arbitrary payload interpreted by the action handler

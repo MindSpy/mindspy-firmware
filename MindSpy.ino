@@ -93,6 +93,7 @@ bool samples_callback(pb_ostream_t *stream, const pb_field_t *field, void * cons
   uint8_t bytes = Sensor.getSampleBytes();
   uint16_t bsize = Sensor.getTotalBytes();
   uint8_t* buffer = (uint8_t*)malloc(bsize*sizeof(uint8_t));
+  bool err = false;
   
   for (uint32_t i = 0; i < req->count; i++) {
     
@@ -111,13 +112,17 @@ bool samples_callback(pb_ostream_t *stream, const pb_field_t *field, void * cons
     samp.sequence = sequence++;
     samp.payload_count = channels;
     
-    if (!pb_encode_tag_for_field(stream, field))
-      return false;
-    if (!pb_encode_submessage(stream, Sample_fields, &samp))
-      return false;
+    if (!pb_encode_tag_for_field(stream, field)) {
+      err = true;
+      break;
+    }
+    if (!pb_encode_submessage(stream, Sample_fields, &samp)){
+      err = true;
+      break;
+    }
   }
   Sensor.SDATAC();
-  return true;
+  return !err;
 }
 
 void setup() {
