@@ -1,7 +1,7 @@
 import time; import serial; import regs_pb2
 
 def pb_invoke(request, response):
-  ser = serial.Serial('/dev/ttyACM3', 921600, timeout=1)
+  ser = serial.Serial('/dev/rfcomm0', 921600, timeout=1)
   request.timestamp = int(time.time())
   i = 0
   err = 0

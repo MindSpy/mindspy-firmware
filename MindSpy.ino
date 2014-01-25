@@ -125,13 +125,37 @@ bool samples_callback(pb_ostream_t *stream, const pb_field_t *field, void * cons
   return !err;
 }
 
+
 void setup() {
-  Serial.begin(921600);
-  Serial1.begin(9600);
+  
+  pinMode(GREEN_LED, INPUT);
+  pinMode(BLUE_LED, INPUT);
+  pinMode(PB_2, OUTPUT);
+  pinMode(PB_3, OUTPUT);
+  
+  Serial.begin(115200);
+  Log.init(LOG_LEVEL_VERBOSE, &Serial);
+  
+  // reset BT
+  digitalWrite(PB_2, LOW);
+  delay(20);
+  digitalWrite(PB_2, HIGH);
+  
+  // setup BT
+  digitalWrite(PB_3, HIGH);
+  Serial1.begin(38400);
+  Serial1.print("AT+UART=921600,1,0\r\n"); // max. 1382400=1.3Mbps
+  Serial1.print("AT+NAME=MindSpy\r\n");
+  Serial1.print("AT+ROLE=0\r\n");
+  delay(10);
+  digitalWrite(PB_3, LOW);
+    
+  Serial1.end();
+  Serial1.begin(921600); // max. 1382400=1.3Mbps
+  StreamWrapper::init(&Serial1, handlers, C_ARRAY_LENGTH(handlers));
+    
   Sensor.begin();
   Sensor.START();
-  StreamWrapper::init(&Serial, handlers, C_ARRAY_LENGTH(handlers));
-  Log.init(LOG_LEVEL_VERBOSE, &Serial1);
 }
 
 void loop() {
