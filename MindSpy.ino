@@ -99,13 +99,14 @@ bool samples_callback(pb_ostream_t *stream, const pb_field_t *field, void * cons
     
     // wait for sample
     while(!Sensor);
-    
     Sensor.RDATA(buffer, bsize);
+    // unpack the buffer
+    size_t idx = 3; // skip 3 bytes - status registers
     for (int j = 0; j < channels; j++) {
       int32_t tmp = 0;
       for (int k = 0; k < bytes; k++) {
         tmp<<=8;
-        tmp|=buffer[3+j*bytes+k];// skip 3 bytes at begining - status registers
+        tmp|=buffer[idx++];
       }
       samp.payload[j] = tmp;
     }
