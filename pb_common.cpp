@@ -12,8 +12,6 @@
 Stream*  StreamWrapper::_serial;
 response_handler_t* StreamWrapper::_handlers;
 uint8_t StreamWrapper::_handler_count;
-pb_istream_t StreamWrapper::_input = {&StreamWrapper::read_callback, NULL, SIZE_MAX};
-pb_ostream_t StreamWrapper::_output = {&StreamWrapper::write_callback, NULL, SIZE_MAX, 0};
 
 void StreamWrapper::init(Stream* serial, response_handler_t* handlers, uint8_t handler_count) {
   _serial = serial;
@@ -25,8 +23,11 @@ void StreamWrapper::handle(void) {
   Request request;
   Response response;
   
+  pb_istream_t istream = {&StreamWrapper::read_callback, StreamWrapper::_serial, SIZE_MAX};
+  pb_ostream_t ostream = {&StreamWrapper::write_callback, StreamWrapper::_serial, SIZE_MAX, 0};
+  
   // intercept request message
-  if (!pb_decode(input(), Request_fields, &request)) {
+  if (!pb_decode(&istream, Request_fields, &request)) {
     return;
   }
   
@@ -51,7 +52,7 @@ void StreamWrapper::handle(void) {
     response.has_error_msg = true;
     sprintf(response.error_msg, "Missing handler for action #%d.", request.action);
     // serialize response message
-    if (!pb_encode(output(), Response_fields, &response)) {
+    if (!pb_encode(&ostream, Response_fields, &response)) {
       return;
     }
   } else {
@@ -60,7 +61,7 @@ void StreamWrapper::handle(void) {
     sep.last = false;
     for (bool first = true; first || (request.repeat && (!_serial->available())); first = false) {
       if (!first) {
-        if (!pb_encode(output(), Separator_fields, &sep)) {
+        if (!pb_encode(&ostream, Separator_fields, &sep)) {
           return;
         }
       }
@@ -75,7 +76,7 @@ void StreamWrapper::handle(void) {
         }
       }
       // serialize response message
-      if (!pb_encode(output(), Response_fields, &response)) {
+      if (!pb_encode(&ostream, Response_fields, &response)) {
         return;
       }
     }
@@ -87,9 +88,9 @@ bool StreamWrapper::write_callback(pb_ostream_t *stream, const uint8_t *buf, siz
 }
 
 bool StreamWrapper::read_callback(pb_istream_t *stream, uint8_t *buf, size_t count) {
-  uint32_t avail = 0;
-  while(!(avail = _serial->available())) delayMicroseconds(2);
-  uint32_t result = _serial->readBytes((char*)buf, constrain(avail,0,count));
+  size_t avail = 0;
+  while(!(avail = _serial->available())) delayMicroseconds(1);
+  size_t result = _serial->readBytes((char*)buf, constrain(avail,0,count));
   stream->bytes_left -= result;
   return result == count;
 }

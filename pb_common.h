@@ -15,25 +15,10 @@ class StreamWrapper {
     static Stream* _serial;
     static response_handler_t* _handlers;
     static uint8_t _handler_count;
-    static pb_istream_t _input;
-    static pb_ostream_t _output;
     
     static bool write_callback(pb_ostream_t *, const uint8_t *, size_t );
     static bool read_callback(pb_istream_t *, uint8_t *, size_t );
   public:
-    /*!
-     * Returns NanoPB input stream instance.
-     * \param void
-     * \return void 
-     */ 
-    inline static pb_istream_t* input(void) {return &_input;}
-    
-    /*!
-     * Returns NanoPB output stream instance.
-     * \param void
-     * \return void 
-     */ 
-    inline static pb_ostream_t* output(void) {return &_output;}
     
     /*!
      * Initializes StreamWrapper with stream instance and response handlers.
