@@ -62,17 +62,20 @@ bool get_state_callback(pb_ostream_t *stream, const pb_field_t *field, void * co
   Request* req = (Request*)*arg;
   State state;
   uint8_t* buffer = (uint8_t*)malloc(req->count*sizeof(uint8_t));
+  bool err = false;
+  
   Sensor.RREG(req->start, req->count, buffer);
   
   for (uint32_t i = 0, a = req->start; i < req->count; i++, a++) {
     state.address = a;
     state.payload = buffer[i];
     if (!pb_encode_tag_for_field(stream, field))
-      return false;
+      err = true;
     if (!pb_encode_submessage(stream, State_fields, &state))
-      return false;
+      err = true;
   }
-  return true;
+  free(buffer);
+  return !err;
 }
 
 bool set_state_callback(pb_ostream_t *stream, const pb_field_t *field, void * const *arg) {
@@ -122,6 +125,7 @@ bool samples_callback(pb_ostream_t *stream, const pb_field_t *field, void * cons
       break;
     }
   }
+  free(buffer);
   Sensor.SDATAC();
   return !err;
 }
