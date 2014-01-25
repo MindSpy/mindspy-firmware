@@ -2,7 +2,14 @@
 #include <pb_decode.h>
 #include "pb_common.h"
 
-// TODO: this is in question - does it work? 
+#define _PB_DEBUG
+
+#ifdef _PB_DEBUG
+#include <Logging.h>
+#endif
+
+
+// TODO: this is in question - does it work?
 #ifndef SIZE_MAX
 #define SIZE_MAX ~((size_t)0)
 #endif
@@ -31,6 +38,10 @@ void StreamWrapper::handle(void) {
     return;
   }
   
+#ifdef _PB_DEBUG
+  Log.debug("Received message: {action=%d, start=%d, count=%d, stream=%d}"CR, request.action, request.start, request.count, request.stream);
+#endif
+  
   //defaults
   response.has_error = false;
   response.has_error_msg = false;
@@ -51,15 +62,17 @@ void StreamWrapper::handle(void) {
     response.error = Response_ErrNo_HANDLER_MISSING;
     response.has_error_msg = true;
     sprintf(response.error_msg, "Missing handler for action #%d.", request.action);
+#ifdef _PB_DEBUG
+    Log.debug("%s"CR, response.error_msg);
+#endif
     // serialize response message
     if (!pb_encode(&ostream, Response_fields, &response)) {
       return;
     }
   } else {
     Separator sep;
-    sep.has_last = true;
     sep.last = false;
-    for (bool first = true; first || (request.repeat && (!_serial->available())); first = false) {
+    for (bool first = true; first || (request.stream && (!_serial->available())); first = false) {
       if (!first) {
         if (!pb_encode(&ostream, Separator_fields, &sep)) {
           return;
@@ -74,6 +87,9 @@ void StreamWrapper::handle(void) {
             sprintf(response.error_msg, "No error message provided.");
           }
         }
+#ifdef _PB_DEBUG
+        Log.debug("%s"CR, response.error_msg);
+#endif
       }
       // serialize response message
       if (!pb_encode(&ostream, Response_fields, &response)) {

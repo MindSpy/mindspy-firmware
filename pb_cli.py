@@ -9,7 +9,7 @@ def pb_invoke(request, response):
     start = time.time()
     ser.flushInput()
     ser.write(request.SerializeToString()+'\x00')
-    if request.repeat:
+    if request.stream:
       buff = ''
       sep = regs_pb2.Separator()
       sep.last = False
@@ -36,7 +36,7 @@ def pb_invoke(request, response):
               buff = buff[0]
         except KeyboardInterrupt:
           request.action=regs_pb2.Request.ECHO
-          request.repeat = False
+          request.stream = False
           ser.write(request.SerializeToString()+'\x00')
           buff += ser.readall()
           try:
@@ -62,6 +62,12 @@ def echo():
   request.action=regs_pb2.Request.ECHO
   pb_invoke(request, response)
 
+def led():
+  request = regs_pb2.Request()
+  response = regs_pb2.Response()
+  request.action=regs_pb2.Request.LED
+  pb_invoke(request, response)
+
 def get_state(start, count):
   request = regs_pb2.Request()
   response = regs_pb2.Response()
@@ -78,10 +84,10 @@ def set_state(start, payload):
   request.start = start
   pb_invoke(request, response)
 
-def get_samples(count, repeat = False):
+def get_samples(count, stream = False):
   request = regs_pb2.Request()
   response = regs_pb2.Response()
   request.action=regs_pb2.Request.SAMPLES
   request.count = count
-  request.repeat = repeat
+  request.stream = stream
   pb_invoke(request, response)
