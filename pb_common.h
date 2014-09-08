@@ -10,6 +10,10 @@ typedef struct _response_handler_t {
     bool (*handler)(Request*, Response*);
 } response_handler_t;
 
+/*!
+ * IO stream handlers wraper.
+ * Class for an request message interception, handler invocation and response genereation.
+ */
 class StreamWrapper {
   protected:
     static Stream* _serial;
@@ -39,7 +43,7 @@ class StreamWrapper {
     static void handle(void);
     
     /*!
-     *
+     * Not implemented.
      */
     static void error(Response*,const Response_ErrNo,const char[]);
 };
