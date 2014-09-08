@@ -49,43 +49,53 @@ class ADS1x9y {
     //module operations
     
     /*!
-     * Read data (cnotinous). See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
+     * Read data (cnotinous). 
+     * See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
      */
     void RDATAC(void);
     /*!
-     * Stop data read (continous). See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
+     * Stop data read (continous). 
+     * See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
      */
     void SDATAC(void);
     /*!
-     * Read data. See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
+     * Read data.
+     * See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
      */
     void RDATA(uint8_t*,uint16_t);
     /*!
-     * Read register. See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
+     * Read register. 
+     * See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
      */
     void RREG(uint8_t,uint8_t,uint8_t*);
     /*!
-     * Write register. See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
+     * Write register. 
+     * See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
      */
     void WREG(uint8_t,uint8_t,uint8_t*);
     /*!
-     * Wakeup from stanby. See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
+     * Wakeup from stanby. 
+     * See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
      */
     void WAKEUP(void);
     /*!
-     * Standby. See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
+     * Standby. 
+     * See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
      */
     void STANDBY(void);
     /*!
-     * Reset the single module via command. See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
+     * Reset the single module via command. 
+     * See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
      */
     void RESET(void);
     /*!
-     * Start conversion in single module via command. See ADS1x9y::start() and <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
+     * Start conversion in single module via command. 
+     * See ADS1x9y::start() and <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
      */
     void START(void);
     /*!
-     * Stop conversion in single module via command. See ADS1x9y::stop() and <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
+     * Stop conversion in single module via command. 
+     * See ADS1x9y::stop() and <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
      */
     void STOP(void);
     
@@ -175,39 +185,47 @@ class ADS1x9y {
      */
     operator bool(void);
     /*!
-     * Start conversion in all modules via pin. See ADS1x9y::START() and <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
+     * Start conversion in all modules via pin. 
+     * See ADS1x9y::START() and <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
      */
     static void start(void);
     /*!
-     * Stop conversion in all modules via pin. See ADS1x9y::STOP() and <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
+     * Stop conversion in all modules via pin. 
+     * See ADS1x9y::STOP() and <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
      */
     static void stop(void);
     /*!
-     * Reset all modules via pin. See ADS1x9y::RESET() and <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
+     * Reset all modules via pin.
+     * See ADS1x9y::RESET() and <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
      */
     static void reset(void);
     /*!
-     * Power down all modules via pin. See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
+     * Power down all modules via pin. 
+     * See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
      */
     static void pwrdn(void);
     /*!
-     * Power up all modules via pin. See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
+     * Power up all modules via pin. 
+     * See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
      */
     static void pwrup(void);
     /*!
-     * Set mode of GPIO pin. See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
+     * Set mode of GPIO pin. 
+     * See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
      * \param GPIO number
      * \param mode
      */
     static void gpioMode(uint8_t, int);
     /*!
-     * Read value of GPIO pin. See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
+     * Read value of GPIO pin. 
+     * See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
      * \param GPIO number
      * \result value
      */
     static int gpioRead(uint8_t);
     /*!
-     * Write value of GPIO pin. See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
+     * Write value of GPIO pin. 
+     * See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
      * \param GPIO number
      * \param new value
      */
