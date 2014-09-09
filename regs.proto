@@ -2,10 +2,6 @@
 option java_package = "org.mindspy.protobufs";
 option java_outer_classname = "Regs";
 
-message Separator {
-  required bool last = 1;
-}
-
 message Request {
   enum Action {
     ECHO = 0;
