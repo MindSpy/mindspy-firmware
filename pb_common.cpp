@@ -34,7 +34,7 @@ void StreamWrapper::handle(void) {
   pb_ostream_t ostream = {&StreamWrapper::write_callback, StreamWrapper::_serial, SIZE_MAX, 0};
   
   // intercept request message
-  if (!pb_decode(&istream, Request_fields, &request)) {
+  if (!pb_decode_delimited(&istream, Request_fields, &request)) {
     return;
   }
   
@@ -66,18 +66,11 @@ void StreamWrapper::handle(void) {
     Log.debug("%s"CR, response.error_msg);
 #endif
     // serialize response message
-    if (!pb_encode(&ostream, Response_fields, &response)) {
+    if (!pb_encode_delimited(&ostream, Response_fields, &response)) {
       return;
     }
   } else {
-    Separator sep;
-    sep.last = false;
     for (bool first = true; first || (request.stream && (!_serial->available())); first = false) {
-      if (!first) {
-        if (!pb_encode(&ostream, Separator_fields, &sep)) {
-          return;
-        }
-      }
       if (!(*handler->handler)(&request, &response)) {
         if (!response.has_error){
           response.has_error = true;
@@ -92,10 +85,10 @@ void StreamWrapper::handle(void) {
 #endif
       }
       // serialize response message
-      if (!pb_encode(&ostream, Response_fields, &response)) {
+      if (!pb_encode_delimited(&ostream, Response_fields, &response)) {
         return;
       }
-    }
+    }   
   }
 }
 
