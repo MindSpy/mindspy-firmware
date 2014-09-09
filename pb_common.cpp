@@ -8,7 +8,6 @@
 #include <Logging.h>
 #endif
 
-
 // TODO: this is in question - does it work?
 #ifndef SIZE_MAX
 #define SIZE_MAX ~((size_t)0)
@@ -35,6 +34,18 @@ void StreamWrapper::handle(void) {
   
   // intercept request message
   if (!pb_decode_delimited(&istream, Request_fields, &request)) {
+    response.has_error = true;
+    response.has_error_msg = true;
+    sprintf(response.error_msg, "Message decoding failed.");
+#ifdef _PB_DEBUG
+    Log.error("%s"CR, response.error_msg);
+#endif
+    // serialize response message
+    if (!pb_encode_delimited(&ostream, Response_fields, &response)) {
+#ifdef _PB_DEBUG
+    Log.error("Serialization of error message failed."CR);
+#endif
+    }
     return;
   }
   
@@ -70,7 +81,7 @@ void StreamWrapper::handle(void) {
       return;
     }
   } else {
-    for (bool first = true; first || (request.stream && (!_serial->available())); first = false) {
+    do {
       if (!(*handler->handler)(&request, &response)) {
         if (!response.has_error){
           response.has_error = true;
@@ -88,8 +99,8 @@ void StreamWrapper::handle(void) {
       if (!pb_encode_delimited(&ostream, Response_fields, &response)) {
         return;
       }
-    }   
-  }
+    } while (request.stream && (!_serial->available()));  
+  } 
 }
 
 bool StreamWrapper::write_callback(pb_ostream_t *stream, const uint8_t *buf, size_t count) {
@@ -98,9 +109,11 @@ bool StreamWrapper::write_callback(pb_ostream_t *stream, const uint8_t *buf, siz
 
 bool StreamWrapper::read_callback(pb_istream_t *stream, uint8_t *buf, size_t count) {
   size_t avail = 0;
-  while(!(avail = _serial->available())) delayMicroseconds(1);
+  while (avail < count) {
+    avail = _serial->available();
+    delayMicroseconds(1);
+  }
   size_t result = _serial->readBytes((char*)buf, constrain(avail,0,count));
-  stream->bytes_left -= result;
   return result == count;
 }
 
