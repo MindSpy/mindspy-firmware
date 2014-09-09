@@ -31,7 +31,7 @@ bool samples_handler(Request* request, Response* response) {
   }
   response->sample.funcs.encode = &samples_callback;
   response->sample.arg = request;
-  response->module = Sensor.getModule();
+  //response->module = Sensor.getModule();
   return true;
 }
 
@@ -43,7 +43,7 @@ bool get_state_handler(Request* request, Response* response) {
   }
   response->state.funcs.encode = &get_state_callback;
   response->state.arg = request;
-  response->module = Sensor.getModule();
+  //response->module = Sensor.getModule();
   return true;
 }
 
@@ -55,7 +55,7 @@ bool set_state_handler(Request* request, Response* response) {
   }
   response->state.funcs.encode = &set_state_callback;
   response->state.arg = request;
-  response->module = Sensor.getModule(); 
+  //response->module = Sensor.getModule(); 
   return true;
 }
 
