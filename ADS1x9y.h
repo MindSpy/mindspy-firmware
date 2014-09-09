@@ -45,6 +45,10 @@ class ADS1x9y {
      * Deativate this module if possible and stop SPI.
      */ 
     void end();
+    /*!
+     * Get module id
+     */
+    int getModule();
     
     //module operations
     

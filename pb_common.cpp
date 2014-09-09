@@ -36,6 +36,7 @@ void StreamWrapper::handle(void) {
   if (!pb_decode_delimited(&istream, Request_fields, &request)) {
     response.has_error = true;
     response.has_error_msg = true;
+    response.timestamp = micros();
     sprintf(response.error_msg, "Message decoding failed.");
 #ifdef _PB_DEBUG
     Log.error("%s"CR, response.error_msg);
@@ -59,6 +60,7 @@ void StreamWrapper::handle(void) {
   response.timestamp = micros();
   response.sample.funcs.encode = NULL;
   response.state.funcs.encode = NULL;
+  response.reqid = request.reqid;
   
   // determine handler based on request
   response_handler_t* handler = NULL;
@@ -82,6 +84,7 @@ void StreamWrapper::handle(void) {
     }
   } else {
     do {
+      response.timestamp = micros();
       if (!(*handler->handler)(&request, &response)) {
         if (!response.has_error){
           response.has_error = true;

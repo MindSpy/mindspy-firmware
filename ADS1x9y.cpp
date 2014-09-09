@@ -86,6 +86,9 @@ void ADS1x9y::end() {
   _active = -1;
 }
 
+int ADS1x9y::getModule() {
+  return _module;
+}
 void ADS1x9y::RDATAC(void) {
   transfer(SPI_CMD_RDATAC);
   _continous = true;
