@@ -44,14 +44,15 @@ void StreamWrapper::handle(void) {
     // serialize response message
     if (!pb_encode_delimited(&ostream, Response_fields, &response)) {
 #ifdef _PB_DEBUG
-    Log.error("Serialization of error message failed."CR);
+    Log.error("Serialization of response message failed."CR);
 #endif
+      return;
     }
     return;
   }
   
 #ifdef _PB_DEBUG
-  Log.debug("Received message: {action=%d, start=%d, count=%d, stream=%d}"CR, request.action, request.start, request.count, request.stream);
+  Log.debug("<- {reqid=%d, timestamp=%d, action=%d, start=%d, count=%d, stream=%d}"CR, request.reqid, request.timestamp, request.action, request.start, request.count, request.stream);
 #endif
   
   //defaults
@@ -80,6 +81,9 @@ void StreamWrapper::handle(void) {
 #endif
     // serialize response message
     if (!pb_encode_delimited(&ostream, Response_fields, &response)) {
+#ifdef _PB_DEBUG
+    Log.error("Serialization of response message failed."CR);
+#endif
       return;
     }
   } else {
@@ -100,8 +104,16 @@ void StreamWrapper::handle(void) {
       }
       // serialize response message
       if (!pb_encode_delimited(&ostream, Response_fields, &response)) {
+#ifdef _PB_DEBUG
+    Log.error("Serialization of response message failed."CR);
+#endif
         return;
       }
+      
+#ifdef _PB_DEBUG
+  Log.debug("-> {reqid=%d, timestamp=%d}"CR, response.reqid, response.timestamp);
+#endif
+      
     } while (request.stream && (!_serial->available()));  
   } 
 }
