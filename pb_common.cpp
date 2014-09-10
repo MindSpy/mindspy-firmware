@@ -41,7 +41,7 @@ void StreamWrapper::handle(void) {
   }
   
 #ifdef _PB_DEBUG
-  Log.debug("<- {reqid=%i, action=%d, timestamp=%d}"CR, request.reqid, request.action, request.timestamp&0xffffffff);
+  Log.debug("<- {reqid=%i, action=%d}"CR, request.reqid, request.action);
 #endif
   
   //defaults
@@ -101,7 +101,7 @@ void StreamWrapper::handle(void) {
       }
       
 #ifdef _PB_DEBUG
-  Log.debug("-> {reqid=%d, timestamp=%d}"CR, response.reqid, response.timestamp&0xffffffff);
+  Log.debug("-> {reqid=%d}"CR, response.reqid);
 #endif
       
     } while (request.stream && (!_serial->available()));  
