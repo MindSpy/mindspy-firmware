@@ -34,30 +34,20 @@ void StreamWrapper::handle(void) {
   
   // intercept request message
   if (!pb_decode_delimited(&istream, Request_fields, &request)) {
-    response.has_error = true;
-    response.has_error_msg = true;
-    response.timestamp = micros();
-    sprintf(response.error_msg, "Message decoding failed.");
 #ifdef _PB_DEBUG
-    Log.error("%s"CR, response.error_msg);
+    Log.error("Message decoding failed."CR, response.error_msg);
 #endif
-    // serialize response message
-    if (!pb_encode_delimited(&ostream, Response_fields, &response)) {
-#ifdef _PB_DEBUG
-    Log.error("Serialization of response message failed."CR);
-#endif
-      return;
-    }
     return;
   }
   
 #ifdef _PB_DEBUG
-  Log.debug("<- {reqid=%d, timestamp=%d, action=%d, start=%d, count=%d, stream=%d}"CR, request.reqid, request.timestamp, request.action, request.start, request.count, request.stream);
+  Log.debug("<- {reqid=%i, action=%d, timestamp=%d}"CR, request.reqid, request.action, request.timestamp&0xffffffff);
 #endif
   
   //defaults
   response.has_error = false;
   response.has_error_msg = false;
+  response.has_module = false;
   response.timestamp = micros();
   response.sample.funcs.encode = NULL;
   response.state.funcs.encode = NULL;
@@ -111,7 +101,7 @@ void StreamWrapper::handle(void) {
       }
       
 #ifdef _PB_DEBUG
-  Log.debug("-> {reqid=%d, timestamp=%d}"CR, response.reqid, response.timestamp);
+  Log.debug("-> {reqid=%d, timestamp=%d}"CR, response.reqid, response.timestamp&0xffffffff);
 #endif
       
     } while (request.stream && (!_serial->available()));  
