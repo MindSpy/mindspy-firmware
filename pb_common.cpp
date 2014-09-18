@@ -1,12 +1,8 @@
 #include <pb_encode.h>
 #include <pb_decode.h>
 #include "pb_common.h"
-
-#define _PB_DEBUG
-
-#ifdef _PB_DEBUG
 #include <Logging.h>
-#endif
+
 
 // TODO: this is in question - does it work?
 #ifndef SIZE_MAX
@@ -34,15 +30,11 @@ void StreamWrapper::handle(void) {
   
   // intercept request message
   if (!pb_decode_delimited(&istream, Request_fields, &request)) {
-#ifdef _PB_DEBUG
-    Log.error("Message decoding failed."CR, response.error_msg);
-#endif
+    ERROR("Message decoding failed."CR, response.error_msg);
     return;
   }
   
-#ifdef _PB_DEBUG
-  Log.debug("<- {reqid=%i}"CR, request.reqid);
-#endif
+  DEBUG("<- {reqid=%i}"CR, request.reqid);
   
   //defaults
   response.has_error_msg = false;
@@ -65,18 +57,14 @@ void StreamWrapper::handle(void) {
       
       if (request.has_setState) {
         if (!sensor->setState(request.setState.states, request.setState.states_count, NULL)) {
-#ifdef _PB_DEBUG
-    Log.error("Method setState of module #%d failed."CR, module);
-#endif
+          ERROR("Method setState of module #%d failed."CR, module);
           return;
         }
       }
       
       if (request.has_getState) {
         if (!sensor->getState(request.getState.addresses, request.getState.addresses_count, response.states)) {
-#ifdef _PB_DEBUG
-    Log.error("Method getState of module #%d failed."CR, module);
-#endif
+          ERROR("Method getState of module #%d failed."CR, module);
           return;
         }
         response.states_count = request.getState.addresses_count;
@@ -84,9 +72,7 @@ void StreamWrapper::handle(void) {
       
       if (request.has_getSamples) {
         if (!sensor->getSamples(request.getSamples.count, response.samples)) {
-#ifdef _PB_DEBUG
-    Log.error("Method getSamples of module #%d failed."CR, module);
-#endif
+          ERROR("Method getSamples of module #%d failed."CR, module);
           return;
         }
         response.samples_count = request.getSamples.count;
@@ -94,9 +80,7 @@ void StreamWrapper::handle(void) {
 
       if (request.has_getModelName) {
         if (!sensor->getModelName(response.modelName)) {
-#ifdef _PB_DEBUG
-    Log.error("Method getModelName of module #%d failed."CR, module);
-#endif
+          ERROR("Method getModelName of module #%d failed."CR, module);
           return;
         }
         response.has_modelName = true;
@@ -104,16 +88,12 @@ void StreamWrapper::handle(void) {
       
       // serialize response message
       if (!pb_encode_delimited(&ostream, Response_fields, &response)) {
-#ifdef _PB_DEBUG
-    Log.error("Serialization of response message failed."CR);
-#endif
+        ERROR("Serialization of response message failed."CR);
         return;
       }
-#ifdef _PB_DEBUG
-  Log.debug("-> {reqid=%d}"CR, response.reqid);
-#endif
-      
-    
+
+      DEBUG("-> {reqid=%d}"CR, response.reqid);
+
     } while (!request.has_module && (++module < _sensor_count));
   } while (request.stream && (!_serial->available()));  
 }

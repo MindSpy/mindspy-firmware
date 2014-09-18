@@ -1,3 +1,5 @@
+#define LOGLEVEL LOG_LEVEL_VERBOSE
+
 
 #include <Arduino.h>
 #include <SPI.h>
@@ -11,6 +13,7 @@
 
 #define C_ARRAY_LENGTH(_name) sizeof(_name)/sizeof(*_name)
 
+
 // define callbacks for patricular data structures types
 
 ISensor* sensors[] = { &Sensor };
@@ -23,8 +26,10 @@ void setup() {
   pinMode(PB_3, OUTPUT);
   
   Serial.begin(115200);
-  Log.init(LOG_LEVEL_VERBOSE, &Serial);
-  
+#ifdef LOGLEVEL
+  Log.init(LOGLEVEL, &Serial);
+#endif
+
   // reset BT
   digitalWrite(PB_2, LOW);
   delay(20);

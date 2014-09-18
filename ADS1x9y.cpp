@@ -131,10 +131,10 @@ bool ADS1x9y::getModelName(char* modelName) {
 
 void ADS1x9y::begin() {
   if (_active>-1) {
-    Log.error("Cannot module %d begin on cs=%d. Module %d is already active."CR, _module, _cs, _active);
+    ERROR("Cannot module %d begin on cs=%d. Module %d is already active."CR, _module, _cs, _active);
     return;
   }
-  Log.debug("Begin module %d on cs=%d."CR, _module, _cs);
+  DEBUG("Begin module %d on cs=%d."CR, _module, _cs);
   pinSetup();
   _active = _module;
   
@@ -142,7 +142,7 @@ void ADS1x9y::begin() {
 }
 
 void ADS1x9y::end() {
-  Log.debug("End module %d on cs=%d."CR, _module, _cs);
+  DEBUG("End module %d on cs=%d."CR, _module, _cs);
   SPI.end();
   _active = -1;
 }
@@ -166,7 +166,7 @@ void ADS1x9y::RDATA(uint8_t* buffer, uint16_t bsize) {
   }
   register uint8_t size = getTotalBytes(); // status registers + channels
   if (bsize < size) {
-    Log.error("RDATA: buffer too small!");
+    ERROR("RDATA: buffer too small!");
     return;
   }
   
@@ -262,28 +262,28 @@ ADS1x9y::operator bool() {
 
 void ADS1x9y::start() {
   digitalWrite(PIN_START, HIGH);
-  Log.debug("Start"CR);
+  DEBUG("Start"CR);
 }
 
 void ADS1x9y::stop() {
   digitalWrite(PIN_START, LOW);
-  Log.debug("Stop"CR);
+  DEBUG("Stop"CR);
 }
 
 void ADS1x9y::reset() {
   digitalWrite(PIN_RESET_, LOW);
   delayMicroseconds(20); 
   digitalWrite(PIN_RESET_, HIGH);
-  Log.debug("Reset"CR);
+  DEBUG("Reset"CR);
 }
 
 void ADS1x9y::pwrdn() {
-  Log.debug("Power down"CR);
+  DEBUG("Power down"CR);
   digitalWrite(PIN_PWDN_, LOW);
 }
 
 void ADS1x9y::pwrup() {
-  Log.debug("Power up"CR);
+  DEBUG("Power up"CR);
   digitalWrite(PIN_PWDN_, HIGH);
 }
 
