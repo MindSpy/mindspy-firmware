@@ -8,6 +8,7 @@ by pBorky
 #include <Arduino.h>
 #include <SPI.h>
 #include <Logging.h>
+#include "Sensor.h"
 
 #ifndef ADS1x9y_h
 #define ADS1x9y_h
@@ -16,7 +17,7 @@ by pBorky
  * TI ADS1x9y module.
  * See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
  */
-class ADS1x9y {
+class ADS1x9y: public ISensor {
   private:    
     int _module;
     int _cs;
@@ -25,6 +26,7 @@ class ADS1x9y {
     
     static boolean _pinSet;
     static int _active;
+    static int _sequence;
     
     void pinSetup(void);
     void getDeviceId(void);
@@ -36,6 +38,11 @@ class ADS1x9y {
      * \param module nnumber (CS pin)
      */
     ADS1x9y(uint8_t);
+    
+    // override ISensor methods
+    bool getSamples(uint32_t, Sample*);
+    bool getState(uint32_t*, uint32_t, State*);
+    bool setState(State*, uint32_t, void*);
     
     /*!
      * Activate this module if possible and setup SPI.

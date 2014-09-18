@@ -16,13 +16,13 @@
 #define C_ARRAY_LENGTH(_name) sizeof(_name)/sizeof(*_name)
 
 Stream*  StreamWrapper::_serial;
-response_handler_t* StreamWrapper::_handlers;
-uint8_t StreamWrapper::_handler_count;
+ISensor** StreamWrapper::_sensors;
+uint8_t StreamWrapper::_sensor_count;
 
-void StreamWrapper::init(Stream* serial, response_handler_t* handlers, uint8_t handler_count) {
+void StreamWrapper::init(Stream* serial, ISensor** sensors, uint8_t sensor_count) {
   _serial = serial;
-  _handlers = handlers;
-  _handler_count = handler_count;
+  _sensors = sensors;
+  _sensor_count = sensor_count;
 }
 
 void StreamWrapper::handle(void) {
@@ -41,57 +41,57 @@ void StreamWrapper::handle(void) {
   }
   
 #ifdef _PB_DEBUG
-  Log.debug("<- {reqid=%i, action=%d}"CR, request.reqid, request.action);
+  Log.debug("<- {reqid=%i}"CR, request.reqid);
 #endif
   
   //defaults
-  response.has_error = false;
   response.has_error_msg = false;
-  response.has_module = false;
   response.timestamp = micros();
-  response.sample.funcs.encode = NULL;
-  response.state.funcs.encode = NULL;
   response.reqid = request.reqid;
   
-  // determine handler based on request
-  response_handler_t* handler = NULL;
-  for (int i = 0; i < _handler_count; i++) {
-    if (_handlers[i].action == request.action) {
-      handler = &_handlers[i];
-      break;
-    }
+  ISensor* sensor = NULL;
+  uint8_t module = 0;
+
+  if (request.has_module) {
+    module = request.module;
   }
-  if (handler == NULL) {
-    response.has_error = true;
-    response.error = Response_ErrNo_HANDLER_MISSING;
-    response.has_error_msg = true;
-    sprintf(response.error_msg, "Missing handler for action #%d.", request.action);
-#ifdef _PB_DEBUG
-    Log.debug("%s"CR, response.error_msg);
-#endif
-    // serialize response message
-    if (!pb_encode_delimited(&ostream, Response_fields, &response)) {
-#ifdef _PB_DEBUG
-    Log.error("Serialization of response message failed."CR);
-#endif
-      return;
-    }
-  } else {
+  
+  do {
     do {
+      sensor = _sensors[module];    
       response.timestamp = micros();
-      if (!(*handler->handler)(&request, &response)) {
-        if (!response.has_error){
-          response.has_error = true;
-          response.error = Response_ErrNo_HANDLER_FAILED;
-          if (!response.has_error_msg) {
-            response.has_error_msg = true;
-            sprintf(response.error_msg, "No error message provided.");
-          }
-        }
+      response.has_error_msg = false;
+      response.module = module;
+      
+      if (request.has_setState) {
+        if (!sensor->setState(request.setState.states, request.setState.states_count, NULL)) {
 #ifdef _PB_DEBUG
-        Log.debug("%s"CR, response.error_msg);
+    Log.error("Method setState of module #%d failed."CR, module);
 #endif
+          return;
+        }
       }
+      
+      if (request.has_getState) {
+        if (!sensor->getState(request.getState.addresses, request.getState.addresses_count, response.states)) {
+#ifdef _PB_DEBUG
+    Log.error("Method getState of module #%d failed."CR, module);
+#endif
+          return;
+        }
+        response.states_count = request.getState.addresses_count;
+      }
+      
+      if (request.has_getSamples) {
+        if (!sensor->getSamples(request.getSamples.count, response.samples)) {
+#ifdef _PB_DEBUG
+    Log.error("Method getSamples of module #%d failed."CR, module);
+#endif
+          return;
+        }
+        response.samples_count = request.getSamples.count;
+      }
+      
       // serialize response message
       if (!pb_encode_delimited(&ostream, Response_fields, &response)) {
 #ifdef _PB_DEBUG
@@ -99,13 +99,13 @@ void StreamWrapper::handle(void) {
 #endif
         return;
       }
-      
 #ifdef _PB_DEBUG
   Log.debug("-> {reqid=%d}"CR, response.reqid);
 #endif
       
-    } while (request.stream && (!_serial->available()));  
-  } 
+    
+    } while (!request.has_module && (++module < _sensor_count));
+  } while (request.stream && (!_serial->available()));  
 }
 
 bool StreamWrapper::write_callback(pb_ostream_t *stream, const uint8_t *buf, size_t count) {

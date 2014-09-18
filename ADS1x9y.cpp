@@ -60,12 +60,67 @@ static const unsigned int GPIO_PINS[GPIO_PIN_COUNT] = {
 
 boolean ADS1x9y::_pinSet = false;
 int ADS1x9y::_active = -1;
+int ADS1x9y::_sequence = 0;
 
 ADS1x9y::ADS1x9y(uint8_t module = 0) {
   _module = constrain(module,0,SPI_CS_PIN_COUNT-1);
   _continous = true;
   _channels = 0;
   _cs = SPI_CS(_module); // here: module = board
+}
+
+bool ADS1x9y::getSamples(uint32_t count, Sample* result) {
+  
+  uint8_t channels = this->getChannelCount();
+  uint8_t bytes = this->getSampleBytes();
+  uint16_t bsize = this->getTotalBytes();
+  uint8_t* buffer = (uint8_t*)malloc(bsize*sizeof(uint8_t));
+    
+  for (uint32_t i = 0; i < count; i++) {
+    Sample* samp = &(result[i]);
+        
+    // wait for sample
+    while(!this);
+    RDATA(buffer, bsize);
+    // unpack the buffer
+    size_t idx = 3; // skip 3 bytes - status registers
+    for (int j = 0; j < channels; j++) {
+      int32_t tmp = 0;
+      for (int k = 0; k < bytes; k++) {
+        tmp<<=8;
+        tmp|=buffer[idx++];
+      }
+      samp->payload[j] = tmp;
+    }
+    samp->sequence = _sequence++;
+    samp->payload_count = channels;
+    
+  }
+  free(buffer);
+  Sensor.SDATAC();
+  return true;
+}
+
+bool ADS1x9y::getState(uint32_t* addresses, uint32_t addresses_count, State* result) {  
+  uint8_t buffer = 0;
+  
+  for (uint32_t i = 0; i < addresses_count; i++) {    
+    this->RREG(addresses[i], 1, &buffer);
+    
+    result[i].address = addresses[i];
+    result[i].payload = buffer;
+  }
+  
+  return true;
+}
+
+bool ADS1x9y::setState(State* states, uint32_t states_count, void* result) {
+  uint8_t p;
+  for (uint32_t i = 0; i < states_count; i++) {
+    p = states[i].payload;
+    this->WREG(states[i].address, 1, &p);
+  }
+  return true;
 }
 
 void ADS1x9y::begin() {
