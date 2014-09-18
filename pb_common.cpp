@@ -91,6 +91,16 @@ void StreamWrapper::handle(void) {
         }
         response.samples_count = request.getSamples.count;
       }
+
+      if (request.has_getModelName) {
+        if (!sensor->getModelName(response.modelName)) {
+#ifdef _PB_DEBUG
+    Log.error("Method getModelName of module #%d failed."CR, module);
+#endif
+          return;
+        }
+        response.has_modelName = true;
+      }
       
       // serialize response message
       if (!pb_encode_delimited(&ostream, Response_fields, &response)) {

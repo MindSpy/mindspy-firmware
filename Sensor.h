@@ -27,6 +27,12 @@ class ISensor {
      * \param states to set up
      */
     virtual bool setState(State*, uint32_t, void*) = 0;
+    
+    /*!
+     * Get model name.
+     * \param result model name
+     */
+    virtual bool getModelName(char*) = 0;
 };
 
 #endif

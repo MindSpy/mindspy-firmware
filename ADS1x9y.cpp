@@ -123,6 +123,12 @@ bool ADS1x9y::setState(State* states, uint32_t states_count, void* result) {
   return true;
 }
 
+bool ADS1x9y::getModelName(char* modelName) {
+  String model =  getModel();
+  model.toCharArray(modelName, 16);
+  return true;
+}
+
 void ADS1x9y::begin() {
   if (_active>-1) {
     Log.error("Cannot module %d begin on cs=%d. Module %d is already active."CR, _module, _cs, _active);

@@ -43,6 +43,7 @@ class ADS1x9y: public ISensor {
     bool getSamples(uint32_t, Sample*);
     bool getState(uint32_t*, uint32_t, State*);
     bool setState(State*, uint32_t, void*);
+    bool getModelName(char*);
     
     /*!
      * Activate this module if possible and setup SPI.
