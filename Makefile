@@ -119,7 +119,7 @@
 
 # default arduino software directory, check software exists
 ifndef ENERGIADIR
-ENERGIADIR := $(firstword $(wildcard ~/energia /usr/share/energia))
+ENERGIADIR := $(firstword $(wildcard ~/energia /usr/share/energia ~/apps/energia))
 endif
 ifndef BOARDFAMILY
 BOARDFAMILY := lm4f
@@ -214,11 +214,8 @@ ENERGIALIBOBJS := $(foreach dir, $(ENERGIACOREDIR) $(ENERGIALIBLIBSPATH) $(ENERG
 
 # no board?
 ifndef ENERGIABOARD
-ifneq "$(MAKECMDGOALS)" "boards"
-ifneq "$(MAKECMDGOALS)" "clean"
-$(error ENERGIABOARD is unset.  Type 'make boards' to see possible values)
-endif
-endif
+# try this
+ENERGIABOARD := lptm4c1230c3pm
 endif
 
 # obtain board parameters from the arduino boards.txt file
