@@ -1,5 +1,7 @@
-.lib/
-.dep/
+target/
+
+.idea/
+*iml
 
 
 # Compiled Object files
