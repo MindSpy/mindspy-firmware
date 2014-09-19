@@ -201,7 +201,7 @@ OUTDIR := target/
 LIBOUTDIR := $(OUTDIR)lib/
 DEPOUTDIR := $(OUTDIR)dep/
 TARGET := $(if $(TARGET),$(TARGET),a.out)
-OBJECTS := $(addsuffix .o, $(basename $(SOURCES)))
+OBJECTS := $(addprefix $(OUTDIR),$(addsuffix .o, $(basename $(SOURCES))))
 DEPFILES := $(patsubst %, $(DEPOUTDIR)%.dep, $(SOURCES))
 ENERGIACOREDIR := $(ENERGIADIR)/hardware/$(BOARDFAMILY)/cores/$(BOARDFAMILY)
 ENERGIALIB := $(LIBOUTDIR)arduino.a
@@ -298,9 +298,9 @@ proto:
 	$(MAKE) -C $@
 	mv proto/regs_pb.[hc] ./
 
-target:  $(TARGET).bin
+target:  $(OUTDIR)$(TARGET).bin
 
-upload: $(TARGET).bin
+upload: $(OUTDIR)$(TARGET).bin
 	@echo "\nUploading to board..."
 	$(FLASH) $<
 
@@ -308,7 +308,7 @@ upload: $(TARGET).bin
 clean:
 	rm -f $(OBJECTS)
 	rm -f $(TARGET).elf $(TARGET).bin $(ENERGIALIB) *~
-	rm -rf $(LIBOUTDIR) $(DEPOUTDIR)
+	rm -rf $(OUTDIR)
 
 boards:
 	@echo Available values for BOARD:
@@ -320,45 +320,45 @@ monitor:
 	stty raw 9600 -F $(SERIALDEV)
 	cat $(SERIALDEV)
 
-size: $(TARGET).elf
-	echo && $(MSP430SIZE) $(TARGET).elf
+size: $(OUTDIR)$(TARGET).elf
+	echo && $(MSP430SIZE) $(OUTDIR)$(TARGET).elf
 
 
 debug:
 	$(MSPDEBUG) rf2500 gdb
-	cgdb  -d $(GDB) $(TARGET).elf
+	cgdb  -d $(GDB) $(OUTDIR)$(TARGET).elf
 
 
 # building the target
 
 
-$(TARGET).elf: regs_pb.c $(ENERGIALIB) $(OBJECTS)
+$(OUTDIR)$(TARGET).elf: regs_pb.c $(ENERGIALIB) $(OBJECTS)
 	$(CXX) $(LINKFLAGS) $(OBJECTS) $(ENERGIALIB) -o $@ -lgcc -lc -lm -lrdimon
 
-$(TARGET).bin: $(TARGET).elf
+$(OUTDIR)$(TARGET).bin: $(OUTDIR)$(TARGET).elf
 	$(OBJCOPY) -O binary $< $@ 
 
-%.o: %.c
+$(OUTDIR)%.o: %.c
 	mkdir -p $(DEPOUTDIR)$(dir $<)
 	$(COMPILE.c) $(CPPDEPFLAGS) -o $@ $<
 
-%.o: %.cpp
+$(OUTDIR)%.o: %.cpp
 	mkdir -p $(DEPOUTDIR)$(dir $<)
 	$(COMPILE.cpp) $(CPPDEPFLAGS) -o $@ $<
 
-%.o: %.cc
+$(OUTDIR)%.o: %.cc
 	mkdir -p $(DEPOUTDIR)$(dir $<)
 	$(COMPILE.cpp) $(CPPDEPFLAGS) -o $@ $<
 
-%.o: %.C
+$(OUTDIR)%.o: %.C
 	mkdir -p $(DEPOUTDIR)$(dir $<)
 	$(COMPILE.cpp) $(CPPDEPFLAGS) -o $@ $<
 
-%.o: %.ino
+$(OUTDIR)%.o: %.ino
 	mkdir -p $(DEPOUTDIR)$(dir $<)
 	$(COMPILE.cpp) $(CPPDEPFLAGS) -o $@ $(CPPINOFLAGS) $<
 
-%.o: %.pde
+$(OUTDIR)%.o: %.pde
 	mkdir -p $(DEPOUTDIR)$(dir $<)
 	$(COMPILE.cpp) $(CPPDEPFLAGS) -o $@ -x c++ -include $(ENERGIACOREDIR)/Arduino.h $<
 
