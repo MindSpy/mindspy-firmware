@@ -1,13 +1,10 @@
 #include <pb_encode.h>
 #include <pb_decode.h>
 #include "pb_common.h"
+#include "macros.h"
 #include <Logging.h>
 
 
-// TODO: this is in question - does it work?
-#ifndef SIZE_MAX
-#define SIZE_MAX ~((size_t)0)
-#endif
 
 #define C_ARRAY_LENGTH(_name) sizeof(_name)/sizeof(*_name)
 
