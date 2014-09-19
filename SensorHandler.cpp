@@ -1,5 +1,6 @@
 
 #include "SensorHandler.h"
+#include "macros.h"
 #include <stdio.h> // TODO: deprecated - searching for lightweight sprintf
 
 ISensor** SensorHandler::_sensors;

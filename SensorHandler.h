@@ -1,7 +1,6 @@
 
 #include "regs_pb.h"
 #include "Sensor.h"
-#include "macros.h"
 
 #ifndef SensorHandler_h
 #define SensorHandler_h
