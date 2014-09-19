@@ -197,16 +197,19 @@ MSP430SIZE := $(COMPILER_PREFIX)$(BOARD_PREFIX)size
 FLASH := $(COMPILER_PREFIX)lm4flash
 
 # files
+OUTDIR := target/
+LIBOUTDIR := $(OUTDIR)lib/
+DEPOUTDIR := $(OUTDIR)dep/
 TARGET := $(if $(TARGET),$(TARGET),a.out)
 OBJECTS := $(addsuffix .o, $(basename $(SOURCES)))
-DEPFILES := $(patsubst %, .dep/%.dep, $(SOURCES))
+DEPFILES := $(patsubst %, $(DEPOUTDIR)%.dep, $(SOURCES))
 ENERGIACOREDIR := $(ENERGIADIR)/hardware/$(BOARDFAMILY)/cores/$(BOARDFAMILY)
-ENERGIALIB := .lib/arduino.a
+ENERGIALIB := $(LIBOUTDIR)arduino.a
 ENERGIALIBLIBSDIR := $(ENERGIADIR)/hardware/$(BOARDFAMILY)/libraries
 ENERGIALIBLIBSPATH := $(foreach lib, $(LIBRARIES), \
 	 $(HOME)/sketchbook/libraries/$(lib)/ $(ENERGIADIR)/libraries/$(lib)/ $(ENERGIACOREDIR)/libraries/$(lib) $(ENERGIALIBLIBSDIR)/$(lib) )
 ENERGIALIBOBJS := $(foreach dir, $(ENERGIACOREDIR) $(ENERGIALIBLIBSPATH) $(ENERGIACOREDIR)/driverlib, \
-	$(patsubst %, .lib/%.o, $(wildcard $(addprefix $(dir)/, *.c *.cpp))))
+	$(patsubst %, $(LIBOUTDIR)%.o, $(wildcard $(addprefix $(dir)/, *.c *.cpp))))
 
 
 # no board?
@@ -252,9 +255,9 @@ ifeq "$(ENERGIABOARD)" "lpmsp430f5529_25"
 	MSPDEBUG_PROTOCOL:= tilib
 endif
 
- # /home/pborky/apps/energia/hardware/tools/lm4f/bin/arm-none-eabi-g++ -Os -nostartfiles -nostdlib -Wl,--gc-sections -T/home/pborky/apps/energia/hardware/lm4f/cores/lm4f/lm4fcpp_blizzard.ld -Wl,--entry=ResetISR -mthumb  -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -fsingle-precision-constant -o sketch_sep18a.cpp.elf  sketch_sep18a.cpp.o  .lib/arduino.a -lgcc -lc -lm -lrdimon
+ # /home/pborky/apps/energia/hardware/tools/lm4f/bin/arm-none-eabi-g++ -Os -nostartfiles -nostdlib -Wl,--gc-sections -T/home/pborky/apps/energia/hardware/lm4f/cores/lm4f/lm4fcpp_blizzard.ld -Wl,--entry=ResetISR -mthumb  -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -fsingle-precision-constant -o sketch_sep18a.cpp.elf  sketch_sep18a.cpp.o  $(LIBOUTDIR)arduino.a -lgcc -lc -lm -lrdimon
 
-# /home/pborky/apps/energia/hardware/tools/lm4f/bin/arm-none-eabi-g++ -c -g -Os -w -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -fsingle-precision-constant -DF_CPU=80000000L -MMD -DARDUINO=101 -DENERGIA=12 -I/home/pborky/apps/energia/hardware/lm4f/cores/lm4f -I/home/pborky/apps/energia/hardware/lm4f/variants/stellarpad  -MP -MF .dep/sketch_sep18a.ino.dep  -x c++ -include /home/pborky/apps/energia//hardware/lm4f/cores/lm4f/Arduino.h sketch_sep18a.ino -o sketch_sep18a.cpp.o
+# /home/pborky/apps/energia/hardware/tools/lm4f/bin/arm-none-eabi-g++ -c -g -Os -w -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -fsingle-precision-constant -DF_CPU=80000000L -MMD -DARDUINO=101 -DENERGIA=12 -I/home/pborky/apps/energia/hardware/lm4f/cores/lm4f -I/home/pborky/apps/energia/hardware/lm4f/variants/stellarpad  -MP -MF $(DEPOUTDIR)sketch_sep18a.ino.dep  -x c++ -include /home/pborky/apps/energia//hardware/lm4f/cores/lm4f/Arduino.h sketch_sep18a.ino -o sketch_sep18a.cpp.o
 
 CPPFLAGS := -Os -Wall -g
 CPPFLAGS +=  -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -fsingle-precision-constant  -mfloat-abi=hard -mfpu=fpv4-sp-d16
@@ -272,7 +275,7 @@ CPPFLAGS += -I$(ENERGIADIR)/hardware/$(BOARDFAMILY)/variants/$(BOARD_BUILD_VARIA
 CPPFLAGS += -I$(HOME)/energia_sketchbook/hardware/$(BOARDFAMILY)/variants/$(BOARD_BUILD_VARIANT)/
 CPPFLAGS += $(addprefix -I$(HOME)/sketchbook/libraries/,  $(LIBRARIES))
 CPPFLAGS += $(addprefix -I$(ENERGIADIR)/hardware/$(BOARDFAMILY)/libraries/, $(LIBRARIES))
-CPPDEPFLAGS = -MMD -MP -MF .dep/$<.dep
+CPPDEPFLAGS = -MMD -MP -MF $(DEPOUTDIR)$<.dep
 CPPINOFLAGS := -x c++ -include $(ENERGIACOREDIR)/Arduino.h
 MSPDEBUGFLAGS :=  $(MSPDEBUG_PROTOCOL) 'erase' 'load $(TARGET).elf' 'exit'
 
@@ -308,7 +311,7 @@ upload: $(TARGET).bin
 clean:
 	rm -f $(OBJECTS)
 	rm -f $(TARGET).elf $(TARGET).bin $(ENERGIALIB) *~
-	rm -rf .lib .dep
+	rm -rf $(LIBOUTDIR) $(DEPOUTDIR)
 
 boards:
 	@echo Available values for BOARD:
@@ -339,27 +342,27 @@ $(TARGET).bin: $(TARGET).elf
 	$(OBJCOPY) -O binary $< $@ 
 
 %.o: %.c
-	mkdir -p .dep/$(dir $<)
+	mkdir -p $(DEPOUTDIR)$(dir $<)
 	$(COMPILE.c) $(CPPDEPFLAGS) -o $@ $<
 
 %.o: %.cpp
-	mkdir -p .dep/$(dir $<)
+	mkdir -p $(DEPOUTDIR)$(dir $<)
 	$(COMPILE.cpp) $(CPPDEPFLAGS) -o $@ $<
 
 %.o: %.cc
-	mkdir -p .dep/$(dir $<)
+	mkdir -p $(DEPOUTDIR)$(dir $<)
 	$(COMPILE.cpp) $(CPPDEPFLAGS) -o $@ $<
 
 %.o: %.C
-	mkdir -p .dep/$(dir $<)
+	mkdir -p $(DEPOUTDIR)$(dir $<)
 	$(COMPILE.cpp) $(CPPDEPFLAGS) -o $@ $<
 
 %.o: %.ino
-	mkdir -p .dep/$(dir $<)
+	mkdir -p $(DEPOUTDIR)$(dir $<)
 	$(COMPILE.cpp) $(CPPDEPFLAGS) -o $@ $(CPPINOFLAGS) $<
 
 %.o: %.pde
-	mkdir -p .dep/$(dir $<)
+	mkdir -p $(DEPOUTDIR)$(dir $<)
 	$(COMPILE.cpp) $(CPPDEPFLAGS) -o $@ -x c++ -include $(ENERGIACOREDIR)/Arduino.h $<
 
 # building the arduino library
@@ -367,18 +370,18 @@ $(TARGET).bin: $(TARGET).elf
 $(ENERGIALIB): $(ENERGIALIBOBJS)
 	$(AR) rcs $@ $?
 
-.lib/%.c.o: %.c
+$(LIBOUTDIR)%.c.o: %.c
 	mkdir -p $(dir $@)
 	$(COMPILE.c) -o $@ $<
 
-.lib/%.cpp.o: %.cpp
+$(LIBOUTDIR)%.cpp.o: %.cpp
 	mkdir -p $(dir $@)
 	$(COMPILE.cpp) -o $@ $<
 
-.lib/%.cc.o: %.cc
+$(LIBOUTDIR)%.cc.o: %.cc
 	mkdir -p $(dir $@)
 	$(COMPILE.cpp) -o $@ $<
 
-.lib/%.C.o: %.C
+$(LIBOUTDIR)%.C.o: %.C
 	mkdir -p $(dir $@)
 	$(COMPILE.cpp) -o $@ $<
