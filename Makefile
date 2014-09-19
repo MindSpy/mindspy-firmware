@@ -117,12 +117,14 @@
 #_______________________________________________________________________________
 #
 
+include *.mk
+
 # default arduino software directory, check software exists
 ifndef ENERGIADIR
 ENERGIADIR := $(firstword $(wildcard ~/energia /usr/share/energia ~/apps/energia))
 endif
 ifndef BOARDFAMILY
-BOARDFAMILY := lm4f
+$(error BOARDFAMILY is not set correctly; valid values are lm4f msp430.)
 endif
 ifeq "$(wildcard $(ENERGIADIR)/hardware/$(BOARDFAMILY)/boards.txt)" ""
 $(error ENERGIADIR is not set correctly; energia software not found)
@@ -197,7 +199,9 @@ MSP430SIZE := $(COMPILER_PREFIX)$(BOARD_PREFIX)size
 FLASH := $(COMPILER_PREFIX)lm4flash
 
 # files
+ifndef OUTDIR
 OUTDIR := target/
+endif
 LIBOUTDIR := $(OUTDIR)lib/
 DEPOUTDIR := $(OUTDIR)dep/
 TARGET := $(if $(TARGET),$(TARGET),a.out)
@@ -214,8 +218,11 @@ ENERGIALIBOBJS := $(foreach dir, $(ENERGIACOREDIR) $(ENERGIALIBLIBSPATH) $(ENERG
 
 # no board?
 ifndef ENERGIABOARD
-# try this
-ENERGIABOARD := lptm4c1230c3pm
+ifneq "$(MAKECMDGOALS)" "boards"
+ifneq "$(MAKECMDGOALS)" "clean"
+$(error ENERGIABOARD is unset.  Type 'make boards' to see possible values)
+endif
+endif
 endif
 
 # obtain board parameters from the arduino boards.txt file
