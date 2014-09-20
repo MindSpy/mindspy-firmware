@@ -259,10 +259,6 @@ ifeq "$(ENERGIABOARD)" "lpmsp430f5529_25"
 	MSPDEBUG_PROTOCOL:= tilib
 endif
 
- # /home/pborky/apps/energia/hardware/tools/lm4f/bin/arm-none-eabi-g++ -Os -nostartfiles -nostdlib -Wl,--gc-sections -T/home/pborky/apps/energia/hardware/lm4f/cores/lm4f/lm4fcpp_blizzard.ld -Wl,--entry=ResetISR -mthumb  -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -fsingle-precision-constant -o sketch_sep18a.cpp.elf  sketch_sep18a.cpp.o  $(LIBOUTDIR)arduino.a -lgcc -lc -lm -lrdimon
-
-# /home/pborky/apps/energia/hardware/tools/lm4f/bin/arm-none-eabi-g++ -c -g -Os -w -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -fsingle-precision-constant -DF_CPU=80000000L -MMD -DARDUINO=101 -DENERGIA=12 -I/home/pborky/apps/energia/hardware/lm4f/cores/lm4f -I/home/pborky/apps/energia/hardware/lm4f/variants/stellarpad  -MP -MF $(DEPOUTDIR)sketch_sep18a.ino.dep  -x c++ -include /home/pborky/apps/energia//hardware/lm4f/cores/lm4f/Arduino.h sketch_sep18a.ino -o sketch_sep18a.cpp.o
-
 CPPFLAGS := -Os -Wall -g
 CPPFLAGS +=  -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -fsingle-precision-constant  -mfloat-abi=hard -mfpu=fpv4-sp-d16
 ifeq "$(BOARDFAMILY)" "lm4f"
@@ -276,7 +272,7 @@ endif
 CPPFLAGS += -DF_CPU=$(BOARD_BUILD_FCPU) -DARDUINO=$(ARDUINOCONST)  -DENERGIA=$(ENERGIACONST)
 CPPFLAGS += -I. -Iutil -Iutility -I$(ENERGIACOREDIR)
 CPPFLAGS += -I$(ENERGIADIR)/hardware/$(BOARDFAMILY)/variants/$(BOARD_BUILD_VARIANT)/
-CPPFLAGS += -I$(HOME)/energia_sketchbook/hardware/$(BOARDFAMILY)/variants/$(BOARD_BUILD_VARIANT)/
+CPPFLAGS += -I$(HOME)/sketchbook/hardware/$(BOARDFAMILY)/variants/$(BOARD_BUILD_VARIANT)/
 CPPFLAGS += $(addprefix -I$(HOME)/sketchbook/libraries/,  $(LIBRARIES))
 CPPFLAGS += $(addprefix -I$(ENERGIADIR)/hardware/$(BOARDFAMILY)/libraries/, $(LIBRARIES))
 CPPDEPFLAGS = -MMD -MP -MF $(DEPOUTDIR)$<.dep
@@ -302,7 +298,7 @@ endif
 all: target
 
 proto:
-	$(MAKE) -C $@
+	$(MAKE) -C $@ regs_pb.c
 	mv proto/regs_pb.[hc] ./
 
 target:  $(OUTDIR)$(TARGET).bin
@@ -340,7 +336,7 @@ debug:
 
 
 $(OUTDIR)$(TARGET).elf: regs_pb.c $(ENERGIALIB) $(OBJECTS)
-	$(CXX) $(LINKFLAGS) $(OBJECTS) $(ENERGIALIB) -o $@ -lgcc -lc -lm -lrdimon
+	$(CXX) $(LINKFLAGS) $(OBJECTS) $(ENERGIALIB) -o $@ -lgcc -lc -lgcc -lm -lrdimon
 
 $(OUTDIR)$(TARGET).bin: $(OUTDIR)$(TARGET).elf
 	$(OBJCOPY) -O binary $< $@ 
