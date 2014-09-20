@@ -13,11 +13,9 @@
 class StreamWrapper {
   protected:
     static Stream* _serial;
-    static ISensor** _sensors;
-    static uint8_t _sensor_count;
-
     static bool write_callback(pb_ostream_t *, const uint8_t *, size_t );
     static bool read_callback(pb_istream_t *, uint8_t*, size_t );
+    static bool stopStream(void);
   public:
 
     /*!
@@ -27,7 +25,7 @@ class StreamWrapper {
      * \param sensor_count sensor module count
      * \return void
      */
-    static void init(Stream* stream, ISensor** sensors, size_t sensorCount);
+    static void init(Stream*);
 
     /*!
      * Receives request message and returns response. Intercepts message

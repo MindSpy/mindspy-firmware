@@ -7,7 +7,8 @@
 
 typedef bool (*ResponseEncoderCallbackType) (pb_ostream_t*, const pb_field_t[], const void *);
 typedef bool (*RequestDecoderCallbackType) (pb_istream_t*, const pb_field_t[], void *);
-typedef uint64_t (*TimestampCallbackType) (void);
+typedef uint32_t (*TimestampCallbackType) (void);
+typedef bool (*StopStreamCallbackType) (void);
 
 /*! 
 * Static class for handling the request, reading data from sensors and updating the responses.
@@ -19,6 +20,7 @@ class SensorHandler {
         static ResponseEncoderCallbackType _encoder;
         static RequestDecoderCallbackType _decoder;
         static TimestampCallbackType _timestamp;
+        static StopStreamCallbackType _stop;
 
     public:
         /*!
@@ -27,7 +29,12 @@ class SensorHandler {
         * \param responseEncoder - response encoder callback
         * \param timestampCallback - platform non-specific timestamp callback
         */
-        static void init(RequestDecoderCallbackType, ResponseEncoderCallbackType, TimestampCallbackType, ISensor**, size_t);
+        static void init(RequestDecoderCallbackType, ResponseEncoderCallbackType, TimestampCallbackType, StopStreamCallbackType);
+
+        /*!
+         *
+         */
+        static void init(ISensor**, size_t);
 
         /*!
         * Handle request and update response object
@@ -36,7 +43,7 @@ class SensorHandler {
         * \param response encoder callback
         * \param platform non-specific timestamp callback
         */
-        static bool handleRequest(Request*, Response*, pb_istream_t*, pb_ostream_t*);
+        static bool handle(Request*, Response*, pb_istream_t*, pb_ostream_t*);
 };
 
 #endif

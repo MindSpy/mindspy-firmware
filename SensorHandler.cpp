@@ -1,101 +1,126 @@
+#define LOGLEVEL LOG_LEVEL_VERBOSE
 
+#include <stdio.h>
+#include <Logging.h>
 #include "SensorHandler.h"
 #include "macros.h"
-#include <stdio.h>
 
 ISensor** SensorHandler::_sensors;
 size_t SensorHandler::_sensorCount;
 ResponseEncoderCallbackType SensorHandler::_encoder;
 RequestDecoderCallbackType SensorHandler::_decoder;
 TimestampCallbackType SensorHandler::_timestamp;
+StopStreamCallbackType SensorHandler::_stop;
 
-void SensorHandler::init(RequestDecoderCallbackType decoder, ResponseEncoderCallbackType encoder, TimestampCallbackType timestamp, ISensor** sensors, size_t sensorCount) {
-    _sensors = sensors;
-    _sensorCount = sensorCount;
+void SensorHandler::init(RequestDecoderCallbackType decoder, ResponseEncoderCallbackType encoder, TimestampCallbackType timestamp, StopStreamCallbackType stop) {
     _encoder = encoder;
     _decoder = decoder;
     _timestamp = timestamp;
+    _stop = stop;
 }
 
-bool SensorHandler::handleRequest(Request* request, Response* response, pb_istream_t* istream, pb_ostream_t* ostream) {
-    //defaults
-    response->has_error_msg = false;
-    response->has_module = false;
-    response->reqid = request->reqid;
+void SensorHandler::init(ISensor** sensors, size_t sensorCount) {
+    _sensors = sensors;
+    _sensorCount = sensorCount;
+}
 
-    ISensor* sensor = NULL;
-    uint8_t module = 0;
+bool SensorHandler::handle(Request* request, Response* response, pb_istream_t* istream, pb_ostream_t* ostream) {
 
-    // obtain module number from request
-    if (request->has_module) {
-        module = request->module;
+    // intercept request message
+    if (!(*_decoder)(istream, Request_fields, request)) {
+        response->has_error_msg = true;
+        snprintf(response->error_msg, COUNT_OF(response->error_msg), "Decoding of request message failed.");
+        return false;
     }
 
-    // invoke for each module - exit loop when module is explicitly specified in request
+     DEBUG("<- {reqid=%i}"CR, request->reqid);
+
+    // issue response one or more times
     do {
-        response->has_module = true;
-        response->module = module;
+        //defaults
+        response->has_error_msg = false;
+        response->has_module = false;
+        response->reqid = request->reqid;
 
-        if (_timestamp != NULL) //TODO this value can come from the caller
-            response->timestamp = (*_timestamp)();
+        ISensor* sensor = NULL;
+        uint8_t module = 0;
 
-        // invoke ISensor methods based on reuest
+        // obtain module number from request
+        if (request->has_module) {
+            module = request->module;
+        }
 
-        if (module < _sensorCount) {
+        // invoke for each module - exit loop when module is explicitly specified in request
+        do {
+            response->has_module = true;
+            response->module = module;
 
-            sensor = _sensors[module];
+            if (_timestamp != NULL) {
+                response->timestamp = (*_timestamp)();
+            }
 
-            if (request->has_setState) {
-                if (!sensor->setState(request->setState.states, request->setState.states_count, NULL)) {
+            if (module >= _sensorCount) {
+                if (request->has_module) {
                     response->has_error_msg = true;
-                    snprintf(response->error_msg, COUNT_OF(response->error_msg), "Method setState of module #%d failed.", module);
+                    snprintf(response->error_msg, COUNT_OF(response->error_msg), "Requested module #%d is outside of interval [0,%d].", module, _sensorCount-1);
                     return false;
                 }
             }
 
-            if (request->has_getState) {
-                if (!sensor->getState(request->getState.addresses, request->getState.addresses_count, response->states)) {
-                    response->has_error_msg = true;
-                    snprintf(response->error_msg, COUNT_OF(response->error_msg), "Method getState of module #%d failed.", module);
-                    return false;
+            // invoke ISensor methods based on request
+
+            if (request->has_setState || request->has_getState || request->has_getSamples || request->has_getModelName) {
+
+                sensor = _sensors[module];
+
+                if (request->has_setState) {
+                    if (!sensor->setState(request->setState.states, request->setState.states_count, NULL)) {
+                        response->has_error_msg = true;
+                        snprintf(response->error_msg, COUNT_OF(response->error_msg), "Method setState of module #%d failed.", module);
+                        return false;
+                    }
                 }
-                response->states_count = request->getState.addresses_count;
+
+                if (request->has_getState) {
+                    if (!sensor->getState(request->getState.addresses, request->getState.addresses_count, response->states)) {
+                        response->has_error_msg = true;
+                        snprintf(response->error_msg, COUNT_OF(response->error_msg), "Method getState of module #%d failed.", module);
+                        return false;
+                    }
+                    response->states_count = request->getState.addresses_count;
+                }
+
+                if (request->has_getSamples) {
+                    if (!sensor->getSamples(request->getSamples.count, response->samples)) {
+                        response->has_error_msg = true;
+                        snprintf(response->error_msg, COUNT_OF(response->error_msg), "Method getSamples of module #%d failed.", module);
+                        return false;
+                    }
+                    response->samples_count = request->getSamples.count;
+                }
+
+                if (request->has_getModelName) {
+                    if (!sensor->getModelName(response->modelName)) {
+                        response->has_error_msg = true;
+                        snprintf(response->error_msg, COUNT_OF(response->error_msg), "Method getModelName of module #%d failed.", module);
+                        return false;
+                    }
+                    response->has_modelName = true;
+                }
             }
 
-            if (request->has_getSamples) {
-                if (!sensor->getSamples(request->getSamples.count, response->samples)) {
-                    response->has_error_msg = true;
-                    snprintf(response->error_msg, COUNT_OF(response->error_msg), "Method getSamples of module #%d failed.", module);
-                    return false;
-                }
-                response->samples_count = request->getSamples.count;
-            }
+            // serialize response message
 
-            if (request->has_getModelName) {
-                if (!sensor->getModelName(response->modelName)) {
-                    response->has_error_msg = true;
-                    snprintf(response->error_msg, COUNT_OF(response->error_msg), "Method getModelName of module #%d failed.", module);
-                    return false;
-                }
-                response->has_modelName = true;
-            }
-        } else {
-            if (request->has_module) {
+            if (!(*_encoder)(ostream, Response_fields, response)) {
                 response->has_error_msg = true;
-                snprintf(response->error_msg, COUNT_OF(response->error_msg), "Requested module #%d is outside of interval [0,%d].", module, _sensorCount-1);
+                snprintf(response->error_msg, COUNT_OF(response->error_msg), "Encoding of response message failed.");
                 return false;
             }
-        }
 
-        // serialize response message
+            DEBUG("-> {reqid=%i}"CR, request->reqid);
 
-        if (!(*_encoder)(ostream, Response_fields, response)) {
-            response->has_error_msg = true;
-            snprintf(response->error_msg, COUNT_OF(response->error_msg), "Encoding of response message failed.");
-            return false;
-        }
-
-    } while (!request->has_module && (++module < _sensorCount));
+        } while (!request->has_module && (++module < _sensorCount));
+    } while (request->stream && (!(*_stop)()));
 
     return true;
 

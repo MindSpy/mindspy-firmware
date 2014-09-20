@@ -4,6 +4,7 @@
 #include <SPI.h>
 #include <Logging.h>
 #include "StreamWrapper.h"
+#include "SensorHandler.h"
 #include "ADS1x9y.h"
 #include "regs_pb.h"
 #include "macros.h"
@@ -42,7 +43,8 @@ void setup() {
   Serial1.end();
   Serial1.begin(921600); // max. 1382400=1.3Mbps
 
-  StreamWrapper::init(&Serial1, sensors, COUNT_OF(sensors));
+  StreamWrapper::init(&Serial1);
+  SensorHandler::init(sensors, COUNT_OF(sensors));
 
   Sensor.begin();
   Sensor.START();
