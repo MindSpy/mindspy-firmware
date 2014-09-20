@@ -6,7 +6,7 @@
 #include <Logging.h>
 #include "ADS1x9y.h"
 #include "regs_pb.h"
-#include "pb_common.h"
+#include "StreamWrapper.h"
 #include "macros.h"
 
 #define C_ARRAY_LENGTH(_name) sizeof(_name)/sizeof(*_name)

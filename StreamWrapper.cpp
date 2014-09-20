@@ -1,6 +1,6 @@
 #include <pb_encode.h>
 #include <pb_decode.h>
-#include "pb_common.h"
+#include "StreamWrapper.h"
 #include "macros.h"
 #include "SensorHandler.h"
 #include <Logging.h>
