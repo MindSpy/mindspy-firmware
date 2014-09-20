@@ -1,12 +1,11 @@
 #define LOGLEVEL LOG_LEVEL_VERBOSE
 
-
 #include <Arduino.h>
 #include <SPI.h>
 #include <Logging.h>
+#include "StreamWrapper.h"
 #include "ADS1x9y.h"
 #include "regs_pb.h"
-#include "StreamWrapper.h"
 #include "macros.h"
 
 #define C_ARRAY_LENGTH(_name) sizeof(_name)/sizeof(*_name)

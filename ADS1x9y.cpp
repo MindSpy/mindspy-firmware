@@ -5,6 +5,11 @@ created 30 Nov 2013
 by pBorky
 */
 
+#define LOGLEVEL LOG_LEVEL_VERBOSE
+
+#include <Logging.h>
+#include <SPI.h>
+#include <Arduino.h>
 #include "ADS1x9y.h"
 
 // Sensor Pinout definition

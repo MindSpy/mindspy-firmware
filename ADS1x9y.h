@@ -5,9 +5,6 @@ created 30 Nov 2013
 by pBorky
 */
 
-#include <Arduino.h>
-#include <SPI.h>
-#include <Logging.h>
 #include "Sensor.h"
 
 #ifndef ADS1x9y_h
