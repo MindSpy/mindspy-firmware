@@ -5,7 +5,8 @@
 #ifndef SensorHandler_h
 #define SensorHandler_h
 
-typedef bool (*ResponseEncoderCallbackType) (const pb_field_t[], const Response *);
+typedef bool (*ResponseEncoderCallbackType) (pb_ostream_t*, const pb_field_t[], const void *);
+typedef bool (*RequestDecoderCallbackType) (pb_istream_t*, const pb_field_t[], void *);
 typedef uint64_t (*TimestampCallbackType) (void);
 
 /*! 
@@ -16,6 +17,7 @@ class SensorHandler {
         static ISensor** _sensors;
         static size_t _sensorCount;
         static ResponseEncoderCallbackType _encoder;
+        static RequestDecoderCallbackType _decoder;
         static TimestampCallbackType _timestamp;
 
     public:
@@ -25,8 +27,7 @@ class SensorHandler {
         * \param responseEncoder - response encoder callback
         * \param timestampCallback - platform non-specific timestamp callback
         */
-        template <size_t N>
-        static void init(const ISensor* (& sensors) [N], ResponseEncoderCallbackType, TimestampCallbackType);
+        static void init(RequestDecoderCallbackType, ResponseEncoderCallbackType, TimestampCallbackType, ISensor**, size_t);
 
         /*!
         * Handle request and update response object
@@ -35,7 +36,7 @@ class SensorHandler {
         * \param response encoder callback
         * \param platform non-specific timestamp callback
         */
-        static bool handleRequest(Request*, Response*);
+        static bool handleRequest(Request*, Response*, pb_istream_t*, pb_ostream_t*);
 };
 
 #endif

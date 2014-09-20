@@ -1,26 +1,26 @@
 
 #include "SensorHandler.h"
 #include "macros.h"
-#include <stdio.h> // TODO: deprecated - searching for lightweight sprintf
+#include <stdio.h>
 
 ISensor** SensorHandler::_sensors;
 size_t SensorHandler::_sensorCount;
 ResponseEncoderCallbackType SensorHandler::_encoder;
+RequestDecoderCallbackType SensorHandler::_decoder;
 TimestampCallbackType SensorHandler::_timestamp;
 
-template <size_t N>
-void SensorHandler::init(const ISensor* (& sensors) [N], ResponseEncoderCallbackType encoder, TimestampCallbackType timestamp) {
+void SensorHandler::init(RequestDecoderCallbackType decoder, ResponseEncoderCallbackType encoder, TimestampCallbackType timestamp, ISensor** sensors, size_t sensorCount) {
     _sensors = sensors;
-    _sensorCount = N;
+    _sensorCount = sensorCount;
     _encoder = encoder;
+    _decoder = decoder;
     _timestamp = timestamp;
 }
 
-bool SensorHandler::handleRequest(Request* request, Response* response) {
-
+bool SensorHandler::handleRequest(Request* request, Response* response, pb_istream_t* istream, pb_ostream_t* ostream) {
     //defaults
     response->has_error_msg = false;
-    //response->has_module = false;
+    response->has_module = false;
     response->reqid = request->reqid;
 
     ISensor* sensor = NULL;
@@ -33,10 +33,10 @@ bool SensorHandler::handleRequest(Request* request, Response* response) {
 
     // invoke for each module - exit loop when module is explicitly specified in request
     do {
-        //response->has_module = true;
+        response->has_module = true;
         response->module = module;
 
-        if (_timestamp != NULL) //TODO this can come from the caller
+        if (_timestamp != NULL) //TODO this value can come from the caller
             response->timestamp = (*_timestamp)();
 
         // invoke ISensor methods based on reuest
@@ -89,7 +89,7 @@ bool SensorHandler::handleRequest(Request* request, Response* response) {
 
         // serialize response message
 
-        if (!(*_encoder)(Response_fields, response)) {
+        if (!(*_encoder)(ostream, Response_fields, response)) {
             response->has_error_msg = true;
             snprintf(response->error_msg, COUNT_OF(response->error_msg), "Encoding of response message failed.");
             return false;

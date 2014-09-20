@@ -2,20 +2,14 @@
 #include <pb_decode.h>
 #include "pb_common.h"
 #include "macros.h"
+#include "SensorHandler.h"
 #include <Logging.h>
 
-
-
-#define C_ARRAY_LENGTH(_name) sizeof(_name)/sizeof(*_name)
-
 Stream*  StreamWrapper::_serial;
-ISensor** StreamWrapper::_sensors;
-uint8_t StreamWrapper::_sensor_count;
 
-void StreamWrapper::init(Stream* serial, ISensor** sensors, uint8_t sensor_count) {
+void StreamWrapper::init(Stream* serial, ISensor** sensors, size_t sensorCount) {
   _serial = serial;
-  _sensors = sensors;
-  _sensor_count = sensor_count;
+  SensorHandler::init(&pb_decode_delimited, &pb_encode_delimited, (TimestampCallbackType)&micros, sensors, sensorCount);
 }
 
 void StreamWrapper::handle(void) {
@@ -33,65 +27,17 @@ void StreamWrapper::handle(void) {
   
   DEBUG("<- {reqid=%i}"CR, request.reqid);
   
-  //defaults
-  response.has_error_msg = false;
+  //set timestamp
   response.timestamp = micros();
-  response.reqid = request.reqid;
-  
-  ISensor* sensor = NULL;
-  uint8_t module = 0;
 
-  if (request.has_module) {
-    module = request.module;
-  }
-  
   do {
-    do {
-      sensor = _sensors[module];    
-      response.timestamp = micros();
-      response.has_error_msg = false;
-      response.module = module;
-      
-      if (request.has_setState) {
-        if (!sensor->setState(request.setState.states, request.setState.states_count, NULL)) {
-          ERROR("Method setState of module #%d failed."CR, module);
-          return;
+    if (!SensorHandler::handleRequest(&request, &response, &istream, &ostream)) {
+        ERROR(response.error_msg);
+        if (!pb_encode_delimited(&ostream, Response_fields, &response)) {
+            ERROR("Encoding of response message failed.");
+            return;
         }
-      }
-      
-      if (request.has_getState) {
-        if (!sensor->getState(request.getState.addresses, request.getState.addresses_count, response.states)) {
-          ERROR("Method getState of module #%d failed."CR, module);
-          return;
-        }
-        response.states_count = request.getState.addresses_count;
-      }
-      
-      if (request.has_getSamples) {
-        if (!sensor->getSamples(request.getSamples.count, response.samples)) {
-          ERROR("Method getSamples of module #%d failed."CR, module);
-          return;
-        }
-        response.samples_count = request.getSamples.count;
-      }
-
-      if (request.has_getModelName) {
-        if (!sensor->getModelName(response.modelName)) {
-          ERROR("Method getModelName of module #%d failed."CR, module);
-          return;
-        }
-        response.has_modelName = true;
-      }
-      
-      // serialize response message
-      if (!pb_encode_delimited(&ostream, Response_fields, &response)) {
-        ERROR("Serialization of response message failed."CR);
-        return;
-      }
-
-      DEBUG("-> {reqid=%d}"CR, response.reqid);
-
-    } while (!request.has_module && (++module < _sensor_count));
+    }
   } while (request.stream && (!_serial->available()));  
 }
 
