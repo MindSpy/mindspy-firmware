@@ -259,7 +259,7 @@ ifeq "$(ENERGIABOARD)" "lpmsp430f5529_25"
 	MSPDEBUG_PROTOCOL:= tilib
 endif
 
-CPPFLAGS := -Os -Wall -g
+CPPFLAGS := -Os -Wall -ggdb
 CPPFLAGS +=  -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -fsingle-precision-constant  -mfloat-abi=hard -mfpu=fpv4-sp-d16
 ifeq "$(BOARDFAMILY)" "lm4f"
 CPPFLAGS += -mcpu=$(BOARD_BUILD_MCU)
@@ -326,6 +326,7 @@ monitor:
 size: $(OUTDIR)$(TARGET).elf
 	echo && $(MSP430SIZE) $(OUTDIR)$(TARGET).elf
 
+rebuild: clean all
 
 debug:
 	$(MSPDEBUG) rf2500 gdb
