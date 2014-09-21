@@ -259,7 +259,7 @@ ifeq "$(ENERGIABOARD)" "lpmsp430f5529_25"
 	MSPDEBUG_PROTOCOL:= tilib
 endif
 
-CPPFLAGS := -Os -Wall -ggdb
+CPPFLAGS := -Os -Wall -ggdb -Wno-psabi
 CPPFLAGS +=  -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -fsingle-precision-constant  -mfloat-abi=hard -mfpu=fpv4-sp-d16
 ifeq "$(BOARDFAMILY)" "lm4f"
 CPPFLAGS += -mcpu=$(BOARD_BUILD_MCU)
