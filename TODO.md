@@ -1,12 +1,12 @@
 MILESTONE 0:
-  1. odtranenie static classes (SensorHandler -> non-static, StreamWrapper -> presunut do Main.cpp)
-  2. virtualne metody - zlepsit performance (ISensor)
-  3. unit testy
-  4. zdokumentovanie protokolbuffers, c++ kodu
-  5. Loggin - skopirujeme do projektu
+  1. ~~odtranenie static classes (SensorHandler -> non-static, StreamWrapper -> presunut do Main.cpp)~~
+  1. virtualne metody - zlepsit performance (ISensor)
+  1. unit testy
+  1. zdokumentovanie protokolbuffers, ~~c++ kodu~~
+  1. ~~Loggin - skopirujeme do projektug~~
 
 MILSTONE X - Client:
   1. napisat tenku klientsku vrstvu v Java, Python, C++
-  2. Qt - GUI multiplatform
-  3. PyGame - GUI
+  1. Qt - GUI multiplatform
+  1. PyGame - GUI
  
