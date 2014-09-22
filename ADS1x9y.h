@@ -4,11 +4,12 @@ TI ADS1x9y Analog Frontend
 created 30 Nov 2013
 by pBorky
 */
-
-#include "Sensor.h"
-
 #ifndef ADS1x9y_h
 #define ADS1x9y_h
+
+#include <Arduino.h>
+
+#include "Sensor.h"
 
 /*!
  * TI ADS1x9y module.

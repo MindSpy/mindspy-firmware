@@ -1,28 +1,12 @@
-#define LOGLEVEL LOG_LEVEL_VERBOSE
+#include "SensorHandler.h"
 
 #include <stdio.h>
-#include "Logging.h"
-#include "SensorHandler.h"
+#include "regs_pb.h"
+#include "Sensor.h"
 #include "macros.h"
 
-ISensor** SensorHandler::_sensors;
-size_t SensorHandler::_sensorCount;
-ResponseEncoderCallbackType SensorHandler::_encoder;
-RequestDecoderCallbackType SensorHandler::_decoder;
-TimestampCallbackType SensorHandler::_timestamp;
-StopStreamCallbackType SensorHandler::_stop;
-
-void SensorHandler::init(RequestDecoderCallbackType decoder, ResponseEncoderCallbackType encoder, TimestampCallbackType timestamp, StopStreamCallbackType stop) {
-    _encoder = encoder;
-    _decoder = decoder;
-    _timestamp = timestamp;
-    _stop = stop;
-}
-
-void SensorHandler::init(ISensor** sensors, size_t sensorCount) {
-    _sensors = sensors;
-    _sensorCount = sensorCount;
-}
+#define LOGLEVEL LOG_LEVEL_VERBOSE
+#include "Logging.h"
 
 bool SensorHandler::handle(Request* request, Response* response, pb_istream_t* istream, pb_ostream_t* ostream) {
 

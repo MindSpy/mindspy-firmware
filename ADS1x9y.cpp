@@ -5,12 +5,15 @@ created 30 Nov 2013
 by pBorky
 */
 
-#define LOGLEVEL LOG_LEVEL_VERBOSE
+#include "ADS1x9y.h"
 
-#include "Logging.h"
 #include <SPI.h>
 #include <Arduino.h>
-#include "ADS1x9y.h"
+
+#include "Sensor.h"
+
+#define LOGLEVEL LOG_LEVEL_VERBOSE
+#include "Logging.h"
 
 // Sensor Pinout definition
 // SPI pins
