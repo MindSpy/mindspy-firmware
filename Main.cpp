@@ -15,7 +15,7 @@
 #include "Logging.h"
 
 ISensor* sensors[] = { &Sensor };
-SensorHandler sh  = SensorHandler(&pb_decode_delimited, &pb_encode_delimited, &timestamp, &stopStream, sensors, COUNT_OF(sensors));
+SensorHandler sensorHandler  = SensorHandler(&pb_decode_delimited, &pb_encode_delimited, &timestamp, &stopStream, sensors, COUNT_OF(sensors));
 
 uint64_t bootTime = 0;
 
@@ -42,34 +42,6 @@ bool read_callback(pb_istream_t *stream, uint8_t *buf, size_t count) {
     }
     size_t result = s->readBytes((char*)buf, constrain(avail,0,count));
     return result == count;
-}
-
-void handle(void) {
-    // streams for nanopb
-    pb_istream_t istream = {&read_callback, &PB_STREAM, SIZE_MAX};
-    pb_ostream_t ostream = {&write_callback, &PB_STREAM, SIZE_MAX, 0};
-
-    // request and response structures
-    Request request;
-    Response response;
-
-    // response defaults
-    response.timestamp = timestamp();
-    response.has_module = false;
-    response.states_count = 0;
-    response.samples_count = 0;
-    response.has_modelName = false;
-    response.has_error_msg = false;
-
-    // handle incomming request
-    if (!sh.handle(&request, &response, &istream, &ostream)) {
-        ERROR(response.error_msg);
-        ERROR(CR);
-        if (!pb_encode_delimited(&ostream, Response_fields, &response)) {
-            ERROR("Encoding of response message failed."CR);
-            return;
-        }
-    }
 }
 
 void setup() {
@@ -109,7 +81,29 @@ void setup() {
 }
 
 void loop() {
-    // TODO: module autodetection, timestamp correction
-    // process protocol buffers handler
-    handle();
+    // streams for nanopb
+    pb_istream_t istream = {&read_callback, &PB_STREAM, SIZE_MAX};
+    pb_ostream_t ostream = {&write_callback, &PB_STREAM, SIZE_MAX, 0};
+
+    // request and response structures
+    Request request;
+    Response response;
+
+    // response defaults
+    response.timestamp = timestamp();
+    response.has_module = false;
+    response.states_count = 0;
+    response.samples_count = 0;
+    response.has_modelName = false;
+    response.has_error_msg = false;
+
+    // handle incomming request
+    if (!sensorHandler.handle(&request, &response, &istream, &ostream)) {
+        ERROR(response.error_msg);
+        ERROR(CR);
+        if (!pb_encode_delimited(&ostream, Response_fields, &response)) {
+            ERROR("Encoding of response message failed."CR);
+            return;
+        }
+    }
 }

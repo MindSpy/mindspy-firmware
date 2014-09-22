@@ -36,19 +36,14 @@ bool read_callback(pb_istream_t *, uint8_t*, size_t );
 
 /*!
  * callback for SensorHandler::handle stop condition
- * \return determine when to stop streaming
+ * \return stop streaming
  */
 bool stopStream(void);
 
 /*!
  * callback for SensorHandler::handle timestamp generator
- * \return time in microseconds from reference
+ * \return elapsed time from reference in microseconds
  */
 uint64_t timestamp(void);
-
-/*!
- * callback for nanopb input
- */
-void handle(void);
 
 #endif
