@@ -18,6 +18,7 @@ class ISensor {
     /*!
      * Get State of the sensor (get the registers).
      * \param addresses to get
+     * \param addresses count
      * \return result states
      */
     virtual bool getState(uint32_t*, uint32_t, State*) = 0;
@@ -33,6 +34,11 @@ class ISensor {
      * \param result model name
      */
     virtual bool getModelName(char*) = 0;
+
+    /*!
+     * Check if data is ready in this module.
+     */
+    virtual operator bool(void) = 0;
 };
 
 #endif
