@@ -7,7 +7,7 @@ by pBorky
 
 #define LOGLEVEL LOG_LEVEL_VERBOSE
 
-#include <Logging.h>
+#include "Logging.h"
 #include <SPI.h>
 #include <Arduino.h>
 #include "ADS1x9y.h"

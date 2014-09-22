@@ -2,7 +2,7 @@
 
 #include <Arduino.h>
 #include <SPI.h>
-#include <Logging.h>
+#include "Logging.h"
 #include "StreamWrapper.h"
 #include "SensorHandler.h"
 #include "ADS1x9y.h"

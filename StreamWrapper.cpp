@@ -2,7 +2,7 @@
 
 #include <pb_encode.h>
 #include <pb_decode.h>
-#include <Logging.h>
+#include "Logging.h"
 #include "StreamWrapper.h"
 #include "SensorHandler.h"
 #include "macros.h"
