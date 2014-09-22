@@ -188,6 +188,11 @@ BOARD_PREFIX := msp430-
 endif
 endif
 
+V := 0
+M_0 := @
+M_1 :=
+M = $(M_$(V))
+
 CC := $(COMPILER_PREFIX)$(BOARD_PREFIX)gcc
 CXX := $(COMPILER_PREFIX)$(BOARD_PREFIX)g++
 LD := $(COMPILER_PREFIX)$(BOARD_PREFIX)ld
@@ -259,8 +264,11 @@ ifeq "$(ENERGIABOARD)" "lpmsp430f5529_25"
 	MSPDEBUG_PROTOCOL:= tilib
 endif
 
+CFLAGS :=
+CXXFLAGS := -fno-rtti
+
 CPPFLAGS := -Os -Wall -ggdb -Wno-psabi
-CPPFLAGS +=  -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -fsingle-precision-constant  -mfloat-abi=hard -mfpu=fpv4-sp-d16
+CPPFLAGS +=  -fno-exceptions -ffunction-sections -fdata-sections -fsingle-precision-constant  -mfloat-abi=hard -mfpu=fpv4-sp-d16
 ifeq "$(BOARDFAMILY)" "lm4f"
 CPPFLAGS += -mcpu=$(BOARD_BUILD_MCU)
 CPPFLAGS += -mthumb
@@ -309,9 +317,7 @@ upload: $(OUTDIR)$(TARGET).bin
 
 
 clean:
-	rm -f $(OBJECTS)
-	rm -f $(TARGET).elf $(TARGET).bin $(ENERGIALIB) *~
-	rm -rf $(OUTDIR)
+	$Mrm -rf $(OUTDIR) *~
 
 boards:
 	@echo Available values for BOARD:
@@ -320,69 +326,81 @@ boards:
 			-e 's/\(.\{14\}\) *\(.*\)/\1 \2/'
 
 monitor:
-	stty raw 9600 -F $(SERIALDEV)
-	cat $(SERIALDEV)
+	$Mstty raw 9600 -F $(SERIALDEV)
+	$Mcat $(SERIALDEV)
 
 size: $(OUTDIR)$(TARGET).elf
-	echo && $(MSP430SIZE) $(OUTDIR)$(TARGET).elf
+	$Mecho && $(MSP430SIZE) $(OUTDIR)$(TARGET).elf
 
 rebuild: clean all
 
-debug:
-	$(MSPDEBUG) rf2500 gdb
-	cgdb  -d $(GDB) $(OUTDIR)$(TARGET).elf
+debug: $(OUTDIR)$(TARGET).elf
+	@echo "Running gdb.."
+	$M$(GDB) $<
 
 
 # building the target
 
 
 $(OUTDIR)$(TARGET).elf: regs_pb.c $(ENERGIALIB) $(OBJECTS)
-	$(CXX) $(LINKFLAGS) $(OBJECTS) $(ENERGIALIB) -o $@ -lgcc -lc -lgcc -lm -lrdimon
+	@echo "Linking" `basename $@` "<" $(foreach obj, $(OBJECTS) $(ENERGIALIB), `basename $(obj)` )
+	$M$(CXX) $(LINKFLAGS) $(OBJECTS) $(ENERGIALIB) -o $@ -lgcc -lc -lgcc -lm -lrdimon
 
 $(OUTDIR)$(TARGET).bin: $(OUTDIR)$(TARGET).elf
-	$(OBJCOPY) -O binary $< $@ 
+	@echo "Copying objects `basename $@` <" `basename $<`
+	$M$(OBJCOPY) -O binary $< $@
 
 $(OUTDIR)%.o: %.c
-	mkdir -p $(DEPOUTDIR)$(dir $<)
-	$(COMPILE.c) $(CPPDEPFLAGS) -o $@ $<
+	@echo "Compiling <" `basename $<`
+	$Mmkdir -p $(DEPOUTDIR)$(dir $<)
+	$M$(COMPILE.c) $(CPPDEPFLAGS) -o $@ $<
 
 $(OUTDIR)%.o: %.cpp
-	mkdir -p $(DEPOUTDIR)$(dir $<)
-	$(COMPILE.cpp) $(CPPDEPFLAGS) -o $@ $<
+	@echo "Compiling <" `basename $<`
+	$Mmkdir -p $(DEPOUTDIR)$(dir $<)
+	$M$(COMPILE.cpp) $(CPPDEPFLAGS) -o $@ $<
 
 $(OUTDIR)%.o: %.cc
-	mkdir -p $(DEPOUTDIR)$(dir $<)
-	$(COMPILE.cpp) $(CPPDEPFLAGS) -o $@ $<
+	@echo "Compiling <" `basename $<`
+	$Mmkdir -p $(DEPOUTDIR)$(dir $<)
+	$M$(COMPILE.cpp) $(CPPDEPFLAGS) -o $@ $<
 
 $(OUTDIR)%.o: %.C
-	mkdir -p $(DEPOUTDIR)$(dir $<)
-	$(COMPILE.cpp) $(CPPDEPFLAGS) -o $@ $<
+	@echo "Compiling <" `basename $<`
+	$Mmkdir -p $(DEPOUTDIR)$(dir $<)
+	$M$(COMPILE.cpp) $(CPPDEPFLAGS) -o $@ $<
 
 $(OUTDIR)%.o: %.ino
-	mkdir -p $(DEPOUTDIR)$(dir $<)
-	$(COMPILE.cpp) $(CPPDEPFLAGS) -o $@ $(CPPINOFLAGS) $<
+	@echo "Compiling <" `basename $<`
+	$Mmkdir -p $(DEPOUTDIR)$(dir $<)
+	$M$(COMPILE.cpp) $(CPPDEPFLAGS) -o $@ $(CPPINOFLAGS) $<
 
 $(OUTDIR)%.o: %.pde
-	mkdir -p $(DEPOUTDIR)$(dir $<)
-	$(COMPILE.cpp) $(CPPDEPFLAGS) -o $@ -x c++ -include $(ENERGIACOREDIR)/Arduino.h $<
+	$Mmkdir -p $(DEPOUTDIR)$(dir $<)
+	$M$(COMPILE.cpp) $(CPPDEPFLAGS) -o $@ -x c++ -include $(ENERGIACOREDIR)/Arduino.h $<
 
 # building the arduino library
 
 $(ENERGIALIB): $(ENERGIALIBOBJS)
-	$(AR) rcs $@ $?
+	@echo "Creating archive" `basename $@` "<" $(foreach obj, $?, `basename $(obj)` )
+	$M$(AR) rcs $@ $?
 
 $(LIBOUTDIR)%.c.o: %.c
-	mkdir -p $(dir $@)
-	$(COMPILE.c) -o $@ $<
+	@echo "Compiling <" `basename $<`
+	$Mmkdir -p $(dir $@)
+	$M$(COMPILE.c) -o $@ $<
 
 $(LIBOUTDIR)%.cpp.o: %.cpp
-	mkdir -p $(dir $@)
-	$(COMPILE.cpp) -o $@ $<
+	@echo "Compiling <" `basename $<`
+	$Mmkdir -p $(dir $@)
+	$M$(COMPILE.cpp) -o $@ $<
 
 $(LIBOUTDIR)%.cc.o: %.cc
-	mkdir -p $(dir $@)
-	$(COMPILE.cpp) -o $@ $<
+	@echo "Compiling <" `basename $<`
+	$Mmkdir -p $(dir $@)
+	$M$(COMPILE.cpp) -o $@ $<
 
 $(LIBOUTDIR)%.C.o: %.C
-	mkdir -p $(dir $@)
-	$(COMPILE.cpp) -o $@ $<
+	@echo "Compiling <" `basename $<`
+	$Mmkdir -p $(dir $@)
+	$M$(COMPILE.cpp) -o $@ $<
