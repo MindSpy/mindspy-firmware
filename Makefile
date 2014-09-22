@@ -199,7 +199,7 @@ LD := $(COMPILER_PREFIX)$(BOARD_PREFIX)ld
 AR := $(COMPILER_PREFIX)$(BOARD_PREFIX)ar
 OBJCOPY := $(COMPILER_PREFIX)$(BOARD_PREFIX)objcopy
 MSPDEBUG := $(COMPILER_PREFIX)mspdebug
-GDB := $(COMPILER_PREFIX)$(BOARD_PREFIX)gdb
+GDB := $(COMPILER_PREFIX)$(BOARD_PREFIX)gdbtui
 MSP430SIZE := $(COMPILER_PREFIX)$(BOARD_PREFIX)size
 FLASH := $(COMPILER_PREFIX)lm4flash
 
@@ -267,15 +267,18 @@ endif
 CFLAGS :=
 CXXFLAGS := -fno-rtti
 
-CPPFLAGS := -Os -Wall -ggdb -Wno-psabi
+rebuild_debug: OPT := -O0
+OPT := -Os
+
+CPPFLAGS = $(OPT) -Wall -Wno-psabi
 CPPFLAGS +=  -fno-exceptions -ffunction-sections -fdata-sections -fsingle-precision-constant  -mfloat-abi=hard -mfpu=fpv4-sp-d16
 ifeq "$(BOARDFAMILY)" "lm4f"
 CPPFLAGS += -mcpu=$(BOARD_BUILD_MCU)
 CPPFLAGS += -mthumb
-LINKFLAGS := -mcpu=$(BOARD_BUILD_MCU) -Os -nostartfiles -nostdlib -Wl,-gc-sections -T$(ENERGIACOREDIR)/$(BOARD_LD_SCRIPT) -Wl,--entry=ResetISR -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -fsingle-precision-constant 
+LINKFLAGS := -mcpu=$(BOARD_BUILD_MCU) $(OPT) -nostartfiles -nostdlib -Wl,-gc-sections -T$(ENERGIACOREDIR)/$(BOARD_LD_SCRIPT) -Wl,--entry=ResetISR -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -fsingle-precision-constant 
 else
 CPPFLAGS += -mmcu=$(BOARD_BUILD_MCU)
-LINKFLAGS := -mmcu=$(BOARD_BUILD_MCU) -Os -Wl,-gc-sections,-u,main -lm
+LINKFLAGS := -mmcu=$(BOARD_BUILD_MCU) $(OPT) -Wl,-gc-sections,-u,main -lm
 endif
 CPPFLAGS += -DF_CPU=$(BOARD_BUILD_FCPU) -DARDUINO=$(ARDUINOCONST)  -DENERGIA=$(ENERGIACONST)
 CPPFLAGS += -I. -Iutil -Iutility -I$(ENERGIACOREDIR)
@@ -309,7 +312,7 @@ proto:
 	$(MAKE) -C $@ regs_pb.c
 	mv proto/regs_pb.[hc] ./
 
-target:  $(OUTDIR)$(TARGET).bin
+target: $(OUTDIR)$(TARGET).bin
 
 upload: $(OUTDIR)$(TARGET).bin
 	@echo "\nUploading to board..."
@@ -334,13 +337,14 @@ size: $(OUTDIR)$(TARGET).elf
 
 rebuild: clean all
 
+rebuild_debug: CPPFLAGS += -ggdb -DTIMER5DELAY=100000000
+rebuild_debug: clean $(OUTDIR)$(TARGET).elf
+
 debug: $(OUTDIR)$(TARGET).elf
 	@echo "Running gdb.."
 	$M$(GDB) $<
 
-
 # building the target
-
 
 $(OUTDIR)$(TARGET).elf: regs_pb.c $(ENERGIALIB) $(OBJECTS)
 	@echo "Linking" `basename $@` "<" $(foreach obj, $(OBJECTS) $(ENERGIALIB), `basename $(obj)` )
