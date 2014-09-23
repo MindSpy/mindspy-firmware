@@ -179,7 +179,7 @@ endif
 # software
 #CC := msp430-gcc
 
-COMPILER_PREFIX := /usr/bin/
+#COMPILER_PREFIX := /usr/bin/ #this is default
 #COMPILER_PREFIX := $(ENERGIADIR)/hardware/tools/$(BOARDFAMILY)/bin/
 ifeq "$(BOARDFAMILY)" "lm4f"
 BOARD_PREFIX := arm-none-eabi-
@@ -204,7 +204,7 @@ LD := $(COMPILER_PREFIX)$(BOARD_PREFIX)ld
 AR := $(COMPILER_PREFIX)$(BOARD_PREFIX)ar
 OBJCOPY := $(COMPILER_PREFIX)$(BOARD_PREFIX)objcopy
 MSPDEBUG := $(COMPILER_PREFIX)mspdebug
-GDB := $(COMPILER_PREFIX)$(BOARD_PREFIX)gdbtui
+GDB := $(COMPILER_PREFIX)$(BOARD_PREFIX)gdb
 MSP430SIZE := $(COMPILER_PREFIX)$(BOARD_PREFIX)size
 FLASH := $(COMPILER_PREFIX)lm4flash
 
