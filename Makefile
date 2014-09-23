@@ -179,12 +179,17 @@ endif
 # software
 #CC := msp430-gcc
 
-COMPILER_PREFIX := $(ENERGIADIR)/hardware/tools/$(BOARDFAMILY)/bin/
+COMPILER_PREFIX := /usr/bin/
+#COMPILER_PREFIX := $(ENERGIADIR)/hardware/tools/$(BOARDFAMILY)/bin/
 ifeq "$(BOARDFAMILY)" "lm4f"
 BOARD_PREFIX := arm-none-eabi-
 else
 ifeq "$(BOARDFAMILY)" "msp430"
 BOARD_PREFIX := msp430-
+else
+ifeq "$(BOARDFAMILY)" "arduino"
+BOARD_PREFIX := avr-
+endif
 endif
 endif
 
@@ -271,14 +276,19 @@ rebuild_debug: OPT := -O0
 OPT := -Os
 
 CPPFLAGS = $(OPT) -Wall -Wno-psabi
-CPPFLAGS +=  -fno-exceptions -ffunction-sections -fdata-sections -fsingle-precision-constant  -mfloat-abi=hard -mfpu=fpv4-sp-d16
+CPPFLAGS +=  -fno-exceptions -ffunction-sections -fdata-sections -fsingle-precision-constant
 ifeq "$(BOARDFAMILY)" "lm4f"
 CPPFLAGS += -mcpu=$(BOARD_BUILD_MCU)
-CPPFLAGS += -mthumb
+CPPFLAGS += -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16
 LINKFLAGS := -mcpu=$(BOARD_BUILD_MCU) $(OPT) -nostartfiles -nostdlib -Wl,-gc-sections -T$(ENERGIACOREDIR)/$(BOARD_LD_SCRIPT) -Wl,--entry=ResetISR -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -fsingle-precision-constant 
 else
-CPPFLAGS += -mmcu=$(BOARD_BUILD_MCU)
+ifeq "$(BOARDFAMILY)" "msp430"
+CPPFLAGS += -mmcu=$(BOARD_BUILD_MCU) 
 LINKFLAGS := -mmcu=$(BOARD_BUILD_MCU) $(OPT) -Wl,-gc-sections,-u,main -lm
+else
+ifeq "$(BOARDFAMILY)" "arduino"
+endif
+endif
 endif
 CPPFLAGS += -DF_CPU=$(BOARD_BUILD_FCPU) -DARDUINO=$(ARDUINOCONST)  -DENERGIA=$(ENERGIACONST)
 CPPFLAGS += -I. -Iutil -Iutility -I$(ENERGIACOREDIR)
