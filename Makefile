@@ -218,7 +218,7 @@ TARGET := $(if $(TARGET),$(TARGET),a.out)
 OBJECTS := $(addprefix $(OUTDIR),$(addsuffix .o, $(basename $(SOURCES))))
 DEPFILES := $(patsubst %, $(DEPOUTDIR)%.dep, $(SOURCES))
 ENERGIACOREDIR := $(ENERGIADIR)/hardware/$(BOARDFAMILY)/cores/$(BOARDFAMILY)
-ENERGIALIB := $(LIBOUTDIR)arduino.a
+ENERGIALIB := $(LIBOUTDIR)wiring.a
 ENERGIALIBLIBSDIR := $(ENERGIADIR)/hardware/$(BOARDFAMILY)/libraries
 ENERGIALIBLIBSPATH := $(foreach lib, $(LIBRARIES), \
 	 $(HOME)/sketchbook/libraries/$(lib)/ $(ENERGIADIR)/libraries/$(lib)/ $(ENERGIACOREDIR)/libraries/$(lib) $(ENERGIALIBLIBSDIR)/$(lib) )
