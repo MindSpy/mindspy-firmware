@@ -1,9 +1,9 @@
 
-#include "regs_pb.h"
-
-
 #ifndef Sensor_h
 #define Sensor_h
+
+#include "regs_pb.h"
+
 
 class ISensor {
   public:
