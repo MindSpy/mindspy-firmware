@@ -37,7 +37,7 @@ public:
 			_name(name), _rate(rate), _channels(chan) {}
 
 
-	// override ISensor methods
+    // override Sensor methods
 	bool getSamples(uint32_t, Sample*);
 	bool getState(uint32_t*, uint32_t, State*);
 	bool setState(State*, uint32_t, void*);

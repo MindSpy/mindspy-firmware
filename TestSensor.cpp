@@ -16,8 +16,8 @@ bool TestSensor::getSamples(uint32_t count, Sample* result) {
 	while ((*this) && count--) {
 		result->sequence = _sequence;
 		result->payload_count = _channels;
-		for (uint8_t i = 0; i < result->payload_count; i++) {
-			result->payload[i] = (_sequence & 0xff) - 0x80 - i;
+        for (uint8_t i = 0; i < _channels; i++) {
+            result->payload[i] = (_sequence & 0xff) - 0x80 - i;
 		}
 
 		_lastTime += 1000 / _rate;
