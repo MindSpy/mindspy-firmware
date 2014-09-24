@@ -244,6 +244,4 @@ public:
 	 */
 	static void gpioWrite(uint8_t, int);
 };
-
-extern ADS1x9y analogSensor;
 #endif

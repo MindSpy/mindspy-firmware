@@ -11,6 +11,7 @@
 #define LOGLEVEL LOG_LEVEL_VERBOSE
 #include "Logging.h"
 
+ADS1x9y analogSensor = ADS1x9y();
 sensor::Sensor* sensors[] = { &analogSensor };
 sensor::SensorHandler sensorHandler = sensor::SensorHandler(&timestamp, &stopStream, sensors, COUNT_OF(sensors));
 

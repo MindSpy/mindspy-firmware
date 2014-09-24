@@ -103,7 +103,7 @@ bool ADS1x9y::getSamples(uint32_t count, Sample* result) {
 
 	}
 	free(buffer);
-	analogSensor.SDATAC();
+	SDATAC();
 	return true;
 }
 
@@ -420,5 +420,3 @@ void ADS1x9y::ssiSetup(uint8_t SSIModule) {
 	SPI.setDataMode(SPI_MODE1);
 
 }
-
-ADS1x9y analogSensor = ADS1x9y();
