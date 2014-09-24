@@ -5,9 +5,9 @@
 #include <pb.h>
 
 // max. 1382400=1.3Mbps
-#define BT_STREAM_BAUD 921600
-#define BT_STREAM_INIT_BAUD 38400
-#define LOG_STREAM_BAUD 115200
+const int BLUETOOTH_STREAM_BAUD = 921600;
+const int BLUETOOTH_STREAM_INIT_BAUD = 38400;
+const int LOG_STREAM_BAUD = 115200;
 #define PB_STREAM Serial1
 #define LOG_STREAM Serial
 

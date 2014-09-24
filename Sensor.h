@@ -3,11 +3,13 @@
 
 #include "regs_pb.h"
 
-class ISensor {
+namespace sensor {
+
+class Sensor {
 public:
 
-	ISensor() {}
-	virtual ~ISensor() {}
+	Sensor() {}
+	virtual ~Sensor() {}
 
 	/**
 	 * Get Samples from the sensor.
@@ -41,5 +43,7 @@ public:
 	 */
 	virtual operator bool(void) = 0;
 };
+
+} // namespace
 
 #endif

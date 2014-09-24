@@ -103,7 +103,7 @@ bool ADS1x9y::getSamples(uint32_t count, Sample* result) {
 
 	}
 	free(buffer);
-	Sensor.SDATAC();
+	analogSensor.SDATAC();
 	return true;
 }
 
@@ -421,4 +421,4 @@ void ADS1x9y::ssiSetup(uint8_t SSIModule) {
 
 }
 
-ADS1x9y Sensor = ADS1x9y();
+ADS1x9y analogSensor = ADS1x9y();

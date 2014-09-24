@@ -11,35 +11,10 @@
 #define LOGLEVEL LOG_LEVEL_VERBOSE
 #include "Logging.h"
 
-ISensor* sensors[] = { &Sensor };
-SensorHandler sensorHandler = SensorHandler(&timestamp, &stopStream, sensors, COUNT_OF(sensors));
+sensor::Sensor* sensors[] = { &analogSensor };
+sensor::SensorHandler sensorHandler = sensor::SensorHandler(&timestamp, &stopStream, sensors, COUNT_OF(sensors));
 
 uint64_t bootTime = 0;
-
-bool stopStream(void) {
-	return !!PB_STREAM.available();
-}
-
-uint64_t timestamp(void) {
-	return bootTime + micros();
-}
-
-bool write_callback(pb_ostream_t *stream, const uint8_t *buf, size_t count) {
-	Stream* s = (Stream*) stream->state;
-	return s->write(buf, count) == count;
-}
-
-bool read_callback(pb_istream_t *stream, uint8_t *buf, size_t count) {
-	Stream* s = (Stream*) stream->state;
-	size_t avail = 0;
-	// wait for enough data
-	while (avail < count) {
-		avail = s->available();
-		delayMicroseconds(1);
-	}
-	size_t result = s->readBytes((char*) buf, constrain(avail, 0, count));
-	return result == count;
-}
 
 void setup() {
 
@@ -61,9 +36,9 @@ void setup() {
 	// Setup bluetooth.
 	digitalWrite(PB_3, HIGH);
 	// Initialize speed
-	PB_STREAM.begin(BT_STREAM_INIT_BAUD);
+	PB_STREAM.begin(BLUETOOTH_STREAM_INIT_BAUD);
 	// Set new speed
-	PB_STREAM.print("AT+UART=" STRINGIFY(BT_STREAM_BAUD) ",1,0\r\n");
+	PB_STREAM.print("AT+UART=" STRINGIFY(BLUETOOTH_STREAM_BAUD) ",1,0\r\n");
 	PB_STREAM.print("AT+NAME=MindSpy\r\n");
 	PB_STREAM.print("AT+ROLE=0\r\n");
 
@@ -72,12 +47,12 @@ void setup() {
 
 	// Start bt stream on a new speed.
 	PB_STREAM.end();
-	PB_STREAM.begin(BT_STREAM_BAUD); // max. 1382400=1.3Mbps
+	PB_STREAM.begin(BLUETOOTH_STREAM_BAUD); // max. 1382400=1.3Mbps
 
 	// TODO: module autodetection
 	// Initialize sensor(s)
-	Sensor.begin();
-	Sensor.START(); // start A/D conversion
+	analogSensor.begin();
+	analogSensor.START(); // start A/D conversion
 }
 
 void loop() {
@@ -87,4 +62,31 @@ void loop() {
 
 	// Handle incomming request.
 	sensorHandler.handle(&istream, &ostream);
+}
+
+bool stopStream(void) {
+	return !!PB_STREAM.available();
+}
+
+uint64_t timestamp(void) {
+	return bootTime + micros();
+}
+
+bool write_callback(pb_ostream_t *stream, const uint8_t *buf, size_t count) {
+	Stream* s = (Stream*) stream->state;
+	return s->write(buf, count) == count;
+}
+
+bool read_callback(pb_istream_t *stream, uint8_t *buf, size_t count) {
+	Stream* s = (Stream*) stream->state;
+	size_t avail = 0;
+
+	// wait for enough data
+	while (avail < count) {
+		avail = s->available();
+		delayMicroseconds(1);
+	}
+
+	size_t result = s->readBytes((char*) buf, constrain(avail, 0, count));
+	return result == count;
 }

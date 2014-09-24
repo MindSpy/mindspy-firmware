@@ -9,13 +9,13 @@
 #define LOGLEVEL LOG_LEVEL_VERBOSE
 #include "Logging.h"
 
-// request and response structures
-Request request;
-Response response;
+namespace sensor {
 
-SensorHandler::SensorHandler(TimestampCallbackType time, StopStreamCallbackType stop, ISensor** sense, size_t nsense) :
-		_timestamp(time), _stop(stop), _sensors(sense), _sensorCount(nsense) {
+SensorHandler::SensorHandler(TimestampCallbackType time, StopStreamCallbackType stop, sensor::Sensor** sensor, size_t sensors) :
+		timesStamp(time), stopStream(stop), sensors(sensor), boardSensor(NULL), countOfSensors(sensors) {
+}
 
+SensorHandler::~SensorHandler() {
 }
 
 bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
@@ -45,7 +45,6 @@ bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
 		response.has_module = false;
 		response.reqid = request.reqid;
 
-		ISensor* sensor = NULL;
 		uint8_t module = 0;
 
 		// obtain module number from request
@@ -58,29 +57,29 @@ bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
 			response.has_module = true;
 			response.module = module;
 
-			if (_timestamp != NULL) {
-				response.timestamp = (*_timestamp)();
+			if (timesStamp != NULL) {
+				response.timestamp = (*timesStamp)();
 			}
 
-			if (module >= _sensorCount) {
+			if (module >= countOfSensors) {
 				if (request.has_module) {
 					response.has_error_msg = true;
 					snprintf(response.error_msg, COUNT_OF(response.error_msg),
 							"Requested module #%d is outside of interval [0,%d].",
-							module, _sensorCount - 1);
+							module, countOfSensors - 1);
 					return false;
 				}
 			}
 
-			// invoke ISensor methods based on request
+			// invoke Sensor methods based on request
 
 			if (request.has_setState || request.has_getState
 					|| request.has_getSamples || request.has_getModelName) {
 
-				sensor = _sensors[module];
+				boardSensor = sensors[module];
 
 				if (request.has_setState) {
-					if (!sensor->setState(request.setState.states,
+					if (!boardSensor->setState(request.setState.states,
 							request.setState.states_count, NULL)) {
 						response.has_error_msg = true;
 						snprintf(response.error_msg,
@@ -92,7 +91,7 @@ bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
 				}
 
 				if (request.has_getState) {
-					if (!sensor->getState(request.getState.addresses,
+					if (!boardSensor->getState(request.getState.addresses,
 							request.getState.addresses_count,
 							response.states)) {
 						response.has_error_msg = true;
@@ -106,7 +105,7 @@ bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
 				}
 
 				if (request.has_getSamples) {
-					if (!sensor->getSamples(request.getSamples.count,
+					if (!boardSensor->getSamples(request.getSamples.count,
 							response.samples)) {
 						response.has_error_msg = true;
 						snprintf(response.error_msg,
@@ -119,7 +118,7 @@ bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
 				}
 
 				if (request.has_getModelName) {
-					if (!sensor->getModelName(response.modelName)) {
+					if (!boardSensor->getModelName(response.modelName)) {
 						response.has_error_msg = true;
 						snprintf(response.error_msg,
 								COUNT_OF(response.error_msg),
@@ -142,9 +141,11 @@ bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
 
 			DEBUG("-> {reqid=%i}"CR, request.reqid);
 
-		} while (!request.has_module && (++module < _sensorCount));
-	} while (request.stream && (!(*_stop)()));
+		} while (!request.has_module && (++module < countOfSensors));
+	} while (request.stream && (!(*stopStream)()));
 
 	return true;
 
 }
+
+} // namespace

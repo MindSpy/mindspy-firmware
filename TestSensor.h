@@ -14,7 +14,7 @@
 /**
  * TestSensor for unit tests
  */
-class TestSensor: public ISensor {
+class TestSensor: public sensor::Sensor {
 private:
 
 	const char * _name;

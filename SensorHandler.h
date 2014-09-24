@@ -9,6 +9,8 @@ typedef bool (*RequestDecoderCallbackType)(pb_istream_t*, const pb_field_t[], vo
 typedef uint64_t (*TimestampCallbackType)(void);
 typedef bool (*StopStreamCallbackType)(void);
 
+namespace sensor {
+
 /**
  * Static class for handling the request, reading data from sensors and updating the responses.
  */
@@ -16,8 +18,7 @@ class SensorHandler {
 public:
 
 	/**
-	 * Constructor.
-	 * This class encoder and decoder request.
+	 * Constructor call handling the request and reading data.
 	 * \param decoder - callback for request decoding
 	 * \param encoder - callback for response encodding
 	 * \param timestamp - callback for timestamp generation
@@ -25,8 +26,8 @@ public:
 	 * \param sensors - array of pointers to sensors
 	 * \param responseEncoder - response encoder callback
 	 */
-	SensorHandler(TimestampCallbackType time, StopStreamCallbackType stop,
-			ISensor** sense, size_t nsense);
+	SensorHandler(TimestampCallbackType time, StopStreamCallbackType stop, sensor::Sensor** sensor, size_t sensors);
+	~SensorHandler();
 
 	/**
 	 * Handle request and update response object.
@@ -37,11 +38,38 @@ public:
 
 private:
 
-	TimestampCallbackType _timestamp;
-	StopStreamCallbackType _stop;
-	ISensor** _sensors;
-	size_t _sensorCount;
+	/**
+	 *
+	 */
+	TimestampCallbackType timesStamp;
 
+	/**
+	 *
+	 */
+	StopStreamCallbackType stopStream;
+
+	/**
+	 *
+	 */
+	sensor::Sensor** sensors;
+
+	/**
+	 *
+	 */
+	sensor::Sensor* boardSensor;
+
+	/**
+	 * Count of senzors for board.
+	 */
+	size_t countOfSensors;
+
+	/**
+	 * Request and response structures.
+	 */
+	Request request;
+	Response response;
 };
+
+} // namespace
 
 #endif

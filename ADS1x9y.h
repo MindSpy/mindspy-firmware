@@ -14,7 +14,7 @@
  * TI ADS1x9y module.
  * See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
  */
-class ADS1x9y: public ISensor {
+class ADS1x9y: public sensor::Sensor {
 private:
 
 	int _module;
@@ -245,5 +245,5 @@ public:
 	static void gpioWrite(uint8_t, int);
 };
 
-extern ADS1x9y Sensor;
+extern ADS1x9y analogSensor;
 #endif
