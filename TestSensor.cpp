@@ -10,7 +10,7 @@ by pBorky
 #include <Arduino.h>
 
 #include "Sensor.h"
-#include "regs_pb.h"
+#include "proto.h"
 
 bool TestSensor::getSamples(uint32_t count, Sample* result) {
     while (!(*this))
