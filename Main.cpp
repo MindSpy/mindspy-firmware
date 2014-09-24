@@ -6,10 +6,12 @@
 #include "Main.h"
 #include "SensorHandler.h"
 #include "ADS1x9y.h"
+#include "TestSensor.h"
 #include "macros.h"
 
+TestSensor testSensor = TestSensor("TestSensor", 128, 8);
 ADS1x9y analogSensor = ADS1x9y(0);
-sensor::Sensor* sensors[] = { &analogSensor };
+sensor::Sensor* sensors[] = { &testSensor, &analogSensor };
 sensor::SensorHandler sensorHandler = sensor::SensorHandler(&timestamp, &stopStream, sensors, COUNT_OF(sensors));
 
 uint64_t bootTime = 0;
