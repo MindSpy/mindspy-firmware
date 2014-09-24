@@ -150,7 +150,7 @@ SOURCES := $(INOFILE) \
 	$(wildcard $(addprefix utility/, *.c *.cc *.cpp))
 
 # automatically determine included libraries
-LIBRARIES := $(filter $(notdir $(wildcard $(HOME)/sketchbook/libraries/*)), \
+LIBRARIES := $(filter $(notdir $(wildcard $(LOCALLIBS)/*)), \
     $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(SOURCES)))
 
 # automatically determine included libraries
@@ -221,7 +221,7 @@ ENERGIACOREDIR := $(ENERGIADIR)/hardware/$(BOARDFAMILY)/cores/$(BOARDFAMILY)
 ENERGIALIB := $(LIBOUTDIR)wiring.a
 ENERGIALIBLIBSDIR := $(ENERGIADIR)/hardware/$(BOARDFAMILY)/libraries
 ENERGIALIBLIBSPATH := $(foreach lib, $(LIBRARIES), \
-	 $(HOME)/sketchbook/libraries/$(lib)/ $(ENERGIADIR)/libraries/$(lib)/ $(ENERGIACOREDIR)/libraries/$(lib) $(ENERGIALIBLIBSDIR)/$(lib) )
+	 $(ENERGIADIR)/libraries/$(lib)/ $(ENERGIACOREDIR)/libraries/$(lib) $(ENERGIALIBLIBSDIR)/$(lib) $(LOCALLIBS)/$(lib) )
 ENERGIALIBOBJS := $(foreach dir, $(ENERGIACOREDIR) $(ENERGIALIBLIBSPATH) $(ENERGIACOREDIR)/driverlib, \
 	$(patsubst %, $(LIBOUTDIR)%.o, $(wildcard $(addprefix $(dir)/, *.c *.cpp))))
 
@@ -293,8 +293,7 @@ endif
 CPPFLAGS += -DF_CPU=$(BOARD_BUILD_FCPU) -DARDUINO=$(ARDUINOCONST)  -DENERGIA=$(ENERGIACONST)
 CPPFLAGS += -I. -Iutil -Iutility -I$(ENERGIACOREDIR)
 CPPFLAGS += -I$(ENERGIADIR)/hardware/$(BOARDFAMILY)/variants/$(BOARD_BUILD_VARIANT)/
-CPPFLAGS += -I$(HOME)/sketchbook/hardware/$(BOARDFAMILY)/variants/$(BOARD_BUILD_VARIANT)/
-CPPFLAGS += $(addprefix -I$(HOME)/sketchbook/libraries/,  $(LIBRARIES))
+CPPFLAGS += $(addprefix -I$(LOCALLIBS),  $(LIBRARIES))
 CPPFLAGS += $(addprefix -I$(ENERGIADIR)/hardware/$(BOARDFAMILY)/libraries/, $(LIBRARIES))
 CPPDEPFLAGS = -MMD -MP -MF $(DEPOUTDIR)$<.dep
 CPPINOFLAGS := -x c++ -include $(ENERGIACOREDIR)/Arduino.h
@@ -314,13 +313,13 @@ endif
 #_______________________________________________________________________________
 #                                                                          RULES
 
-.PHONY:	all target upload clean boards monitor size proto
+.PHONY:	all target upload clean boards monitor size
 
 all: target
 
-proto:
-	$(MAKE) -C $@ regs_pb.c
-	mv proto/regs_pb.[hc] ./
+proto.c:
+	$(MAKE) -C proto $@
+	mv proto/proto.[hc] ./
 
 target: $(OUTDIR)$(TARGET).bin
 
@@ -356,7 +355,7 @@ debug: $(OUTDIR)$(TARGET).elf
 
 # building the target
 
-$(OUTDIR)$(TARGET).elf: regs_pb.c $(ENERGIALIB) $(OBJECTS)
+$(OUTDIR)$(TARGET).elf: proto.c $(ENERGIALIB) $(OBJECTS)
 	@echo "Linking" `basename $@` "<" $(foreach obj, $(OBJECTS) $(ENERGIALIB), `basename $(obj)` )
 	$M$(CXX) $(LINKFLAGS) $(OBJECTS) $(ENERGIALIB) -o $@ -lgcc -lc -lgcc -lm -lrdimon
 

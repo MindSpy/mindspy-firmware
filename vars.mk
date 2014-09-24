@@ -1,5 +1,6 @@
 
 
-ENERGIADIR ?= ../wiring-library/
+LOCALLIBS ?= ./lib/
+ENERGIADIR ?= $(LOCALLIBS)/wiring/
 BOARDFAMILY ?= lm4f
 ENERGIABOARD ?= lptm4c1230c3pm
