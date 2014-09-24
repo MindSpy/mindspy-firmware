@@ -65,3 +65,9 @@ target/
 *.i*86
 *.x86_64
 *.hex
+
+MindSpy-firmware.config
+MindSpy-firmware.creator
+MindSpy-firmware.creator.user
+MindSpy-firmware.files
+MindSpy-firmware.includes
