@@ -1,3 +1,9 @@
 [submodule "proto"]
 	path = proto
 	url = https://github.com/MindSpy/mindspy-proto.git
+[submodule "lib/wiring"]
+	path = lib/wiring
+	url = https://github.com/MindSpy/wiring-library.git
+[submodule "lib/nanopb"]
+	path = lib/pb
+	url = https://code.google.com/p/nanopb/
