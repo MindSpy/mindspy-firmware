@@ -34,8 +34,10 @@ void setup() {
 	digitalWrite(PB_3, HIGH);
 	// Initialize speed
 	PB_STREAM.begin(BLUETOOTH_STREAM_INIT_BAUD);
-	// Set new speed
-	PB_STREAM.print("AT+UART=" STRINGIFY(BLUETOOTH_STREAM_BAUD) ",1,0\r\n");
+    // Set new speed
+    PB_STREAM.print("AT+UART=");
+    PB_STREAM.print(BLUETOOTH_STREAM_BAUD);
+    PB_STREAM.print(",1,0\r\n");
 	PB_STREAM.print("AT+NAME=MindSpy\r\n");
 	PB_STREAM.print("AT+ROLE=0\r\n");
 
