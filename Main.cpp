@@ -8,10 +8,7 @@
 #include "ADS1x9y.h"
 #include "macros.h"
 
-#define LOGLEVEL LOG_LEVEL_VERBOSE
-#include "Logging.h"
-
-ADS1x9y analogSensor = ADS1x9y();
+ADS1x9y analogSensor = ADS1x9y(0);
 sensor::Sensor* sensors[] = { &analogSensor };
 sensor::SensorHandler sensorHandler = sensor::SensorHandler(&timestamp, &stopStream, sensors, COUNT_OF(sensors));
 
@@ -27,7 +24,6 @@ void setup() {
 
 	// Initialize logger
 	LOG_STREAM.begin(LOG_STREAM_BAUD);
-	Log.init(LOGLEVEL, &LOG_STREAM);
 
 	// Reset bluetooth.
 	digitalWrite(PB_2, LOW);

@@ -12,9 +12,6 @@
 
 #include "Sensor.h"
 
-#define LOGLEVEL LOG_LEVEL_VERBOSE
-#include "Logging.h"
-
 // Sensor Pinout definition
 // SPI pins
 #define PIN_DRDY_  PC_6
@@ -67,7 +64,7 @@ boolean ADS1x9y::_pinSet = false;
 int ADS1x9y::_active = -1;
 int ADS1x9y::_sequence = 0;
 
-ADS1x9y::ADS1x9y(uint8_t module = 0) {
+ADS1x9y::ADS1x9y(uint8_t module) {
 	_module = constrain(module, 0, SPI_CS_PIN_COUNT-1);
 	_continous = true;
 	_channels = 0;
@@ -138,11 +135,8 @@ bool ADS1x9y::getModelName(char* modelName) {
 
 void ADS1x9y::begin() {
 	if (_active > -1) {
-		ERROR("Cannot module %d begin on cs=%d. Module %d is already active."CR,
-				_module, _cs, _active);
 		return;
 	}
-	DEBUG("Begin module %d on cs=%d."CR, _module, _cs);
 	pinSetup();
 	_active = _module;
 
@@ -150,7 +144,6 @@ void ADS1x9y::begin() {
 }
 
 void ADS1x9y::end() {
-	DEBUG("End module %d on cs=%d."CR, _module, _cs);
 	SPI.end();
 	_active = -1;
 }
@@ -174,7 +167,6 @@ void ADS1x9y::RDATA(uint8_t* buffer, uint16_t bsize) {
 	}
 	register uint8_t size = getTotalBytes(); // status registers + channels
 	if (bsize < size) {
-		ERROR("RDATA: buffer too small!");
 		return;
 	}
 
@@ -272,28 +264,23 @@ ADS1x9y::operator bool() {
 
 void ADS1x9y::start() {
 	digitalWrite(PIN_START, HIGH);
-	DEBUG("Start"CR);
 }
 
 void ADS1x9y::stop() {
 	digitalWrite(PIN_START, LOW);
-	DEBUG("Stop"CR);
 }
 
 void ADS1x9y::reset() {
 	digitalWrite(PIN_RESET_, LOW);
 	delayMicroseconds(20);
 	digitalWrite(PIN_RESET_, HIGH);
-	DEBUG("Reset"CR);
 }
 
 void ADS1x9y::pwrdn() {
-	DEBUG("Power down"CR);
 	digitalWrite(PIN_PWDN_, LOW);
 }
 
 void ADS1x9y::pwrup() {
-	DEBUG("Power up"CR);
 	digitalWrite(PIN_PWDN_, HIGH);
 }
 

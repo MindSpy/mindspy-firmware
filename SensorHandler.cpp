@@ -6,9 +6,6 @@
 #include "Sensor.h"
 #include "macros.h"
 
-#define LOGLEVEL LOG_LEVEL_VERBOSE
-#include "Logging.h"
-
 namespace sensor {
 
 SensorHandler::SensorHandler(TimestampCallbackType time, StopStreamCallbackType stop, sensor::Sensor** sensor, size_t sensors) :
@@ -26,9 +23,7 @@ bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
 		snprintf(response.error_msg, COUNT_OF(response.error_msg),
 				"Decoding of request message failed.");
 		return false;
-	}
-
-	DEBUG("<- {reqid=%i}"CR, request.reqid);
+    }
 
 	// response defaults
 	response.timestamp = 0;
@@ -132,14 +127,9 @@ bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
 
 			// serialize response message
 
-			if (!pb_encode_delimited(ostream, Response_fields, &response)) {
-				if (response.has_error_msg)
-					ERROR("Previous error: %s"CR, response.error_msg);
-				ERROR("Encoding of response message failed."CR);
+            if (!pb_encode_delimited(ostream, Response_fields, &response)) {
 				return false;
 			}
-
-			DEBUG("-> {reqid=%i}"CR, request.reqid);
 
 		} while (!request.has_module && (++module < countOfSensors));
 	} while (request.stream && (!(*stopStream)()));
