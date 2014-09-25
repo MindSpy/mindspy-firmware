@@ -60,8 +60,8 @@ bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
 				if (request.has_module) {
 					response.has_error_msg = true;
 					snprintf(response.error_msg, COUNT_OF(response.error_msg),
-							"Requested module #%d is outside of interval [0,%d].",
-							module, countOfSensors - 1);
+                            "Requested module #%d is outside of interval [0, %z].",
+                            module, countOfSensors - 1);
 					return false;
 				}
 			}

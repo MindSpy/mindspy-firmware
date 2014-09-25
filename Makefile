@@ -206,7 +206,17 @@ OBJCOPY := $(COMPILER_PREFIX)$(BOARD_PREFIX)objcopy
 MSPDEBUG := $(COMPILER_PREFIX)mspdebug
 GDB := $(COMPILER_PREFIX)$(BOARD_PREFIX)gdb
 MSP430SIZE := $(COMPILER_PREFIX)$(BOARD_PREFIX)size
+ifeq "$(BOARDFAMILY)" "lm4f"
 FLASH := $(COMPILER_PREFIX)lm4flash
+else
+ifeq "$(BOARDFAMILY)" "msp430"
+$(error $(BOARDFAMILY) flash tool not defined.)
+else
+ifeq "$(BOARDFAMILY)" "arduino"
+$(error $(BOARDFAMILY) flash tool not defined.)
+endif
+endif
+endif
 
 # files
 ifndef OUTDIR
@@ -291,7 +301,7 @@ endif
 endif
 endif
 CPPFLAGS += -DF_CPU=$(BOARD_BUILD_FCPU) -DARDUINO=$(ARDUINOCONST)  -DENERGIA=$(ENERGIACONST)
-CPPFLAGS += -I. -Iutil -Iutility -I$(ENERGIACOREDIR)
+CPPFLAGS += -I. -I$(ENERGIACOREDIR)
 CPPFLAGS += -I$(ENERGIADIR)/hardware/$(BOARDFAMILY)/variants/$(BOARD_BUILD_VARIANT)/
 CPPFLAGS += $(addprefix -I$(LOCALLIBS),  $(LIBRARIES))
 CPPFLAGS += $(addprefix -I$(ENERGIADIR)/hardware/$(BOARDFAMILY)/libraries/, $(LIBRARIES))
@@ -313,13 +323,16 @@ endif
 #_______________________________________________________________________________
 #                                                                          RULES
 
-.PHONY:	all target upload clean boards monitor size
+.PHONY:	all target upload clean boards monitor size test
 
-all: target
+all: test target 
 
 proto.c:
 	$(MAKE) -C proto $@
 	mv proto/proto.[hc] ./
+
+test:
+	$(MAKE) -C test
 
 target: $(OUTDIR)$(TARGET).bin
 
@@ -327,9 +340,9 @@ upload: $(OUTDIR)$(TARGET).bin
 	@echo "\nUploading to board..."
 	$(FLASH) $<
 
-
 clean:
 	$Mrm -rf $(OUTDIR) *~
+	$(MAKE) -C test $@
 
 boards:
 	@echo Available values for BOARD:
