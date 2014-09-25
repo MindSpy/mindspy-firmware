@@ -13,6 +13,7 @@
 
 #include <sys/time.h>
 
+// micros for unit testing (wiring is not available)
 uint64_t micros() {
     struct timeval tp;
     gettimeofday(&tp, NULL);

@@ -18,8 +18,9 @@
 #include <unistd.h>
 #include <sys/time.h>
 
+// delayMicroseconds for unit testing (wiring is not available)
 #define delayMicroseconds(us) usleep(us)
-
+// millis for unit testing (wiring is not available)
 uint64_t millis() {
     struct timeval tp;
     gettimeofday(&tp, NULL);
