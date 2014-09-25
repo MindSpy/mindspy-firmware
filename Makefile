@@ -325,14 +325,14 @@ endif
 
 .PHONY:	all target upload clean boards monitor size test
 
-all: test target 
+all: target  test
 
 proto.c: lib/proto/regs.proto
-	$(MAKE) -C lib/proto $@
-	mv lib/proto/proto.[hc] ./
+	$M$(MAKE) -C lib/proto $@
+	$Mmv lib/proto/proto.[hc] ./
 
 test:
-	$(MAKE) -C test
+	$M$(MAKE) -C test
 
 target: $(OUTDIR)$(TARGET).bin
 
@@ -341,8 +341,8 @@ upload: $(OUTDIR)$(TARGET).bin
 	$(FLASH) $<
 
 clean:
-	$Mrm -rf $(OUTDIR) *~
-	$(MAKE) -C test $@
+	rm -rf $(OUTDIR) *~ || true
+	$M$(MAKE) -C test $@
 
 boards:
 	@echo Available values for BOARD:

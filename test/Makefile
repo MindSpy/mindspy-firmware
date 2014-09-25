@@ -8,7 +8,7 @@ M = $(M_$(V))
 all: test
 
 clean:
-	rm *.o test
+	rm *.o test || true
 
 CPPFLAGS := -I../lib/pb
 
@@ -41,4 +41,4 @@ test: test.cpp.o SensorHandler.cpp.o pb_common.c.o pb_encode.c.o pb_decode.c.o p
 	@echo "Linking" `basename $@` "<" $<
 	$M$(CXX) $< -o $@ -lgcc -lcpptest
 	@echo "Running tests.."
-	$M./test
+	$M./test || rm test && false
