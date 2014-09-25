@@ -11,31 +11,29 @@
 #include "Sensor.h"
 #include "proto.h"
 
-/**
- * TestSensor for unit tests
+/*!
+ * \brief TestSensor for unit tests
  */
 class TestSensor: public sensor::Sensor {
 private:
 
     const char * _name;
     uint64_t _sequence;
-    uint32_t _lastTime;
     uint8_t _rate;
     uint8_t _channels;
+    uint32_t _lastTime;
     uint8_t getState(uint32_t);
     bool setState(State state);
 
 public:
 
-    /**
-     * Contructor
+    /*!
+     * \brief Contructor
      * \param model name of the sensor
      * \param rate of generated waveform
      * \param number of generated channels
      */
-    TestSensor(const char* name, const uint8_t rate, const uint8_t chan) :
-            _name(name), _rate(rate), _channels(chan) {}
-
+    TestSensor(const char*, const uint8_t, const uint8_t);
 
     // override Sensor methods
     bool getSamples(uint32_t, Sample*);
@@ -43,6 +41,8 @@ public:
     bool setState(State*, uint32_t, void*);
     bool getModelName(char*);
     operator bool(void);
+    void begin();
+    void end();
 
 };
 

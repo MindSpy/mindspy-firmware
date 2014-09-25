@@ -9,6 +9,11 @@
 #include "Sensor.h"
 #include "proto.h"
 
+TestSensor::TestSensor(const char* name, const uint8_t rate, const uint8_t chan) :
+        _name(name), _rate(rate), _channels(chan), _lastTime(0) {}
+
+
+
 bool TestSensor::getSamples(uint32_t count, Sample* result) {
     while (!(*this))
         delayMicroseconds(10);
@@ -75,4 +80,12 @@ bool TestSensor::getModelName(char* result) {
 TestSensor::operator bool(void) {
     delayMicroseconds(1);
     return _lastTime + 1000 / _rate >= millis();
+}
+
+void TestSensor::begin() {
+    _lastTime = millis();
+}
+
+void TestSensor::end() {
+    _lastTime = 0;
 }

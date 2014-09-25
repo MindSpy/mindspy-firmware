@@ -60,7 +60,7 @@ PIN_GPIO1, PIN_GPIO2, PIN_GPIO3, PIN_GPIO4 };
 #define SPI_CS(module) SPI_CS_PINS[module]
 #define GPIO(pin) GPIO_PINS[pin]
 
-boolean ADS1x9y::_pinSet = false;
+bool ADS1x9y::_pinSet = false;
 int ADS1x9y::_active = -1;
 int ADS1x9y::_sequence = 0;
 
@@ -141,6 +141,7 @@ void ADS1x9y::begin() {
     _active = _module;
 
     getDeviceId();
+    START();
 }
 
 void ADS1x9y::end() {
@@ -235,7 +236,7 @@ void ADS1x9y::deactivate(void) {
         delayMicroseconds(2);
 }
 
-boolean ADS1x9y::isActive(void) {
+bool ADS1x9y::isActive(void) {
     return digitalRead(_cs) == LOW;
 }
 
@@ -247,7 +248,7 @@ uint8_t ADS1x9y::transfer(uint8_t data) {
     return transfer(data, false);
 }
 
-uint8_t ADS1x9y::transfer(uint8_t data, boolean hold) {
+uint8_t ADS1x9y::transfer(uint8_t data, bool hold) {
     if (!isActive()) {
         activate();
     }

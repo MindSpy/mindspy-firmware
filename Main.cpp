@@ -5,14 +5,17 @@
 #include <pb_decode.h>
 #include "Main.h"
 #include "SensorHandler.h"
+#include "SensorDetector.h"
 #include "ADS1x9y.h"
 #include "TestSensor.h"
 #include "macros.h"
 
+// TODO this will be in SensorDetector once it is finished
 TestSensor testSensor = TestSensor("TestSensor", 128, 8);
 ADS1x9y analogSensor = ADS1x9y(0);
 sensor::Sensor* sensors[] = { &testSensor, &analogSensor };
-sensor::SensorHandler sensorHandler = sensor::SensorHandler(&timestamp, &stopStream, sensors, COUNT_OF(sensors));
+
+sensor::SensorHandler sensorHandler = sensor::SensorHandler(&timestamp, &stopStream, SensorDetector(sensors, COUNT_OF(sensors)));
 
 uint64_t bootTime = 0;
 
@@ -49,11 +52,6 @@ void setup() {
     // Start bt stream on a new speed.
     PB_STREAM.end();
     PB_STREAM.begin(BLUETOOTH_STREAM_BAUD); // max. 1382400=1.3Mbps
-
-    // TODO: module autodetection
-    // Initialize sensor(s)
-    analogSensor.begin();
-    analogSensor.START(); // start A/D conversion
 }
 
 void loop() {

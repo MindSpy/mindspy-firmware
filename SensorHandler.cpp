@@ -8,8 +8,8 @@
 
 namespace sensor {
 
-SensorHandler::SensorHandler(TimestampCallbackType time, StopStreamCallbackType stop, sensor::Sensor** sensor, size_t sensors) :
-        timesStamp(time), stopStream(stop), sensors(sensor), boardSensor(NULL), countOfSensors(sensors) {
+SensorHandler::SensorHandler(TimestampCallbackType time, StopStreamCallbackType stop, SensorDetector sensorDetector) :
+        timesStamp(time), stopStream(stop), sensors(sensorDetector) {
 }
 
 SensorHandler::~SensorHandler() {
@@ -56,12 +56,12 @@ bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
                 response.timestamp = (*timesStamp)();
             }
 
-            if (module >= countOfSensors) {
+            if (module >= sensors.count()) {
                 if (request.has_module) {
                     response.has_error_msg = true;
                     snprintf(response.error_msg, COUNT_OF(response.error_msg),
                             "Requested module #%d is outside of interval [0, %zu].",
-                            module, countOfSensors - 1);
+                            module, sensors.count() - 1);
                     return false;
                 }
             }
@@ -71,10 +71,10 @@ bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
             if (request.has_setState || request.has_getState
                     || request.has_getSamples || request.has_getModelName) {
 
-                boardSensor = sensors[module];
+                sensor::Sensor* sensor = sensors[module];
 
                 if (request.has_setState) {
-                    if (!boardSensor->setState(request.setState.states,
+                    if (!sensor->setState(request.setState.states,
                             request.setState.states_count, NULL)) {
                         response.has_error_msg = true;
                         snprintf(response.error_msg,
@@ -86,7 +86,7 @@ bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
                 }
 
                 if (request.has_getState) {
-                    if (!boardSensor->getState(request.getState.addresses,
+                    if (!sensor->getState(request.getState.addresses,
                             request.getState.addresses_count,
                             response.states)) {
                         response.has_error_msg = true;
@@ -100,7 +100,7 @@ bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
                 }
 
                 if (request.has_getSamples) {
-                    if (!boardSensor->getSamples(request.getSamples.count,
+                    if (!sensor->getSamples(request.getSamples.count,
                             response.samples)) {
                         response.has_error_msg = true;
                         snprintf(response.error_msg,
@@ -113,7 +113,7 @@ bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
                 }
 
                 if (request.has_getModelName) {
-                    if (!boardSensor->getModelName(response.modelName)) {
+                    if (!sensor->getModelName(response.modelName)) {
                         response.has_error_msg = true;
                         snprintf(response.error_msg,
                                 COUNT_OF(response.error_msg),
@@ -131,7 +131,7 @@ bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
                 return false;
             }
 
-        } while (!request.has_module && (++module < countOfSensors));
+        } while (!request.has_module && (++module < sensors.count()));
     } while (request.stream && (!(*stopStream)()));
 
     return true;
