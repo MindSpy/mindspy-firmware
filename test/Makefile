@@ -10,7 +10,7 @@ all: test
 clean:
 	rm *.o test || true
 
-CPPFLAGS := -I../lib/pb -I..
+CPPFLAGS := -I../lib/pb -I.. -D_UNITTEST
 
 %.cpp.o: %.cpp
 	@echo "Compiling <" `basename $<`
@@ -32,7 +32,7 @@ CPPFLAGS := -I../lib/pb -I..
 	$Mmkdir -p $(dir $@)
 	$M$(COMPILE.c) -o $@ $<
 
-test: test.cpp.o SensorHandler.cpp.o SensorDetector.cpp.o pb_common.c.o pb_encode.c.o pb_decode.c.o proto.c.o
+test: test.cpp.o FileStream.cpp.o ProtocolWrapper.cpp.o TestSensor.cpp.o SensorHandler.cpp.o SensorDetector.cpp.o pb_common.c.o pb_encode.c.o pb_decode.c.o proto.c.o
 	@echo "Linking" `basename $@` "<" $?
 	$M$(CXX) $? -o $@ -lgcc -lcpptest
 	@echo "Running tests.."

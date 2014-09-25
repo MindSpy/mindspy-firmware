@@ -1,5 +1,13 @@
 #include "test.h"
 
+#include "SensorHandler.h"
+#include "SensorDetector.h"
+#include "Sensor.h"
+#include "TestSensor.h"
+#include "ProtocolWrapper.h"
+#include "macros.h"
+#include "FileStream.h"
+
 SensorHandlerTest::SensorHandlerTest()
 {
     TEST_ADD(SensorHandlerTest::test);
@@ -11,7 +19,9 @@ void SensorHandlerTest::tear_down()
 
 void SensorHandlerTest::setup()
 {
-    sh = new sensor::SensorHandler(NULL,NULL,new SensorDetector(NULL,0L));
+    sensor::Sensor* sensors[] = { new TestSensor("TestSensor", 128L,8L) };
+    wrapper = new ProtocolWrapper(new SensorDetector(sensors,COUNT_OF(sensors)));
+    //ProtocolWrapper::setStream(new FileStream());
 }
 
 void SensorHandlerTest::test()

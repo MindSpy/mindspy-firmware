@@ -9,6 +9,25 @@
 #include "Sensor.h"
 #include "proto.h"
 
+#ifndef _UNITTEST
+
+#include <Arduino.h>
+
+#else
+
+#include <unistd.h>
+#include <sys/time.h>
+
+#define delayMicroseconds(us) usleep(us)
+
+uint64_t millis() {
+    struct timeval tp;
+    gettimeofday(&tp, NULL);
+    return tp.tv_sec * 1000 + tp.tv_usec / 1000;
+}
+
+#endif
+
 TestSensor::TestSensor(const char* name, const uint8_t rate, const uint8_t chan) :
         _name(name), _rate(rate), _channels(chan), _lastTime(0) {}
 

@@ -1,15 +1,30 @@
 #include "SensorHandler.h"
 #include <pb_encode.h>
 #include <pb_decode.h>
-#include <pb.h>
 #include "proto.h"
 #include "Sensor.h"
 #include "macros.h"
 
+#ifndef _UNITTEST
+
+#include <Arduino.h>
+
+#else
+
+#include <sys/time.h>
+
+uint64_t micros() {
+    struct timeval tp;
+    gettimeofday(&tp, NULL);
+    return tp.tv_sec * 1000000 + tp.tv_usec;
+}
+
+#endif
+
 namespace sensor {
 
-SensorHandler::SensorHandler(TimestampCallbackType time, StopStreamCallbackType stop, SensorDetector* sensorDetector) :
-        timesStamp(time), stopStream(stop), sensors(sensorDetector) {
+SensorHandler::SensorHandler(StopStreamCallbackType stop, SensorDetector* sensorDetector) :
+        stopStream(stop), sensors(sensorDetector) {
 }
 
 SensorHandler::~SensorHandler() {
@@ -52,9 +67,7 @@ bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
             response.has_module = true;
             response.module = module;
 
-            if (timesStamp != NULL) {
-                response.timestamp = (*timesStamp)();
-            }
+            response.timestamp = micros();
 
             if (module >= sensors->count()) {
                 if (request.has_module) {

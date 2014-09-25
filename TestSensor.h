@@ -7,7 +7,6 @@
 #ifndef TestSensor_h
 #define TestSensor_h
 
-#include <Arduino.h>
 #include "Sensor.h"
 #include "proto.h"
 
@@ -15,15 +14,6 @@
  * \brief TestSensor for unit tests
  */
 class TestSensor: public sensor::Sensor {
-private:
-
-    const char * _name;
-    uint64_t _sequence;
-    uint8_t _rate;
-    uint8_t _channels;
-    uint32_t _lastTime;
-    uint8_t getState(uint32_t);
-    bool setState(State state);
 
 public:
 
@@ -43,6 +33,17 @@ public:
     operator bool(void);
     void begin();
     void end();
+
+private:
+
+    const char * _name;
+    uint64_t _sequence;
+    uint8_t _rate;
+    uint8_t _channels;
+    uint32_t _lastTime;
+
+    uint8_t getState(uint32_t);
+    bool setState(State state);
 
 };
 

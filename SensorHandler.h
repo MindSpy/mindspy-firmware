@@ -7,7 +7,6 @@
 
 typedef bool (*ResponseEncoderCallbackType)(pb_ostream_t*, const pb_field_t[], const void *);
 typedef bool (*RequestDecoderCallbackType)(pb_istream_t*, const pb_field_t[], void *);
-typedef uint64_t (*TimestampCallbackType)(void);
 typedef bool (*StopStreamCallbackType)(void);
 
 namespace sensor {
@@ -24,7 +23,8 @@ public:
      * \param stopStream - callback for stop condition when in stream mode
      * \param sensors - sensor detector instance
      */
-    SensorHandler(TimestampCallbackType, StopStreamCallbackType, SensorDetector*);
+    SensorHandler(StopStreamCallbackType, SensorDetector*);
+
     ~SensorHandler();
 
     /*!
@@ -36,11 +36,6 @@ public:
     bool handle(pb_istream_t*, pb_ostream_t*);
 
 private:
-
-    /*!
-     * \brief timesStamp
-     */
-    TimestampCallbackType timesStamp;
 
     /*!
      * \brief stopStream

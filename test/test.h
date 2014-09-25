@@ -2,8 +2,7 @@
 #define _TEST_H
 
 #include <cpptest.h>
-#include "SensorHandler.h"
-#include "SensorDetector.h"
+#include "ProtocolWrapper.h"
 
 /*!
  * \brief The SensorHandlerTest class
@@ -29,10 +28,7 @@ private:
      * \brief test
      */
     void test();
-    /*!
-     * \brief sh
-     */
-    sensor::SensorHandler* sh;
+    ProtocolWrapper* wrapper;
 };
 
 
