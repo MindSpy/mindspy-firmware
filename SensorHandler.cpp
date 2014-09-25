@@ -8,7 +8,7 @@
 
 namespace sensor {
 
-SensorHandler::SensorHandler(TimestampCallbackType time, StopStreamCallbackType stop, SensorDetector sensorDetector) :
+SensorHandler::SensorHandler(TimestampCallbackType time, StopStreamCallbackType stop, SensorDetector* sensorDetector) :
         timesStamp(time), stopStream(stop), sensors(sensorDetector) {
 }
 
@@ -56,12 +56,12 @@ bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
                 response.timestamp = (*timesStamp)();
             }
 
-            if (module >= sensors.count()) {
+            if (module >= sensors->count()) {
                 if (request.has_module) {
                     response.has_error_msg = true;
                     snprintf(response.error_msg, COUNT_OF(response.error_msg),
                             "Requested module #%d is outside of interval [0, %zu].",
-                            module, sensors.count() - 1);
+                            module, sensors->count() - 1);
                     return false;
                 }
             }
@@ -71,7 +71,7 @@ bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
             if (request.has_setState || request.has_getState
                     || request.has_getSamples || request.has_getModelName) {
 
-                sensor::Sensor* sensor = sensors[module];
+                sensor::Sensor* sensor = (*sensors)[module];
 
                 if (request.has_setState) {
                     if (!sensor->setState(request.setState.states,
@@ -131,7 +131,7 @@ bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
                 return false;
             }
 
-        } while (!request.has_module && (++module < sensors.count()));
+        } while (!request.has_module && (++module < sensors->count()));
     } while (request.stream && (!(*stopStream)()));
 
     return true;

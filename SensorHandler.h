@@ -24,7 +24,7 @@ public:
      * \param stopStream - callback for stop condition when in stream mode
      * \param sensors - sensor detector instance
      */
-    SensorHandler(TimestampCallbackType, StopStreamCallbackType, SensorDetector);
+    SensorHandler(TimestampCallbackType, StopStreamCallbackType, SensorDetector*);
     ~SensorHandler();
 
     /*!
@@ -50,7 +50,7 @@ private:
     /*!
      * \brief sensors
      */
-    SensorDetector sensors;
+    SensorDetector* sensors;
 
     /*!
      * \brief Request and response structures.

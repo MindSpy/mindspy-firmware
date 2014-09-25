@@ -1,38 +1,27 @@
-#include <cpptest.h>
+#include "test.h"
 
-
-/*!
- * \brief The SensorHandlerTest class
- */
-class SensorHandlerTest : public Test::Suite
+SensorHandlerTest::SensorHandlerTest()
 {
-public:
-    /*!
-     * \brief SensorHandlerTest
-     */
-    SensorHandlerTest()
-    {
-        TEST_ADD(SensorHandlerTest::test);
-    }
-protected:
-    virtual void setup()     {}
-    virtual void tear_down() {}
-private:
-    /*!
-     * \brief test
-     */
-    void test()
-    {
-        TEST_FAIL("this will always fail");
-        TEST_FAIL("this assert will never be executed");
-    }
-};
+    TEST_ADD(SensorHandlerTest::test);
+}
+
+void SensorHandlerTest::tear_down()
+{
+}
+
+void SensorHandlerTest::setup()
+{
+    sh = new sensor::SensorHandler(NULL,NULL,new SensorDetector(NULL,0L));
+}
+
+void SensorHandlerTest::test()
+{
+    TEST_FAIL("this will always fail");
+    TEST_FAIL("this assert will never be executed");
+}
 
 /*!
  * \brief main
- * \param argc
- * \param argv
- * \return
  */
 int main( int argc, char **argv)
 {

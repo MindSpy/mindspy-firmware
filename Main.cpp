@@ -10,25 +10,15 @@
 #include "TestSensor.h"
 #include "macros.h"
 
-// TODO this will be in SensorDetector once it is finished
-TestSensor testSensor = TestSensor("TestSensor", 128, 8);
-ADS1x9y analogSensor = ADS1x9y(0);
-sensor::Sensor* sensors[] = { &testSensor, &analogSensor };
-
-sensor::SensorHandler sensorHandler = sensor::SensorHandler(&timestamp, &stopStream, SensorDetector(sensors, COUNT_OF(sensors)));
-
+sensor::SensorHandler* handler = NULL;
 uint64_t bootTime = 0;
 
-void setup() {
-
+void setupBluetooth() {
     // Initialize pins for bluetooth module
     pinMode(GREEN_LED, INPUT);
     pinMode(BLUE_LED, INPUT);
     pinMode(PB_2, OUTPUT);
     pinMode(PB_3, OUTPUT);
-
-    // Initialize logger
-    LOG_STREAM.begin(LOG_STREAM_BAUD);
 
     // Reset bluetooth.
     digitalWrite(PB_2, LOW);
@@ -38,29 +28,48 @@ void setup() {
     // Setup bluetooth.
     digitalWrite(PB_3, HIGH);
     // Initialize speed
-    PB_STREAM.begin(BLUETOOTH_STREAM_INIT_BAUD);
+    BLUETOOTH_STREAM.begin(BLUETOOTH_STREAM_INIT_BAUD);
     // Set new speed
-    PB_STREAM.print("AT+UART=");
-    PB_STREAM.print(BLUETOOTH_STREAM_BAUD);
-    PB_STREAM.print(",1,0\r\n");
-    PB_STREAM.print("AT+NAME=MindSpy\r\n");
-    PB_STREAM.print("AT+ROLE=0\r\n");
+    BLUETOOTH_STREAM.print("AT+UART=");
+    BLUETOOTH_STREAM.print(BLUETOOTH_STREAM_BAUD);
+    BLUETOOTH_STREAM.print(",1,0\r\n");
+    BLUETOOTH_STREAM.print("AT+NAME=MindSpy\r\n");
+    BLUETOOTH_STREAM.print("AT+ROLE=0\r\n");
 
     delay(10);
     digitalWrite(PB_3, LOW);
 
     // Start bt stream on a new speed.
-    PB_STREAM.end();
-    PB_STREAM.begin(BLUETOOTH_STREAM_BAUD); // max. 1382400=1.3Mbps
+    BLUETOOTH_STREAM.end();
+    BLUETOOTH_STREAM.begin(BLUETOOTH_STREAM_BAUD); // max. 1382400=1.3Mbps
+}
+void setupUsb() {
+    USB_STREAM.begin(USB_STREAM_BAUD);
+}
+
+void setup() {
+    // initialize BT
+    setupBluetooth();
+    // Initialize USB
+    setupUsb();
+
+    // TODO this will be in SensorDetector once it is finished
+    sensor::Sensor* sensors[] = { new TestSensor("TestSensor", 128, 8), new ADS1x9y(0) };
+    SensorDetector* detector = new SensorDetector(sensors, COUNT_OF(sensors));
+    // initialize handler
+    handler = new sensor::SensorHandler(&timestamp, &stopStream, detector);
 }
 
 void loop() {
-    // Streams for nanopb library.
-    pb_istream_t istream = { &read_callback, &PB_STREAM, SIZE_MAX };
-    pb_ostream_t ostream = { &write_callback, &PB_STREAM, SIZE_MAX, 0 };
+    if (handler != NULL)
+    {
+        // volatile streams for nanopb library.
+        pb_istream_t istream = { &read_callback, &PB_STREAM, SIZE_MAX };
+        pb_ostream_t ostream = { &write_callback, &PB_STREAM, SIZE_MAX, 0 };
 
-    // Handle incomming request.
-    sensorHandler.handle(&istream, &ostream);
+        // Handle incomming request.
+        handler->handle(&istream, &ostream);
+    }
 }
 
 bool stopStream(void) {
