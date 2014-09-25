@@ -7,8 +7,6 @@ namespace sensor {
 
 class Sensor {
 public:
-
-    Sensor() {}
     virtual ~Sensor() {}
 
     /*!
