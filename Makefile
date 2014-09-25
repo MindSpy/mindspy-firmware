@@ -323,13 +323,13 @@ endif
 #_______________________________________________________________________________
 #                                                                          RULES
 
-.PHONY:	all target upload clean boards monitor size test
+.PHONY:	all target upload clean boards monitor size test proto.c
 
 all: test target 
 
 proto.c:
-	$(MAKE) -C proto $@
-	mv proto/proto.[hc] ./
+	$(MAKE) -C lib/proto $@
+	mv lib/proto/proto.[hc] ./
 
 test:
 	$(MAKE) -C test

@@ -1,5 +1,5 @@
 [submodule "proto"]
-	path = proto
+	path = lib/proto
 	url = https://github.com/MindSpy/mindspy-proto.git
 [submodule "lib/wiring"]
 	path = lib/wiring
