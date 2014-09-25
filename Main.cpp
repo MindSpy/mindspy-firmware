@@ -10,8 +10,7 @@
 #include "TestSensor.h"
 #include "macros.h"
 
-sensor::SensorHandler* handler = NULL;
-uint64_t bootTime = 0;
+Main* wrapper = NULL;
 
 void setupBluetooth() {
     // Initialize pins for bluetooth module
@@ -56,45 +55,59 @@ void setup() {
     // TODO this will be in SensorDetector once it is finished
     sensor::Sensor* sensors[] = { new TestSensor("TestSensor", 128, 8), new ADS1x9y(0) };
     SensorDetector* detector = new SensorDetector(sensors, COUNT_OF(sensors));
-    // initialize handler
-    handler = new sensor::SensorHandler(&timestamp, &stopStream, detector);
+    // ~~
+
+    wrapper = new Main(detector);
 }
 
 void loop() {
-    if (handler != NULL)
+    if (wrapper != NULL)
     {
-        // volatile streams for nanopb library.
-        pb_istream_t istream = { &read_callback, &PB_STREAM, SIZE_MAX };
-        pb_ostream_t ostream = { &write_callback, &PB_STREAM, SIZE_MAX, 0 };
-
-        // Handle incomming request.
-        handler->handle(&istream, &ostream);
+        wrapper->handle();
     }
 }
 
-bool stopStream(void) {
-    return !!PB_STREAM.available();
+Stream* Main::stream = &PB_STREAM;
+uint64_t Main::bootTime = 0;
+
+Main::Main(SensorDetector* detector):
+    handler(new sensor::SensorHandler(&timestamp, &stopStream, detector))
+    {}
+
+bool Main::handle() {
+    // volatile streams for nanopb library.
+    pb_istream_t istream = { &read_callback, &stream, SIZE_MAX };
+    pb_ostream_t ostream = { &write_callback, &stream, SIZE_MAX, 0 };
+
+    // Handle incomming request.
+    return handler->handle(&istream, &ostream);
 }
 
-uint64_t timestamp(void) {
+bool Main::stopStream(void) 
+{
+    return !!stream->available();
+}
+
+uint64_t Main::timestamp(void) 
+{
     return bootTime + micros();
 }
 
-bool write_callback(pb_ostream_t *stream, const uint8_t *buf, size_t count) {
-    Stream* s = (Stream*) stream->state;
-    return s->write(buf, count) == count;
+bool Main::write_callback(pb_ostream_t *, const uint8_t *buf, size_t count) 
+{
+    return stream->write(buf, count) == count;
 }
 
-bool read_callback(pb_istream_t *stream, uint8_t *buf, size_t count) {
-    Stream* s = (Stream*) stream->state;
+bool Main::read_callback(pb_istream_t *, uint8_t *buf, size_t count) 
+{
     size_t avail = 0;
 
     // wait for enough data
     while (avail < count) {
-        avail = s->available();
+        avail = stream->available();
         delayMicroseconds(1);
     }
 
-    size_t result = s->readBytes((char*) buf, constrain(avail, 0, count));
+    size_t result = stream->readBytes((char*) buf, constrain(avail, 0, count));
     return result == count;
 }
