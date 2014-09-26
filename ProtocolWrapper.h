@@ -62,12 +62,6 @@ class ProtocolWrapper {
          * \return stop streaming
          */
         static bool stopStream(void);
-
-        /*!
-         * \brief Callback for SensorHandler::handle timestamp generator
-         * \return elapsed time from reference in microseconds
-         */
-        static uint64_t timestamp(void);
 };
 
 #endif // PROTOCOLWRAPPER_H
