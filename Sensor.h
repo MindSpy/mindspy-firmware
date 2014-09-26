@@ -39,7 +39,7 @@ public:
     /*!
      * \brief Check if data is ready in this module.
      */
-    virtual operator bool(void) = 0;
+    virtual bool operator!(void) = 0;
 
     /*!
      * \brief begin

@@ -30,7 +30,7 @@ public:
     bool getState(uint32_t*, uint32_t, State*);
     bool setState(State*, uint32_t, void*);
     bool getModelName(char*);
-    operator bool(void);
+    bool operator!(void);
     void begin();
     void end();
 
@@ -40,7 +40,7 @@ private:
     uint64_t _sequence;
     uint8_t _rate;
     uint8_t _channels;
-    uint32_t _lastTime;
+    unsigned long _lastTime;
 
     uint8_t getState(uint32_t);
     bool setState(State state);

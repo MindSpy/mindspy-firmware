@@ -196,7 +196,7 @@ public:
     /*!
      * \brief Check if data is ready in this module.
      */
-    operator bool(void);
+    bool operator! (void);
     /*!
      * \brief Start conversion in all modules via pin.
      * See ADS1x9y::START() and <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.

@@ -6,6 +6,7 @@
  */
 
 #include "TestSensor.h"
+#include <limits.h>
 #include "Sensor.h"
 #include "proto.h"
 
@@ -21,7 +22,7 @@
 // delayMicroseconds for unit testing (wiring is not available)
 #define delayMicroseconds(us) usleep(us)
 // millis for unit testing (wiring is not available)
-uint64_t millis() {
+unsigned long millis() {
     struct timeval tp;
     gettimeofday(&tp, NULL);
     return tp.tv_sec * 1000 + tp.tv_usec / 1000;
@@ -30,7 +31,7 @@ uint64_t millis() {
 #endif
 
 TestSensor::TestSensor(const char* name, const uint8_t rate, const uint8_t chan) :
-        _name(name), _rate(rate), _channels(chan), _lastTime(0) {}
+        _name(name), _rate(rate), _channels(chan), _lastTime(ULONG_MAX) {}
 
 
 
@@ -38,7 +39,7 @@ bool TestSensor::getSamples(uint32_t count, Sample* result) {
     while (!(*this))
         delayMicroseconds(10);
 
-    while ((*this) && count--) {
+    while (!!(*this) && count--) {
         result->sequence = _sequence;
         result->payload_count = _channels;
         for (uint8_t i = 0; i < _channels; i++) {
@@ -97,9 +98,11 @@ bool TestSensor::getModelName(char* result) {
     return strcpy(result, _name);
 }
 
-TestSensor::operator bool(void) {
+bool TestSensor::operator! (void) {
     delayMicroseconds(1);
-    return _lastTime + 1000 / _rate >= millis();
+    if (_lastTime == ULONG_MAX)
+        return true;
+    return (_lastTime + 1000 / _rate) > millis();
 }
 
 void TestSensor::begin() {
@@ -107,5 +110,5 @@ void TestSensor::begin() {
 }
 
 void TestSensor::end() {
-    _lastTime = 0;
+    _lastTime = ULONG_MAX;
 }

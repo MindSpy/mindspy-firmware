@@ -259,8 +259,8 @@ uint8_t ADS1x9y::transfer(uint8_t data, bool hold) {
     return r;
 }
 
-ADS1x9y::operator bool() {
-    return digitalRead(PIN_DRDY_) == LOW;
+bool ADS1x9y::operator!() {
+    return digitalRead(PIN_DRDY_) != LOW;
 }
 
 void ADS1x9y::start() {
