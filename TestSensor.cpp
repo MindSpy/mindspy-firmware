@@ -11,29 +11,13 @@
 #include "proto.h"
 
 #ifndef _UNITTEST
-
 #include <Arduino.h>
-
 #else
-
-#include <unistd.h>
-#include <sys/time.h>
-
-// delayMicroseconds for unit testing (wiring is not available)
-#define delayMicroseconds(us) usleep(us)
-// millis for unit testing (wiring is not available)
-unsigned long millis() {
-    struct timeval tp;
-    gettimeofday(&tp, NULL);
-    return tp.tv_sec * 1000 + tp.tv_usec / 1000;
-}
-
+#include "compat.h"
 #endif
 
 TestSensor::TestSensor(const char* name, const uint8_t rate, const uint8_t chan) :
         _name(name), _rate(rate), _channels(chan), _lastTime(ULONG_MAX) {}
-
-
 
 bool TestSensor::getSamples(uint32_t count, Sample* result) {
     while (!(*this))

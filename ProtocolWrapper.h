@@ -5,6 +5,14 @@
 #include "SensorHandler.h"
 
 #ifndef _UNITTEST
+#include <Arduino.h>
+#else
+#include "compat.h"
+#endif
+
+
+
+#ifndef _UNITTEST
 
 #include <Arduino.h>
 
@@ -14,13 +22,7 @@
 // delayMicroseconds for unit testing (wiring is not available)
 #define delayMicroseconds(us) usleep(us)
 // Stream interface to be implemented by unit test (wiring not available)
-class Stream {
-    public:
-        virtual ~Stream() {}
-        virtual int available() = 0;
-        virtual size_t readBytes( char *buffer, size_t length) = 0;
-        virtual size_t write(const uint8_t *buffer, size_t size) = 0;
-};
+
 
 #endif
 

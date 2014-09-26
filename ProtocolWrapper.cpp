@@ -4,11 +4,10 @@
 #include <pb_decode.h>
 #include "macros.h"
 
-#ifdef _UNITTEST
-
-#include <unistd.h>
-#define delayMicroseconds(us) usleep(us)
-
+#ifndef _UNITTEST
+#include <Arduino.h>
+#else
+#include "compat.h"
 #endif
 
 Stream* ProtocolWrapper::stream = NULL;

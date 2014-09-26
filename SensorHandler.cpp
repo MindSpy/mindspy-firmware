@@ -6,20 +6,9 @@
 #include "macros.h"
 
 #ifndef _UNITTEST
-
 #include <Arduino.h>
-
 #else
-
-#include <sys/time.h>
-
-// micros for unit testing (wiring is not available)
-uint64_t micros() {
-    struct timeval tp;
-    gettimeofday(&tp, NULL);
-    return tp.tv_sec * 1000000 + tp.tv_usec;
-}
-
+#include "compat.h"
 #endif
 
 namespace sensor {
