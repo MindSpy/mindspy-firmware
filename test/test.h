@@ -3,33 +3,44 @@
 
 #include <cpptest.h>
 #include "ProtocolWrapper.h"
+#include "SensorHandler.h"
+#include "Sensor.h"
 
-/*!
- * \brief The SensorHandlerTest class
- */
-class SensorHandlerTest : public Test::Suite
+class SensorTest : public Test::Suite
 {
 public:
-    /*!
-     * \brief SensorHandlerTest
-     */
-    SensorHandlerTest();
+    SensorTest();
 protected:
-    /*!
-     * \brief setup
-     */
+    // inherit
     virtual void setup();
-    /*!
-     * \brief tear_down
-     */
     virtual void tear_down();
 private:
-    /*!
-     * \brief test
-     */
-    void test();
-    ProtocolWrapper* wrapper;
+    sensor::Sensor* sensor;
+
+    void testBoolOperator();
+    void testGetModelName();
+    void testGetSamples();
+    void testGetState();
+    void testSetState();
 };
+
+class ProtocolWrapperTest : public Test::Suite
+{
+public:
+    ProtocolWrapperTest();
+protected:
+    // inherit
+    virtual void setup();
+    virtual void tear_down();
+private:
+    ProtocolWrapper* wrapper;
+    char* ibuffer;
+    char* obuffer;
+
+    void testHandle();
+};
+
+
 
 
 #endif // TEST_H

@@ -32,8 +32,8 @@ CPPFLAGS := -I../lib/pb -I.. -D_UNITTEST
 	$Mmkdir -p $(dir $@)
 	$M$(COMPILE.c) -o $@ $<
 
-test: test.cpp.o FileStream.cpp.o ProtocolWrapper.cpp.o TestSensor.cpp.o SensorHandler.cpp.o SensorDetector.cpp.o pb_common.c.o pb_encode.c.o pb_decode.c.o proto.c.o
+test: test.cpp.o MemoryStream.cpp.o ProtocolWrapper.cpp.o TestSensor.cpp.o SensorHandler.cpp.o SensorDetector.cpp.o pb_common.c.o pb_encode.c.o pb_decode.c.o proto.c.o
 	@echo "Linking" `basename $@` "<" $?
 	$M$(CXX) $? -o $@ -lgcc -lcpptest
 	@echo "Running tests.."
-	$M./test || rm test && false
+	$M./test || ( rm test && false )
