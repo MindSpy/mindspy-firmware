@@ -50,8 +50,11 @@ void setup() {
     setupUsb();
 
     // TODO this will be in SensorDetector once it is finished
-    sensor::Sensor* sensors[] = { new TestSensor("TestSensor", 128, 8), new ADS1x9y(0) };
-    SensorDetector* detector = new SensorDetector(sensors, COUNT_OF(sensors));
+    const size_t SENSOR_COUNT = 2;
+    sensor::Sensor** sensors = new sensor::Sensor*[SENSOR_COUNT];
+    sensors[0] = new TestSensor("TestSensor", 128, 8);
+    sensors[1] = new ADS1x9y(0);
+    SensorDetector* detector = new SensorDetector(sensors, SENSOR_COUNT);
     // ~~
 
     wrapper = new ProtocolWrapper(detector);
