@@ -1,16 +1,21 @@
 #include "FileStream.h"
 
-FileStream::FileStream()
+FileStream::FileStream(FILE*i, FILE*o)
 {
+    in = i;
+    out = o;
 }
 int FileStream::available()
 {
+    return MAX_SIZE;
 }
 
-size_t FileStream::readBytes( char *buffer, size_t length)
+size_t FileStream::readBytes( char *buff, size_t l)
 {
+    return fread(buff, l, 1, in);
 }
 
-size_t FileStream::write(const uint8_t *buffer, size_t size)
+size_t FileStream::write(const uint8_t *buff, size_t l)
 {
+    return fwrite(buff, l, 1, out);
 }
