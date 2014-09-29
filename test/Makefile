@@ -5,12 +5,12 @@ M_0 := @
 M_1 :=
 M = $(M_$(V))
 
-all: test
+all: test.elf
 
 clean:
-	rm *.o test || true
+	rm *.o test.elf || true
 
-CPPFLAGS := -I../lib/pb -I.. -D_UNITTEST
+CPPFLAGS := -I../lib/pb -I.. -D_UNITTEST -O0 -ggdb
 
 %.cpp.o: %.cpp
 	@echo "Compiling <" `basename $<`
@@ -32,8 +32,10 @@ CPPFLAGS := -I../lib/pb -I.. -D_UNITTEST
 	$Mmkdir -p $(dir $@)
 	$M$(COMPILE.c) -o $@ $<
 
-test: test.cpp.o MemoryStream.cpp.o ProtocolWrapper.cpp.o TestSensor.cpp.o SensorHandler.cpp.o SensorDetector.cpp.o pb_common.c.o pb_encode.c.o pb_decode.c.o proto.c.o compat.cpp.o
+test.elf: UnitTests.cpp.o MemoryStream.cpp.o ProtocolWrapper.cpp.o TestSensor.cpp.o SensorHandler.cpp.o SensorDetector.cpp.o pb_common.c.o pb_encode.c.o pb_decode.c.o proto.c.o compat.cpp.o
 	@echo "Linking" `basename $@` "<" $?
 	$M$(CXX) $? -o $@ -lgcc -lcpptest
+
+run: test.elf
 	@echo "Running tests.."
-	$M./test || ( rm test && false )
+	$M./test.elf || ( rm test && false )

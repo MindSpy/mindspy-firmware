@@ -1,7 +1,7 @@
 #ifndef FILESTREAM_H
 #define FILESTREAM_H
 
-#include "ProtocolWrapper.h"
+#include "compat.h"
 
 class FileStream : public Stream
 {

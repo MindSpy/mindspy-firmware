@@ -1,12 +1,12 @@
 #ifndef MEMORYSTREAM_H
 #define MEMORYSTREAM_H
 
-#include "ProtocolWrapper.h"
+#include "compat.h"
 
 class MemoryStream : public Stream
 {
 public:
-    MemoryStream(char*, char*, const size_t);
+    MemoryStream(char*, char*, const size_t, const size_t);
     ~MemoryStream();
     int available();
     size_t readBytes( char *, size_t );
@@ -14,7 +14,8 @@ public:
 private:
     char* in;
     char* out;
-    size_t len;
+    size_t ilen;
+    size_t olen;
     size_t iptr;
     size_t optr;
 };

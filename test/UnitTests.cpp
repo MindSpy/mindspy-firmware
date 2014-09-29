@@ -1,4 +1,4 @@
-#include "test.h"
+#include "UnitTests.h"
 
 #include "SensorHandler.h"
 #include "SensorDetector.h"
@@ -31,7 +31,7 @@ void SensorTest::setup()
 
 void SensorTest::tear_down()
 {
-    free(sensor);
+    delete sensor;
 }
 
 void SensorTest::testBoolOperator()
@@ -86,11 +86,16 @@ void SensorTest::testSetState() {
 
 void SensorTest::testGetSamples()
 {
+    Sample samples[10];
     sensor->begin();
-    for (int i = 0; i < 30; i++) {
-        Sample samples[10];
+    for (int i = 0; i < 10; i++) {
         sensor->getSamples(10, samples);
-        // chack  10 samples
+        for (int j = 1; j < 10; j++) {
+            TEST_ASSERT_EQUALS_MSG(samples[j-1].sequence + 1, samples[j].sequence, "Sequence should grow by 1.");
+            for (int k = 1; k < 8; k++) {
+                TEST_ASSERT_EQUALS_MSG(samples[j].payload[k-1] + 1,samples[j].payload[k],"Payload ")
+            }
+        }
     }
     sensor->end();
 }
@@ -102,24 +107,27 @@ ProtocolWrapperTest::ProtocolWrapperTest()
 
 void ProtocolWrapperTest::setup()
 {
-    obuffer = (char*)malloc(1024 * sizeof(char)); // 1KB
-    ibuffer = (char*)malloc(1024 * 1024 * sizeof(char)); // 1MB
-    size_t olen;
+    size_t olen = 1024;
+    size_t ilen = 1024*1024;
+    obuffer = (char*)malloc(olen * sizeof(char)); // 1KB
+    ibuffer = (char*)malloc(ilen * sizeof(char)); // 1MB
     // prepare obuffer set the olen
 
     sensor::Sensor* sensors[] = { new TestSensor("TestSensor", 128L,8L) };
     wrapper = new ProtocolWrapper(new SensorDetector(sensors,COUNT_OF(sensors)));
-    ProtocolWrapper::setStream(new MemoryStream(obuffer, ibuffer, olen));
+    ProtocolWrapper::setStream(new MemoryStream(obuffer, ibuffer, olen, ilen));
 }
 
 void ProtocolWrapperTest::tear_down()
 {
     free(ibuffer);
     free(obuffer);
+    delete wrapper;
 }
 
 void ProtocolWrapperTest::testHandle()
 {
+
     //TEST_FAIL("this will always fail");
     //TEST_FAIL("this assert will never be executed");
 }
