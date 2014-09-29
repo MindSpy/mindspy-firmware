@@ -20,18 +20,17 @@ TestSensor::TestSensor(const char* name, const uint8_t rate, const uint8_t chan)
         _name(name), _rate(rate), _channels(chan), _lastTime(ULONG_MAX) {}
 
 bool TestSensor::getSamples(uint32_t count, Sample* result) {
-    while (!(*this))
-        delayMicroseconds(10);
+    for (int i = 0; i < count; i++) {
+        while (!(*this))
+            delayMicroseconds(10);
 
-    while (!!(*this) && count--) {
-        result->sequence = _sequence;
-        result->payload_count = _channels;
-        for (uint8_t i = 0; i < _channels; i++) {
-            result->payload[i] = (_sequence & 0xff) - 0x80 - i;
+        result[i].sequence = _sequence++;
+        result[i].payload_count = _channels;
+        for (uint8_t j = 0; j < _channels; j++) {
+            result[i].payload[j] = (result[i].sequence & 0xff) - 0x80 + j;
         }
 
         _lastTime += 1000 / _rate;
-        _sequence++;
 
         delayMicroseconds(10);
     }
