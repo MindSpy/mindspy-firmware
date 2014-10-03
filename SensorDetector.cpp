@@ -1,15 +1,17 @@
 #include "SensorDetector.h"
 
-
-SensorDetector::SensorDetector(sensor::Sensor** sensors, size_t countOfSensors ):
-        _sensors(sensors), _countOfSensors(countOfSensors)
-{
-    for (size_t i = 0; i < _countOfSensors; i++)
+SensorDetector::SensorDetector(sensor::Sensor** sensors, size_t countOfSensors) :
+        _sensors(sensors), _countOfSensors(countOfSensors) {
+    for (size_t i = 0; i < _countOfSensors; i++) {
         _sensors[i]->begin();
+	}
 }
 
-sensor::Sensor*& SensorDetector::operator[](size_t idx)
-{
+SensorDetector::~SensorDetector() {
+
+}
+
+sensor::Sensor*& SensorDetector::operator[](size_t idx) {
     if (idx < 0)
         idx = 0;
     if (idx >= _countOfSensors)
@@ -18,7 +20,6 @@ sensor::Sensor*& SensorDetector::operator[](size_t idx)
     return _sensors[idx];
 }
 
-size_t SensorDetector::count()
-{
+size_t SensorDetector::count() {
     return _countOfSensors;
 }

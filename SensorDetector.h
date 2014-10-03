@@ -6,15 +6,16 @@
 /*!
  * \brief The SensorDetector class
  */
-class SensorDetector
-{
+class SensorDetector {
 public:
+
     /*!
      * \brief SensorDetector
      * \param sensors
      * \param count of sensors
      */
     SensorDetector(sensor::Sensor**, size_t);
+	~SensorDetector();
 
     /*!
      * \brief count
@@ -28,6 +29,7 @@ public:
      * \return idx-th memeber
      */
     sensor::Sensor*& operator[](size_t idx);
+
 private:
     /*!
      * \brief _sensors
@@ -36,7 +38,7 @@ private:
     /*!
      * \brief _countOfSensors
      */
-    size_t _countOfSensors;
+    unsigned int _countOfSensors;
 };
 
 #endif // SENDORDETECTOR_H

@@ -1,14 +1,20 @@
+#include "device.h"
 
-#include "Main.h"
-#include "SensorDetector.h"
-#include "ADS1x9y.h"
-#include "TestSensor.h"
-#include "ProtocolWrapper.h"
-#include "macros.h"
+Device::Device() : sensors(NULL), detector(NULL), protocolWrapper(NULL) {
+	SetupBluetooth();
+	SetupUsb();
+}
 
-ProtocolWrapper* wrapper = NULL;
+Device::~Device() {
+	for (unsigned int i = 0; i < SENSOR_COUNT; i++) {
+		delete sensors[i];
+	}
+	delete[] sensors;
+	delete detector;
+	delete protocolWrapper;
+}
 
-void setupBluetooth() {
+void Device::SetupBluetooth() {
     // Initialize pins for bluetooth module
     pinMode(GREEN_LED, INPUT);
     pinMode(BLUE_LED, INPUT);
@@ -39,31 +45,16 @@ void setupBluetooth() {
     BLUETOOTH_STREAM.begin(BLUETOOTH_STREAM_BAUD); // max. 1382400=1.3Mbps
 }
 
-void setupUsb() {
+void Device::SetupUsb() {
     USB_STREAM.begin(USB_STREAM_BAUD);
 }
 
-void setup() {
-    // initialize BT
-    setupBluetooth();
-    // Initialize USB
-    setupUsb();
-
+void Device::SetupDevice() {
     // TODO this will be in SensorDetector once it is finished
-    const size_t SENSOR_COUNT = 2;
-    sensor::Sensor** sensors = new sensor::Sensor*[SENSOR_COUNT];
+    sensors = new sensor::Sensor*[SENSOR_COUNT];
     sensors[0] = new TestSensor("TestSensor", 128, 8);
     sensors[1] = new ADS1x9y(0);
-    SensorDetector* detector = new SensorDetector(sensors, SENSOR_COUNT);
-    // ~~
-
-    wrapper = new ProtocolWrapper(detector);
+    detector = new SensorDetector(sensors, SENSOR_COUNT);
+    protocolWrapper = new ProtocolWrapper(detector);
     ProtocolWrapper::setStream(&PB_STREAM);
-}
-
-void loop() {
-    if (wrapper != NULL)
-    {
-        wrapper->handle();
-    }
 }

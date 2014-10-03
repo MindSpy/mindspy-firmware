@@ -7,7 +7,7 @@ FileStream::FileStream(FILE*i, FILE*o)
 }
 int FileStream::available()
 {
-    return MAX_SIZE;
+    return SIZE_MAX;
 }
 
 size_t FileStream::readBytes( char *buff, size_t l)

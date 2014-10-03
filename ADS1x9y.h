@@ -15,28 +15,13 @@
  * See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
  */
 class ADS1x9y: public sensor::Sensor {
-private:
-
-    int _module;
-    int _cs;
-    uint8_t _channels;
-    bool _continous;
-
-    static bool _pinSet;
-    static int _active;
-    static int _sequence;
-
-    void pinSetup(void);
-    void getDeviceId(void);
-
-    static void ssiSetup(uint8_t SSIModule);
-
 public:
 
     /*!
      * \brief Constructor.
      * \param module nnumber (CS pin)
      */
+	ADS1x9y();
     ADS1x9y(uint8_t);
 
     // override ISensor methods
@@ -243,5 +228,22 @@ public:
      * \param new value
      */
     static void gpioWrite(uint8_t, int);
+
+private:
+
+    int _module;
+    int _cs;
+    uint8_t _channels;
+    bool _continous;
+
+    static bool _pinSet;
+    static int _active;
+    static int _sequence;
+
+    void pinSetup(void);
+    void getDeviceId(void);
+
+    static void ssiSetup(uint8_t SSIModule);
+
 };
 #endif

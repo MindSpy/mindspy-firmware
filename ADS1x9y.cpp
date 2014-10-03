@@ -64,11 +64,10 @@ bool ADS1x9y::_pinSet = false;
 int ADS1x9y::_active = -1;
 int ADS1x9y::_sequence = 0;
 
-ADS1x9y::ADS1x9y(uint8_t module) {
-    _module = constrain(module, 0, SPI_CS_PIN_COUNT-1);
-    _continous = true;
-    _channels = 0;
-    _cs = SPI_CS(_module); // here: module = board
+ADS1x9y::ADS1x9y(uint8_t module) : _module(constrain(module, 0, SPI_CS_PIN_COUNT - 1)), _cs(SPI_CS(_module)), _channels(0), _continous(true) {
+}
+
+ADS1x9y::ADS1x9y() : _module(0), _cs(SPI_CS(_module)), _channels(0), _continous(true) {
 }
 
 bool ADS1x9y::getSamples(uint32_t count, Sample* result) {
