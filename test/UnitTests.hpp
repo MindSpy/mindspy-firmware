@@ -6,6 +6,9 @@
 #include "SensorHandler.hpp"
 #include "Sensor.h"
 
+#define COUNT_OF_ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
+
+
 class SensorTest : public Test::Suite
 {
 public:
