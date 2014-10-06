@@ -2,6 +2,7 @@
 #define FILESTREAM_H
 
 #include "compat.h"
+#include <stdio.h>
 
 class FileStream : public Stream
 {
