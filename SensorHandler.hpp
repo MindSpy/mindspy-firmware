@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include "Sensor.h"
-#include "SensorDetector.h"
+#include "SensorDetector.hpp"
 
 #define COUNT_OF_ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
 

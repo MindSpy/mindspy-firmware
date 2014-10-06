@@ -1,10 +1,10 @@
 #ifndef DEVICE_H
 #define DEVICE_H
 
-#include "ADS1x9y.h"
-#include "ProtocolWrapper.h"
-#include "SensorDetector.h"
-#include "TestSensor.h"
+#include "ADS1x9y.hpp"
+#include "ProtocolWrapper.hpp"
+#include "SensorDetector.hpp"
+#include "TestSensor.hpp"
 
 #define BLUETOOTH_STREAM Serial1
 #define USB_STREAM Serial
