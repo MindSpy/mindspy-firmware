@@ -20,7 +20,7 @@ TestSensor::TestSensor(const char* name, const uint8_t rate, const uint8_t chan)
         _name(name), _rate(rate), _channels(chan), _lastTime(ULONG_MAX) {}
 
 bool TestSensor::getSamples(uint32_t count, Sample* result) {
-    for (int i = 0; i < count; i++) {
+    for (unsigned int i = 0; i < count; i++) {
         while (!(*this))
             delayMicroseconds(10);
 

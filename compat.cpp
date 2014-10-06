@@ -1,4 +1,3 @@
-
 #include "compat.h"
 
 #ifdef _UNITTEST

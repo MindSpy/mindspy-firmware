@@ -8,13 +8,13 @@
 Device device;
 
 void setup() {
-	// detect sensor
-	device.SetupDevice();
+    // detect sensor
+    device.SetupDevice();
 }
 
 void loop() {
-	if (device.protocolWrapper != NULL) {
-		device.protocolWrapper->handle();
-	}
+    if (device.protocolWrapper != NULL) {
+        device.protocolWrapper->handle();
+    }
 }
 
