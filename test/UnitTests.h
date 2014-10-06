@@ -36,6 +36,11 @@ private:
     ProtocolWrapper* wrapper;
     char* ibuffer;
     char* obuffer;
+    size_t olen;
+    size_t ilen;
+    Stream* stream;
+    sensor::Sensor** sensors;
+    SensorDetector* detector;
 
     void testHandle();
 };

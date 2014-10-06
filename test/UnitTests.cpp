@@ -107,27 +107,30 @@ ProtocolWrapperTest::ProtocolWrapperTest()
 
 void ProtocolWrapperTest::setup()
 {
-    size_t olen = 1024;
-    size_t ilen = 1024*1024;
-    obuffer = (char*)malloc(olen * sizeof(char)); // 1KB
-    ibuffer = (char*)malloc(ilen * sizeof(char)); // 1MB
-    // prepare obuffer set the olen
+    olen = 1024;// 1KB
+    ilen = 1024*1024;// 1MB
+    obuffer = (char*)malloc(olen * sizeof(char));
+    ibuffer = (char*)malloc(ilen * sizeof(char));
+    stream = new MemoryStream(obuffer, ibuffer, olen, ilen);
+    ProtocolWrapper::setStream(stream);
 
-    sensor::Sensor* sensors[] = { new TestSensor("TestSensor", 128L,8L) };
-    wrapper = new ProtocolWrapper(new SensorDetector(sensors,COUNT_OF(sensors)));
-    ProtocolWrapper::setStream(new MemoryStream(obuffer, ibuffer, olen, ilen));
+    sensors = new sensor::Sensor*[1];
+    sensors[0] = new TestSensor("TestSensor", 128L,8L);
+    detector = new SensorDetector(sensors, 1);
+    wrapper = new ProtocolWrapper(detector);
 }
 
 void ProtocolWrapperTest::tear_down()
 {
+    delete wrapper;
+    delete detector;
+    delete stream;
     free(ibuffer);
     free(obuffer);
-    delete wrapper;
 }
 
 void ProtocolWrapperTest::testHandle()
 {
-
     //TEST_FAIL("this will always fail");
     //TEST_FAIL("this assert will never be executed");
 }
