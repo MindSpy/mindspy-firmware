@@ -1,4 +1,4 @@
-#include "SensorDetector.h"
+#include "SensorDetector.hpp"
 
 SensorDetector::SensorDetector(sensor::Sensor** sensors, size_t countOfSensors) :
         _sensors(sensors), _countOfSensors(countOfSensors) {

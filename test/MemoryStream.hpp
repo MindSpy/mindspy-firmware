@@ -1,7 +1,7 @@
 #ifndef MEMORYSTREAM_H
 #define MEMORYSTREAM_H
 
-#include "compat.h"
+#include "compat.hpp"
 
 class MemoryStream : public Stream
 {

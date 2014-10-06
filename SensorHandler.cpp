@@ -1,4 +1,4 @@
-#include "SensorHandler.h"
+#include "SensorHandler.hpp"
 #include <pb_encode.h>
 #include <pb_decode.h>
 #include "proto.h"
@@ -7,7 +7,7 @@
 #ifndef _UNITTEST
 #include <Arduino.h>
 #else
-#include "compat.h"
+#include "compat.hpp"
 #endif
 
 namespace sensor {

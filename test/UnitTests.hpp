@@ -2,8 +2,8 @@
 #define _TEST_H
 
 #include <cpptest.h>
-#include "ProtocolWrapper.h"
-#include "SensorHandler.h"
+#include "ProtocolWrapper.hpp"
+#include "SensorHandler.hpp"
 #include "Sensor.h"
 
 class SensorTest : public Test::Suite

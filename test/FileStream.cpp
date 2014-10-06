@@ -1,4 +1,4 @@
-#include "FileStream.h"
+#include "FileStream.hpp"
 
 FileStream::FileStream(FILE*i, FILE*o) : in(i), out(o) { }
 

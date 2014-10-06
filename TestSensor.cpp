@@ -5,7 +5,7 @@
  by pBorky
  */
 
-#include "TestSensor.h"
+#include "TestSensor.hpp"
 #include <limits.h>
 #include "Sensor.h"
 #include "proto.h"
@@ -13,7 +13,7 @@
 #ifndef _UNITTEST
 #include <Arduino.h>
 #else
-#include "compat.h"
+#include "compat.hpp"
 #endif
 
 TestSensor::TestSensor(const char* name, const uint8_t rate, const uint8_t chan) :

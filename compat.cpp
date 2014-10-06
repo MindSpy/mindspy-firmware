@@ -1,5 +1,5 @@
 
-#include "compat.h"
+#include "compat.hpp"
 
 #ifdef _UNITTEST
 

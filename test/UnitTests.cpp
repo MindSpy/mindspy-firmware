@@ -1,13 +1,13 @@
-#include "UnitTests.h"
+#include "UnitTests.hpp"
 
-#include "SensorHandler.h"
-#include "SensorDetector.h"
+#include "SensorHandler.hpp"
+#include "SensorDetector.hpp"
 #include "Sensor.h"
-#include "TestSensor.h"
-#include "ProtocolWrapper.h"
+#include "TestSensor.hpp"
+#include "ProtocolWrapper.hpp"
 #include "macros.h"
-#include "FileStream.h"
-#include "MemoryStream.h"
+#include "FileStream.hpp"
+#include "MemoryStream.hpp"
 #include <stdlib.h>
 #include <unistd.h>
 
