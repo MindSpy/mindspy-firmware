@@ -7,6 +7,8 @@
 
 Device device;
 
+extern "C" {
+
 void setup() {
 	// detect sensor
 	device.SetupDevice();
@@ -18,3 +20,4 @@ void loop() {
 	}
 }
 
+}
