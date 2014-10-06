@@ -60,14 +60,14 @@ PIN_GPIO1, PIN_GPIO2, PIN_GPIO3, PIN_GPIO4 };
 #define SPI_CS(module) SPI_CS_PINS[module]
 #define GPIO(pin) GPIO_PINS[pin]
 
-bool ADS1x9y::_pinSet = false;
-int ADS1x9y::_active = -1;
-int ADS1x9y::_sequence = 0;
+bool ADS1x9y::pinSet = false;
+int ADS1x9y::active = -1;
+int ADS1x9y::sequence = 0;
 
-ADS1x9y::ADS1x9y(uint8_t module) : _module(constrain(module, 0, SPI_CS_PIN_COUNT - 1)), _cs(SPI_CS(_module)), _channels(0), _continous(true) {
+ADS1x9y::ADS1x9y(uint8_t module) : module(constrain(module, 0, SPI_CS_PIN_COUNT - 1)), cs(SPI_CS(module)), channels(0), continous(true) {
 }
 
-ADS1x9y::ADS1x9y() : _module(0), _cs(SPI_CS(_module)), _channels(0), _continous(true) {
+ADS1x9y::ADS1x9y() : module(0), cs(SPI_CS(module)), channels(0), continous(true) {
 }
 
 bool ADS1x9y::getSamples(uint32_t count, Sample* result) {
@@ -94,7 +94,7 @@ bool ADS1x9y::getSamples(uint32_t count, Sample* result) {
             }
             samp->payload[j] = tmp;
         }
-        samp->sequence = _sequence++;
+        samp->sequence = sequence++;
         samp->payload_count = channels;
 
     }
@@ -133,11 +133,11 @@ bool ADS1x9y::getModelName(char* modelName) {
 }
 
 void ADS1x9y::begin() {
-    if (_active > -1) {
+    if (active > -1) {
         return;
     }
     pinSetup();
-    _active = _module;
+    active = module;
 
     getDeviceId();
     START();
@@ -145,24 +145,24 @@ void ADS1x9y::begin() {
 
 void ADS1x9y::end() {
     SPI.end();
-    _active = -1;
+    active = -1;
 }
 
 int ADS1x9y::getModule() {
-    return _module;
+    return module;
 }
 void ADS1x9y::RDATAC(void) {
     transfer(SPI_CMD_RDATAC);
-    _continous = true;
+    continous = true;
 }
 
 void ADS1x9y::SDATAC(void) {
     transfer(SPI_CMD_SDATAC);
-    _continous = false;
+    continous = false;
 }
 
 void ADS1x9y::RDATA(uint8_t* buffer, uint16_t bsize) {
-    if (!_continous) {
+    if (!continous) {
         transfer(SPI_CMD_RDATA, true);
     }
     register uint8_t size = getTotalBytes(); // status registers + channels
@@ -224,19 +224,19 @@ void ADS1x9y::setRegister(uint16_t reg, uint8_t data) {
 }
 
 void ADS1x9y::activate(void) {
-    digitalWrite(_cs, LOW);
+    digitalWrite(cs, LOW);
     while (!isActive())
         delayMicroseconds(2);
 }
 
 void ADS1x9y::deactivate(void) {
-    digitalWrite(_cs, HIGH);
+    digitalWrite(cs, HIGH);
     while (isActive())
         delayMicroseconds(2);
 }
 
 bool ADS1x9y::isActive(void) {
-    return digitalRead(_cs) == LOW;
+    return digitalRead(cs) == LOW;
 }
 
 uint8_t ADS1x9y::transfer() {
@@ -298,7 +298,7 @@ void ADS1x9y::gpioWrite(uint8_t pin, int value) {
 
 void ADS1x9y::pinSetup() {
 
-    if (!_pinSet) {
+    if (!pinSet) {
         pinMode(PIN_DRDY_, INPUT);
         //pinMode(PIN_MOSI, OUTPUT);
         //pinMode(PIN_MISO, INPUT);
@@ -329,43 +329,43 @@ void ADS1x9y::pinSetup() {
 
         ssiSetup(0);
 
-        _pinSet = true;
+        pinSet = true;
     }
 
-    pinMode(_cs, OUTPUT);
-    digitalWrite(_cs, HIGH);
+    pinMode(cs, OUTPUT);
+    digitalWrite(cs, HIGH);
 
     // send SDATAC
-    if (_continous)
+    if (continous)
         SDATAC();
     delayMicroseconds(20);
 
 }
 
 void ADS1x9y::getDeviceId() {
-    if (_channels)
+    if (channels)
         return;
     uint8_t id;
     RREG(0, 1, &id);
     switch (id & 0xe0) {
     case 5: // ADS119x
-        _channels &= 0xcf;
+        channels &= 0xcf;
         break;
     case 6: // ADS129xR
-        _channels |= 0x20;
+        channels |= 0x20;
     case 4: // ADS129x
-        _channels |= 0x10;
+        channels |= 0x10;
         break;
     }
     switch (id & 0x03) {
     case 0: // x=4
-        _channels = 0x04 | (_channels & 0xf0);
+        channels = 0x04 | (channels & 0xf0);
         break;
     case 1: // x=6
-        _channels = 0x06 | (_channels & 0xf0);
+        channels = 0x06 | (channels & 0xf0);
         break;
     case 2: // x=8
-        _channels = 0x08 | (_channels & 0xf0);
+        channels = 0x08 | (channels & 0xf0);
         break;
     case 3: //reserved
         break;
@@ -373,28 +373,28 @@ void ADS1x9y::getDeviceId() {
 }
 String ADS1x9y::getModel(void) {
     String model = "ADS";
-    if (_channels & 0x10) {
+    if (channels & 0x10) {
         model += "129";
     } else {
         model += "119";
     }
-    model += _channels & 0x0f;
-    if (_channels & 0x20) {
+    model += channels & 0x0f;
+    if (channels & 0x20) {
         model += 'R';
     }
     return model;
 }
 
 uint8_t ADS1x9y::getChannelCount(void) {
-    return _channels & 0x0f;
+    return channels & 0x0f;
 }
 
 uint8_t ADS1x9y::getSampleBits(void) {
-    return _channels & 0x10 ? 24 : 16;
+    return channels & 0x10 ? 24 : 16;
 }
 
 uint8_t ADS1x9y::getSampleBytes(void) {
-    return _channels & 0x10 ? 3 : 2;
+    return channels & 0x10 ? 3 : 2;
 }
 uint16_t ADS1x9y::getTotalBytes(void) {
     return getSampleBytes() * getChannelCount() + 3;

@@ -231,14 +231,14 @@ public:
 
 private:
 
-    int _module;
-    int _cs;
-    uint8_t _channels;
-    bool _continous;
+    int module;
+    int cs;
+    uint8_t channels;
+    bool continous;
 
-    static bool _pinSet;
-    static int _active;
-    static int _sequence;
+    static bool pinSet;
+    static int active;
+    static int sequence;
 
     void pinSetup(void);
     void getDeviceId(void);

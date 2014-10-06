@@ -17,20 +17,20 @@
 #endif
 
 TestSensor::TestSensor(const char* name, const uint8_t rate, const uint8_t chan) :
-        _name(name), _rate(rate), _channels(chan), _lastTime(ULONG_MAX) {}
+        name(name), rate(rate), channels(chan), lastTime(ULONG_MAX) {}
 
 bool TestSensor::getSamples(uint32_t count, Sample* result) {
     for (unsigned int i = 0; i < count; i++) {
         while (!(*this))
             delayMicroseconds(10);
 
-        result[i].sequence = _sequence++;
-        result[i].payload_count = _channels;
-        for (uint8_t j = 0; j < _channels; j++) {
+        result[i].sequence = sequence++;
+        result[i].payload_count = channels;
+        for (uint8_t j = 0; j < channels; j++) {
             result[i].payload[j] = (result[i].sequence & 0xff) - 0x80 + j;
         }
 
-        _lastTime += 1000 / _rate;
+        lastTime += 1000 / rate;
 
         delayMicroseconds(10);
     }
@@ -41,9 +41,9 @@ uint8_t TestSensor::getState(uint32_t address) {
     delayMicroseconds(10);
     switch (address) {
     case 0:  // deal with rate
-        return _rate;
+        return rate;
     case 1:
-        return _channels;
+        return channels;
     default:
         return 0xff;
     }
@@ -51,10 +51,10 @@ uint8_t TestSensor::getState(uint32_t address) {
 bool TestSensor::setState(State state) {
     switch (state.address) {
     case 0:  // deal with rate
-        _rate = state.payload;
+        rate = state.payload;
         break;
     case 1:
-        _channels = state.payload;
+        channels = state.payload;
         break;
     }
     delayMicroseconds(10);
@@ -78,20 +78,20 @@ bool TestSensor::setState(State* states, uint32_t count, void*result) {
 
 bool TestSensor::getModelName(char* result) {
     // check overflows !
-    return strcpy(result, _name);
+    return strcpy(result, name);
 }
 
 bool TestSensor::operator! (void) {
     delayMicroseconds(1);
-    if (_lastTime == ULONG_MAX)
+    if (lastTime == ULONG_MAX)
         return true;
-    return (_lastTime + 1000 / _rate) > millis();
+    return (lastTime + 1000 / rate) > millis();
 }
 
 void TestSensor::begin() {
-    _lastTime = millis();
+    lastTime = millis();
 }
 
 void TestSensor::end() {
-    _lastTime = ULONG_MAX;
+    lastTime = ULONG_MAX;
 }

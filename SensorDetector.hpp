@@ -32,13 +32,13 @@ public:
 
 private:
     /*!
-     * \brief _sensors
+     * \brief sensors
      */
-    sensor::Sensor** _sensors;
+    sensor::Sensor** sensors;
     /*!
-     * \brief _countOfSensors
+     * \brief countOfSensors
      */
-    unsigned int _countOfSensors;
+    unsigned int countOfSensors;
 };
 
 #endif // SENDORDETECTOR_H

@@ -36,11 +36,11 @@ public:
 
 private:
 
-    const char * _name;
-    uint64_t _sequence;
-    uint8_t _rate;
-    uint8_t _channels;
-    unsigned long _lastTime;
+    const char * name;
+    uint64_t sequence;
+    uint8_t rate;
+    uint8_t channels;
+    unsigned long lastTime;
 
     uint8_t getState(uint32_t);
     bool setState(State state);
