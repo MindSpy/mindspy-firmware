@@ -5,6 +5,8 @@
 #include "Sensor.h"
 #include "SensorDetector.h"
 
+#define COUNT_OF_ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
+
 typedef bool (*ResponseEncoderCallbackType)(pb_ostream_t*, const pb_field_t[], const void *);
 typedef bool (*RequestDecoderCallbackType)(pb_istream_t*, const pb_field_t[], void *);
 typedef bool (*StopStreamCallbackType)(void);

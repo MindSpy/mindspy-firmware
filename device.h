@@ -5,7 +5,6 @@
 #include "ProtocolWrapper.h"
 #include "SensorDetector.h"
 #include "TestSensor.h"
-#include "macros.h"
 
 #define BLUETOOTH_STREAM Serial1
 #define USB_STREAM Serial

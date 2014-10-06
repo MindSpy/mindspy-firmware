@@ -2,7 +2,6 @@
 
 #include <pb_encode.h>
 #include <pb_decode.h>
-#include "macros.h"
 
 #ifndef _UNITTEST
 #include <Arduino.h>

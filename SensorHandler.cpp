@@ -3,7 +3,6 @@
 #include <pb_decode.h>
 #include "proto.h"
 #include "Sensor.h"
-#include "macros.h"
 
 #ifndef _UNITTEST
 #include <Arduino.h>
@@ -25,7 +24,7 @@ bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
     // intercept request message
     if (!pb_decode_delimited(istream, Request_fields, &request)) {
         response.has_error_msg = true;
-        snprintf(response.error_msg, COUNT_OF(response.error_msg),
+        snprintf(response.error_msg, COUNT_OF_ARRAY_SIZE(response.error_msg),
                 "Decoding of request message failed.");
         return false;
     }
@@ -62,7 +61,7 @@ bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
             if (module >= sensors->count()) {
                 if (request.has_module) {
                     response.has_error_msg = true;
-                    snprintf(response.error_msg, COUNT_OF(response.error_msg),
+                    snprintf(response.error_msg, COUNT_OF_ARRAY_SIZE(response.error_msg),
                             "Requested module #%d is outside of interval [0, %zu].",
                             module, sensors->count() - 1);
                     return false;
@@ -81,7 +80,7 @@ bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
                             request.setState.states_count, NULL)) {
                         response.has_error_msg = true;
                         snprintf(response.error_msg,
-                                COUNT_OF(response.error_msg),
+                                COUNT_OF_ARRAY_SIZE(response.error_msg),
                                 "Method setState of module #%d failed.",
                                 module);
                         return false;
@@ -94,7 +93,7 @@ bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
                             response.states)) {
                         response.has_error_msg = true;
                         snprintf(response.error_msg,
-                                COUNT_OF(response.error_msg),
+                                COUNT_OF_ARRAY_SIZE(response.error_msg),
                                 "Method getState of module #%d failed.",
                                 module);
                         return false;
@@ -107,7 +106,7 @@ bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
                             response.samples)) {
                         response.has_error_msg = true;
                         snprintf(response.error_msg,
-                                COUNT_OF(response.error_msg),
+                                COUNT_OF_ARRAY_SIZE(response.error_msg),
                                 "Method getSamples of module #%d failed.",
                                 module);
                         return false;
@@ -119,7 +118,7 @@ bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
                     if (!sensor->getModelName(response.modelName)) {
                         response.has_error_msg = true;
                         snprintf(response.error_msg,
-                                COUNT_OF(response.error_msg),
+                                COUNT_OF_ARRAY_SIZE(response.error_msg),
                                 "Method getModelName of module #%d failed.",
                                 module);
                         return false;
