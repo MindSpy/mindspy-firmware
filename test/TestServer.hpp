@@ -1,13 +1,13 @@
 #ifndef PROTOCOLSOCKET_H
 #define PROTOCOLSOCKET_H
 
-#include "compat.h"
-#include "SensorHandler.h"
-#include "SensorDetector.h"
+#include "compat.hpp"
+#include "SensorHandler.hpp"
+#include "SensorDetector.hpp"
 #include "Sensor.h"
-#include "TestSensor.h"
-#include "ProtocolWrapper.h"
-#include "FileStream.h"
+#include "TestSensor.hpp"
+#include "ProtocolWrapper.hpp"
+#include "FileStream.hpp"
 
 class TestServer
 {

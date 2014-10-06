@@ -2,9 +2,12 @@
 #define _TEST_H
 
 #include <cpptest.h>
-#include "ProtocolWrapper.h"
-#include "SensorHandler.h"
+#include "ProtocolWrapper.hpp"
+#include "SensorHandler.hpp"
 #include "Sensor.h"
+
+#define COUNT_OF_ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
+
 
 class SensorTest : public Test::Suite
 {

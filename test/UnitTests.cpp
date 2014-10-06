@@ -1,13 +1,12 @@
-#include "UnitTests.h"
+#include "UnitTests.hpp"
 
-#include "SensorHandler.h"
-#include "SensorDetector.h"
+#include "SensorHandler.hpp"
+#include "SensorDetector.hpp"
 #include "Sensor.h"
-#include "TestSensor.h"
-#include "ProtocolWrapper.h"
-#include "macros.h"
-#include "FileStream.h"
-#include "MemoryStream.h"
+#include "TestSensor.hpp"
+#include "ProtocolWrapper.hpp"
+#include "FileStream.hpp"
+#include "MemoryStream.hpp"
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -57,7 +56,7 @@ void SensorTest::testGetState()
 {
     uint32_t addresses[] = {0,1};
     State states[2];
-    sensor->getState(addresses, COUNT_OF(addresses), states);
+    sensor->getState(addresses, COUNT_OF_ARRAY_SIZE(addresses), states);
     TEST_ASSERT_EQUALS_MSG(SAMPLE_RATE, states[0].payload, "Sample rate mismatch.");
     TEST_ASSERT_EQUALS_MSG(CHANNEL_COUNT, states[1].payload, "Channel count mismatch.");
 }

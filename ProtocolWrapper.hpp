@@ -2,12 +2,12 @@
 #define PROTOCOLWRAPPER_H
 
 
-#include "SensorHandler.h"
+#include "SensorHandler.hpp"
 
 #ifndef _UNITTEST
 #include <Arduino.h>
 #else
-#include "compat.h"
+#include "compat.hpp"
 #endif
 
 

@@ -1,7 +1,7 @@
 #ifndef FILESTREAM_H
 #define FILESTREAM_H
 
-#include "compat.h"
+#include "compat.hpp"
 #include <stdio.h>
 
 class FileStream : public Stream

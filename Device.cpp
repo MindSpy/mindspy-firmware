@@ -1,4 +1,4 @@
-#include "device.h"
+#include "Device.hpp"
 
 Device::Device() : sensors(NULL), detector(NULL), protocolWrapper(NULL) {
 	SetupBluetooth();

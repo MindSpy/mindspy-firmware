@@ -5,7 +5,7 @@
  by pBorky
  */
 
-#include "ADS1x9y.h"
+#include "ADS1x9y.hpp"
 
 #include <SPI.h>
 #include <Arduino.h>

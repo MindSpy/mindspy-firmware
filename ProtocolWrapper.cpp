@@ -1,4 +1,4 @@
-#include "ProtocolWrapper.h"
+#include "ProtocolWrapper.hpp"
 
 #include <pb_encode.h>
 #include <pb_decode.h>
@@ -6,7 +6,7 @@
 #ifndef _UNITTEST
 #include <Arduino.h>
 #else
-#include "compat.h"
+#include "compat.hpp"
 #endif
 
 Stream* ProtocolWrapper::stream = NULL;
