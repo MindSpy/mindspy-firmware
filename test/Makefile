@@ -10,6 +10,7 @@ all: test.elf
 clean:
 	rm *.o test.elf || true
 
+CXXFLAGS := -std=gnu++11
 CPPFLAGS := -I../lib/pb -I.. -D_UNITTEST -O0 -ggdb
 
 %.cpp.o: %.cpp

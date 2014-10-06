@@ -280,7 +280,7 @@ ifeq "$(ENERGIABOARD)" "lpmsp430f5529_25"
 endif
 
 CFLAGS :=
-CXXFLAGS := -fno-rtti
+CXXFLAGS := -fno-rtti -std=gnu++11
 
 rebuild_debug: OPT := -O0
 OPT := -Os
