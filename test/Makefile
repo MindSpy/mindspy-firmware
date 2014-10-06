@@ -37,6 +37,10 @@ test.elf: UnitTests.cpp.o MemoryStream.cpp.o ProtocolWrapper.cpp.o TestSensor.cp
 	@echo "Linking" `basename $@` "<" $?
 	$M$(CXX) $? -o $@ -lgcc -lcpptest
 
+server: TestServer.cpp.o FileStream.cpp.o ProtocolWrapper.cpp.o TestSensor.cpp.o SensorHandler.cpp.o SensorDetector.cpp.o compat.cpp.o pb_common.c.o pb_encode.c.o pb_decode.c.o proto.c.o 
+	@echo "Linking" `basename $@` "<" $?
+	$M$(CXX) $? -o $@ -lgcc
+
 run: test.elf
 	@echo "Running tests.."
 	$M./test.elf || ( rm test && false )
