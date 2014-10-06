@@ -11,9 +11,9 @@
 
 Stream* ProtocolWrapper::stream = NULL;
 
-ProtocolWrapper::ProtocolWrapper(SensorDetector* detector):
-    handler(new sensor::SensorHandler(&stopStream, detector))
-    {}
+ProtocolWrapper::ProtocolWrapper(SensorDetector* detector) :
+        handler(new sensor::SensorHandler(&stopStream, detector)) {
+}
 
 bool ProtocolWrapper::handle() {
     // volatile streams for nanopb library.
@@ -24,23 +24,21 @@ bool ProtocolWrapper::handle() {
     return handler->handle(&istream, &ostream);
 }
 
-void ProtocolWrapper::setStream(Stream * s)
-{
+void ProtocolWrapper::setStream(Stream * s) {
     stream = s;
 }
 
-bool ProtocolWrapper::stopStream(void)
-{
+bool ProtocolWrapper::stopStream(void) {
     return !!stream->available();
 }
 
-bool ProtocolWrapper::write_callback(pb_ostream_t *, const uint8_t *buf, size_t count)
-{
+bool ProtocolWrapper::write_callback(pb_ostream_t *, const uint8_t *buf,
+        size_t count) {
     return stream->write(buf, count) == count;
 }
 
-bool ProtocolWrapper::read_callback(pb_istream_t *, uint8_t *buf, size_t count)
-{
+bool ProtocolWrapper::read_callback(pb_istream_t *, uint8_t *buf,
+        size_t count) {
     size_t avail = 0;
 
     // wait for enough data
@@ -49,6 +47,7 @@ bool ProtocolWrapper::read_callback(pb_istream_t *, uint8_t *buf, size_t count)
         delayMicroseconds(1);
     }
 
-    size_t result = stream->readBytes((char*) buf, avail>count?count:avail);
+    size_t result = stream->readBytes((char*) buf,
+            avail > count ? count : avail);
     return result == count;
 }

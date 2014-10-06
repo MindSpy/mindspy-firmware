@@ -1,17 +1,17 @@
 #include "Device.hpp"
 
 Device::Device() : sensors(NULL), detector(NULL), protocolWrapper(NULL) {
-	SetupBluetooth();
-	SetupUsb();
+    SetupBluetooth();
+    SetupUsb();
 }
 
 Device::~Device() {
-	for (unsigned int i = 0; i < SENSOR_COUNT; i++) {
-		delete sensors[i];
-	}
-	delete[] sensors;
-	delete detector;
-	delete protocolWrapper;
+    for (unsigned int i = 0; i < SENSOR_COUNT; i++) {
+        delete sensors[i];
+    }
+    delete[] sensors;
+    delete detector;
+    delete protocolWrapper;
 }
 
 void Device::SetupBluetooth() {

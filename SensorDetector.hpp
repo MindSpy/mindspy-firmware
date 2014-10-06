@@ -1,5 +1,5 @@
-#ifndef SENDORDETECTOR_H
-#define SENDORDETECTOR_H
+#ifndef SENDORDETECTOR_HPP
+#define SENDORDETECTOR_HPP
 
 #include "Sensor.h"
 
@@ -15,7 +15,7 @@ public:
      * \param count of sensors
      */
     SensorDetector(sensor::Sensor**, size_t);
-	~SensorDetector();
+    ~SensorDetector();
 
     /*!
      * \brief count
@@ -41,4 +41,4 @@ private:
     unsigned int countOfSensors;
 };
 
-#endif // SENDORDETECTOR_H
+#endif // SENDORDETECTOR_H

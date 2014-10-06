@@ -1,15 +1,6 @@
-/*
- ADS1x9y Analog Frontend
-
- created 30 Nov 2013
- by pBorky
- */
-
-#include "ADS1x9y.hpp"
-
 #include <SPI.h>
 #include <Arduino.h>
-
+#include "ADS1x9y.hpp"
 #include "Sensor.h"
 
 // Sensor Pinout definition
@@ -64,10 +55,13 @@ bool ADS1x9y::pinSet = false;
 int ADS1x9y::active = -1;
 int ADS1x9y::sequence = 0;
 
-ADS1x9y::ADS1x9y(uint8_t module) : module(constrain(module, 0, SPI_CS_PIN_COUNT - 1)), cs(SPI_CS(module)), channels(0), continous(true) {
+ADS1x9y::ADS1x9y(uint8_t module) :
+        module(constrain(module, 0, SPI_CS_PIN_COUNT - 1)), cs(SPI_CS(module)), channels(
+                0), continous(true) {
 }
 
-ADS1x9y::ADS1x9y() : module(0), cs(SPI_CS(module)), channels(0), continous(true) {
+ADS1x9y::ADS1x9y() :
+        module(0), cs(SPI_CS(module)), channels(0), continous(true) {
 }
 
 bool ADS1x9y::getSamples(uint32_t count, Sample* result) {

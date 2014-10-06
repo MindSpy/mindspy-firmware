@@ -1,11 +1,5 @@
-/*
- TestSensor for unit tests
-
- created 22 Sep 2014
- by pBorky
- */
-#ifndef TestSensor_h
-#define TestSensor_h
+#ifndef TESTSENSOR_HPP
+#define TESTSENSOR_HPP
 
 #include "Sensor.h"
 #include "proto.h"
@@ -13,7 +7,7 @@
 /*!
  * \brief TestSensor for unit tests
  */
-class TestSensor: public sensor::Sensor {
+class TestSensor : public sensor::Sensor {
 
 public:
 
