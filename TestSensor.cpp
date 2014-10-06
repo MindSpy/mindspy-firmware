@@ -17,7 +17,8 @@
 #endif
 
 TestSensor::TestSensor(const char* name, const uint8_t rate, const uint8_t chan) :
-        name(name), rate(rate), channels(chan), lastTime(ULONG_MAX) {}
+        name(name), rate(rate), channels(chan), lastTime(ULONG_MAX) {
+}
 
 bool TestSensor::getSamples(uint32_t count, Sample* result) {
     for (unsigned int i = 0; i < count; i++) {
@@ -81,7 +82,7 @@ bool TestSensor::getModelName(char* result) {
     return strcpy(result, name);
 }
 
-bool TestSensor::operator! (void) {
+bool TestSensor::operator!(void) {
     delayMicroseconds(1);
     if (lastTime == ULONG_MAX)
         return true;

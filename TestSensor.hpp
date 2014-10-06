@@ -13,7 +13,7 @@
 /*!
  * \brief TestSensor for unit tests
  */
-class TestSensor: public sensor::Sensor {
+class TestSensor : public sensor::Sensor {
 
 public:
 

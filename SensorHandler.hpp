@@ -13,48 +13,48 @@ typedef bool (*StopStreamCallbackType)(void);
 
 namespace sensor {
 
-/*!
- * \brief Static class for handling the request, reading data from sensors and updating the responses.
- */
-class SensorHandler {
-public:
-
     /*!
-     * \briefConstructor call handling the request and reading data.
-     * \param timestamp - callback for timestamp generation
-     * \param stopStream - callback for stop condition when in stream mode
-     * \param sensors - sensor detector instance
+     * \brief Static class for handling the request, reading data from sensors and updating the responses.
      */
-    SensorHandler(StopStreamCallbackType, SensorDetector*);
+    class SensorHandler {
+    public:
 
-    ~SensorHandler();
+        /*!
+         * \briefConstructor call handling the request and reading data.
+         * \param timestamp - callback for timestamp generation
+         * \param stopStream - callback for stop condition when in stream mode
+         * \param sensors - sensor detector instance
+         */
+        SensorHandler(StopStreamCallbackType, SensorDetector*);
 
-    /*!
-     * \brief handle the request, contact the sensors and submit response.
-     * \param input stream
-     * \param output stream
-     * \return true if success
-     */
-    bool handle(pb_istream_t*, pb_ostream_t*);
+        ~SensorHandler();
 
-private:
+        /*!
+         * \brief handle the request, contact the sensors and submit response.
+         * \param input stream
+         * \param output stream
+         * \return true if success
+         */
+        bool handle(pb_istream_t*, pb_ostream_t*);
 
-    /*!
-     * \brief stopStream
-     */
-    StopStreamCallbackType stopStream;
+    private:
 
-    /*!
-     * \brief sensors
-     */
-    SensorDetector* sensors;
+        /*!
+         * \brief stopStream
+         */
+        StopStreamCallbackType stopStream;
 
-    /*!
-     * \brief Request and response structures.
-     */
-    Request request;
-    Response response;
-};
+        /*!
+         * \brief sensors
+         */
+        SensorDetector* sensors;
+
+        /*!
+         * \brief Request and response structures.
+         */
+        Request request;
+        Response response;
+    };
 
 } // namespace
 

@@ -4,7 +4,7 @@ SensorDetector::SensorDetector(sensor::Sensor** sensors, size_t countOfSensors) 
         sensors(sensors), countOfSensors(countOfSensors) {
     for (size_t i = 0; i < countOfSensors; i++) {
         sensors[i]->begin();
-	}
+    }
 }
 
 SensorDetector::~SensorDetector() {

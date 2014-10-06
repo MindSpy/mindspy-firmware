@@ -1,9 +1,3 @@
-/*
- TI ADS1x9y Analog Frontend
-
- created 30 Nov 2013
- by pBorky
- */
 #ifndef ADS1x9y_h
 #define ADS1x9y_h
 
@@ -14,14 +8,14 @@
  * TI ADS1x9y module.
  * See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
  */
-class ADS1x9y: public sensor::Sensor {
+class ADS1x9y : public sensor::Sensor {
 public:
 
     /*!
      * \brief Constructor.
      * \param module nnumber (CS pin)
      */
-	ADS1x9y();
+    ADS1x9y();
     ADS1x9y(uint8_t);
 
     // override ISensor methods
@@ -181,7 +175,7 @@ public:
     /*!
      * \brief Check if data is ready in this module.
      */
-    bool operator! (void);
+    bool operator!(void);
     /*!
      * \brief Start conversion in all modules via pin.
      * See ADS1x9y::START() and <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
