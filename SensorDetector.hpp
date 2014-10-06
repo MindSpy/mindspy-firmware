@@ -1,5 +1,5 @@
-#ifndef SENDORDETECTOR_H
-#define SENDORDETECTOR_H
+#ifndef SENDORDETECTOR_HPP
+#define SENDORDETECTOR_HPP
 
 #include "Sensor.h"
 

@@ -1,5 +1,5 @@
-#ifndef ADS1x9y_h
-#define ADS1x9y_h
+#ifndef ADS1X9Y_HPP
+#define ADS1X9Y_HPP
 
 #include <Arduino.h>
 #include "Sensor.h"

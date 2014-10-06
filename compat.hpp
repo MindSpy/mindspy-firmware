@@ -1,5 +1,5 @@
-#ifndef COMPAT_H
-#define COMPAT_H
+#ifndef COMPAT_HPP
+#define COMPAT_HPP
 
 // this is for compatibility with unit tests when wiring is not available
 #ifdef _UNITTEST

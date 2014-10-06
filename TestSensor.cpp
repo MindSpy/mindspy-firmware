@@ -1,14 +1,7 @@
-/*
- TestSensor for unit tests
-
- created 22 Sep 2014
- by pBorky
- */
-
-#include "TestSensor.hpp"
 #include <limits.h>
 #include "Sensor.h"
 #include "proto.h"
+#include "TestSensor.hpp"
 
 #ifndef _UNITTEST
 #include <Arduino.h>

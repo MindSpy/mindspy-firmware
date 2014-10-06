@@ -1,5 +1,5 @@
-#ifndef SensorHandler_h
-#define SensorHandler_h
+#ifndef SENSORHANDLER_HPP
+#define SENSORHANDLER_HPP
 
 #include <stdio.h>
 #include "Sensor.h"

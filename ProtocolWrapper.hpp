@@ -1,5 +1,5 @@
-#ifndef PROTOCOLWRAPPER_H
-#define PROTOCOLWRAPPER_H
+#ifndef PROTOCOLWRAPPER_HPP
+#define PROTOCOLWRAPPER_HPP
 
 #include "SensorHandler.hpp"
 
