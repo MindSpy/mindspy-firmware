@@ -9,7 +9,7 @@ int FileStream::available() {
 }
 
 size_t FileStream::readBytes( char *buff, size_t l) {
-    return in->get(buff, l).gcount();
+    return in->read(buff, l).gcount();
 }
 
 size_t FileStream::write(const uint8_t *buff, size_t l) {
