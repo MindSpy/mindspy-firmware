@@ -10,14 +10,14 @@
 class SensorDetector {
 public:
 
-    SensorDetector(std::vector<sensor::Sensor*> &sensor);
+    SensorDetector(std::vector<sensor::Sensor*> &sensors);
     ~SensorDetector();
 
     /*!
      * \brief count
      * \return return number of sensors registered
      */
-    size_t count();
+    size_t count() const { return sensors.size(); }
 
     /*!
      * \brief operator [] acces the member
@@ -27,17 +27,8 @@ public:
     sensor::Sensor*& operator[](size_t idx);
 
 private:
-    /*!
-     * \brief sensors
-     */
-    sensor::Sensor** sensors;
 
-    std::vector<sensor::Sensor*> sensor;
-
-    /*!
-     * \brief countOfSensors
-     */
-    unsigned int countOfSensors;
+    std::vector<sensor::Sensor*> &sensors;
 };
 
 #endif // SENDORDETECTOR_H
