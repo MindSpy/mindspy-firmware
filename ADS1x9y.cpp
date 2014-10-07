@@ -56,8 +56,7 @@ int ADS1x9y::active = -1;
 int ADS1x9y::sequence = 0;
 
 ADS1x9y::ADS1x9y(uint8_t module) :
-        module(constrain(module, 0, SPI_CS_PIN_COUNT - 1)), cs(SPI_CS(module)), channels(
-                0), continous(true) {
+        module(constrain(module, 0, SPI_CS_PIN_COUNT - 1)), cs(SPI_CS(module)), channels(0), continous(true) {
 }
 
 ADS1x9y::ADS1x9y() :

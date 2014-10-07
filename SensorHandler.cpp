@@ -12,8 +12,7 @@
 
 namespace sensor {
 
-    SensorHandler::SensorHandler(StopStreamCallbackType stop,
-            SensorDetector* sensorDetector) :
+    SensorHandler::SensorHandler(StopStreamCallbackType stop, SensorDetector* sensorDetector) :
             stopStream(stop), sensors(sensorDetector) {
     }
 

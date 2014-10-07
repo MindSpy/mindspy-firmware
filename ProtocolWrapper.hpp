@@ -27,10 +27,10 @@
  */
 class ProtocolWrapper {
 public:
-    /*!
-     * \brief ProtocolBuffersWrapper
-     */
-    ProtocolWrapper(SensorDetector*);
+
+    ProtocolWrapper(SensorDetector *);
+    ~ProtocolWrapper();
+
     /*!
      * \brief handle
      * \return
@@ -40,6 +40,7 @@ public:
     static void setStream(Stream*);
 
 private:
+
     sensor::SensorHandler* handler;
 
     static Stream* stream;

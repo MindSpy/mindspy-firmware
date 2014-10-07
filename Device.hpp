@@ -1,6 +1,7 @@
 #ifndef DEVICE_HPP
 #define DEVICE_HPP
 
+#include <vector>
 #include "ADS1x9y.hpp"
 #include "ProtocolWrapper.hpp"
 #include "SensorDetector.hpp"
@@ -42,11 +43,10 @@ public:
      */
     void SetupBluetooth();
 
-    // array of pointers to sensor.
-    sensor::Sensor** sensors;
+    std::vector<sensor::Sensor*> sensor;
 
     SensorDetector* detector;
-    ProtocolWrapper* protocolWrapper;
+    ProtocolWrapper* protocol;
 
 private:
 
@@ -65,8 +65,5 @@ private:
      * Transfer speed for USB device.
      */
     const static int USB_STREAM_BAUD = 115200;
-
-    // Temporary counter for sensor.
-    const static size_t SENSOR_COUNT = 2;
 };
 #endif // DEVICE_H

@@ -1,15 +1,15 @@
 #include "SensorDetector.hpp"
 
-SensorDetector::SensorDetector(sensor::Sensor** sensors, size_t countOfSensors) :
-        sensors(sensors), countOfSensors(countOfSensors) {
-    for (size_t i = 0; i < countOfSensors; i++) {
-        sensors[i]->begin();
+SensorDetector::SensorDetector(std::vector<sensor::Sensor*> &sensor) {
+    for (unsigned int i = 0; i < sensor.size(); i++) {
+        sensor[i]->begin();
     }
 }
 
 SensorDetector::~SensorDetector() {
 
 }
+
 
 sensor::Sensor*& SensorDetector::operator[](size_t idx) {
     if (idx < 0)
@@ -19,6 +19,7 @@ sensor::Sensor*& SensorDetector::operator[](size_t idx) {
 
     return sensors[idx];
 }
+
 
 size_t SensorDetector::count() {
     return countOfSensors;

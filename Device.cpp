@@ -1,17 +1,18 @@
 #include "Device.hpp"
 
-Device::Device() : sensors(NULL), detector(NULL), protocolWrapper(NULL) {
+Device::Device() {
     SetupBluetooth();
     SetupUsb();
 }
 
 Device::~Device() {
-    for (unsigned int i = 0; i < SENSOR_COUNT; i++) {
-        delete sensors[i];
+    // Dealocate sensors
+    for(unsigned int i = 0; i < sensor.size(); i++) {
+         delete sensor[i];
     }
-    delete[] sensors;
+
     delete detector;
-    delete protocolWrapper;
+    delete protocol;
 }
 
 void Device::SetupBluetooth() {
@@ -50,11 +51,15 @@ void Device::SetupUsb() {
 }
 
 void Device::SetupDevice() {
-    // TODO this will be in SensorDetector once it is finished
-    sensors = new sensor::Sensor*[SENSOR_COUNT];
-    sensors[0] = new TestSensor("TestSensor", 128, 8);
-    sensors[1] = new ADS1x9y(0);
-    detector = new SensorDetector(sensors, SENSOR_COUNT);
-    protocolWrapper = new ProtocolWrapper(detector);
+    // Reserve memory for 10 sensors.
+    sensor.reserve(5);
+    // Add sensors
+    sensor.push_back(new TestSensor("TestSensor", 128, 8));
+    sensor.push_back(new ADS1x9y());
+
+    // Add sensor to detector
+    detector = new SensorDetector(sensor);
+    protocol = new ProtocolWrapper(detector);
+
     ProtocolWrapper::setStream(&PB_STREAM);
 }

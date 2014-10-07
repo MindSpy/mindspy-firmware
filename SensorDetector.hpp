@@ -1,20 +1,16 @@
 #ifndef SENDORDETECTOR_HPP
 #define SENDORDETECTOR_HPP
 
+#include <vector>
 #include "Sensor.h"
 
 /*!
- * \brief The SensorDetector class
+ * The SensorDetector class detection sensors.
  */
 class SensorDetector {
 public:
 
-    /*!
-     * \brief SensorDetector
-     * \param sensors
-     * \param count of sensors
-     */
-    SensorDetector(sensor::Sensor**, size_t);
+    SensorDetector(std::vector<sensor::Sensor*> &sensor);
     ~SensorDetector();
 
     /*!
@@ -35,6 +31,9 @@ private:
      * \brief sensors
      */
     sensor::Sensor** sensors;
+
+    std::vector<sensor::Sensor*> sensor;
+
     /*!
      * \brief countOfSensors
      */
