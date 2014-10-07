@@ -1,10 +1,12 @@
 #include "TestServer.hpp"
 
-#include <iostream>
-#include <stdio.h>
+#include "SensorHandler.hpp"
+#include "TestSensor.hpp"
+#include "FileStream.hpp"
 #include <unistd.h>
+#include <fstream>
 
-TestServer::TestServer(FILE* in, FILE* out) {
+TestServer::TestServer(std::istream* in, std::ostream* out) {
     stream = new FileStream(in, out);
     ProtocolWrapper::setStream(stream);
 
@@ -27,24 +29,26 @@ void TestServer::handle() {
 }
 
 int main(int argc, char **argv) {
-    FILE* in = stdin;
-    FILE* out = stdout;
+    std::ifstream* in = NULL;
+    std::ofstream* out = NULL;
 
     if (argc >= 2) {
-        in = fopen(argv[1], "rb");
+        in = new std::ifstream(argv[1]);
     }
 
     if (argc >= 3) {
-        out = fopen(argv[2], "wb");
+        out = new std::ofstream(argv[2], std::ios::trunc);
     }
 
-    TestServer server(in, out);
+    TestServer server(in==NULL?&std::cin:in, out==NULL?&std::cout:out);
     server.handle();
 
     usleep(10000);
 
-    fclose(in);
-    fclose(out);
+    if (in!=NULL)
+        delete in;
+    if (out!=NULL)
+        delete out;
 
     exit(0);
 }

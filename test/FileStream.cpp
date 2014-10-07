@@ -1,6 +1,6 @@
 #include "FileStream.hpp"
 
-FileStream::FileStream(FILE*i, FILE*o) : in(i), out(o) { }
+FileStream::FileStream(std::istream*i , std::ostream*o ) : in(i), out(o) { }
 
 FileStream::~FileStream() { }
 
@@ -9,9 +9,10 @@ int FileStream::available() {
 }
 
 size_t FileStream::readBytes( char *buff, size_t l) {
-    return fread(buff, 1, l, in);
+    return in->get(buff, l).gcount();
 }
 
 size_t FileStream::write(const uint8_t *buff, size_t l) {
-    return fwrite(buff, 1, l, out);
+    out->write((char*)buff, l);
+    return l;
 }

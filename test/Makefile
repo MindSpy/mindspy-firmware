@@ -5,13 +5,17 @@ M_0 := @
 M_1 :=
 M = $(M_$(V))
 
-all: test.elf
+all: test server
 
 clean:
-	rm *.o test.elf || true
+	rm *.o test server || true
 
 CXXFLAGS := -std=gnu++11
 CPPFLAGS := -I../lib/pb -I.. -D_UNITTEST -O0 -ggdb
+
+Proto.cpp: ../lib/proto/regs.proto
+	$M$(MAKE) -C ../lib/proto Proto.cpp
+	$Mmv ../lib/proto/Proto.[ch]pp ./
 
 %.cpp.o: %.cpp
 	@echo "Compiling <" `basename $<`
@@ -33,14 +37,14 @@ CPPFLAGS := -I../lib/pb -I.. -D_UNITTEST -O0 -ggdb
 	$Mmkdir -p $(dir $@)
 	$M$(COMPILE.c) -o $@ $<
 
-test.elf: UnitTests.cpp.o MemoryStream.cpp.o ProtocolWrapper.cpp.o TestSensor.cpp.o SensorHandler.cpp.o SensorDetector.cpp.o pb_common.c.o pb_encode.c.o pb_decode.c.o proto.c.o compat.cpp.o
+test: UnitTests.cpp.o SensorTest.cpp.o ProtocolTest.cpp.o MemoryStream.cpp.o TestSensor.cpp.o compat.cpp.o Proto.cpp.o Subprocess.cpp.o
 	@echo "Linking" `basename $@` "<" $?
-	$M$(CXX) $? -o $@ -lgcc -lcpptest
+	$M$(CXX) $? -o $@ -lgcc -lcpptest -lprotobuf
 
 server: TestServer.cpp.o FileStream.cpp.o ProtocolWrapper.cpp.o TestSensor.cpp.o SensorHandler.cpp.o SensorDetector.cpp.o compat.cpp.o pb_common.c.o pb_encode.c.o pb_decode.c.o proto.c.o 
 	@echo "Linking" `basename $@` "<" $?
 	$M$(CXX) $? -o $@ -lgcc
 
-run: test.elf
+run: test
 	@echo "Running tests.."
-	$M./test.elf || ( rm test && false )
+	$M./test || ( rm test && false )

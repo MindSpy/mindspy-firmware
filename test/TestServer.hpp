@@ -2,17 +2,15 @@
 #define PROTOCOLSOCKET_H
 
 #include "compat.hpp"
-#include "SensorHandler.hpp"
+#include "ProtocolWrapper.hpp"
 #include "SensorDetector.hpp"
 #include "Sensor.h"
-#include "TestSensor.hpp"
-#include "ProtocolWrapper.hpp"
-#include "FileStream.hpp"
+#include <iostream>
 
 class TestServer
 {
 public:
-    TestServer(FILE* in, FILE* out);
+    TestServer(std::istream* , std::ostream* );
     ~TestServer();
     void handle();
 
