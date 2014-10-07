@@ -44,8 +44,9 @@ void ProtocolTest::communicate(void* req, void* res) {
     std::istream* in = sub.istream();
     std::ostream* out = sub.ostream();
 
-    request->SerializePartialToOstream(out);
-    response->ParseFromIstream(in);
+    // TODO read and write delimited
+    //request->SerializeAsString()  ->SerializePartialToOstream(out);
+    //response->ParseFromIstream(in);
 }
 
 void ProtocolTest::testLocal() {
