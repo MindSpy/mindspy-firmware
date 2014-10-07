@@ -5,7 +5,7 @@
 #include "Sensor.h"
 #include "SensorDetector.hpp"
 
-#define COUNT_OF_ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
+#define DECLARED_ARRAY_ITEM_COUNT(x) (sizeof(x)/sizeof(x[0]))
 
 typedef bool (*ResponseEncoderCallbackType)(pb_ostream_t*, const pb_field_t[], const void *);
 typedef bool (*RequestDecoderCallbackType)(pb_istream_t*, const pb_field_t[], void *);
