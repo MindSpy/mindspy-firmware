@@ -37,13 +37,18 @@ Proto.cpp: ../lib/proto/regs.proto
 	$Mmkdir -p $(dir $@)
 	$M$(COMPILE.c) -o $@ $<
 
-test: UnitTests.cpp.o SensorTest.cpp.o ProtocolTest.cpp.o MemoryStream.cpp.o TestSensor.cpp.o compat.cpp.o Proto.cpp.o Subprocess.cpp.o
+test: UnitTests.cpp.o SensorTest.cpp.o ProtocolTest.cpp.o FileStream.cpp.o \
+      ProtocolWrapper.cpp.o SensorHandler.cpp.o TestSensors.cpp.o \
+      TestSensor.cpp.o compat.cpp.o Proto.cpp.o Subprocess.cpp.o TestServer.cpp.o \
+      compat.cpp.o pb_common.c.o pb_encode.c.o pb_decode.c.o proto.c.o Proto.cpp.o
 	@echo "Linking" `basename $@` "<" $?
 	$M$(CXX) $? -o $@ -lgcc -lcpptest -lprotobuf
 
-server: TestServer.cpp.o FileStream.cpp.o ProtocolWrapper.cpp.o TestSensor.cpp.o SensorHandler.cpp.o SensorDetector.cpp.o compat.cpp.o pb_common.c.o pb_encode.c.o pb_decode.c.o proto.c.o 
+server: server.cpp.o TestServer.cpp.o FileStream.cpp.o ProtocolWrapper.cpp.o \
+      TestSensor.cpp.o SensorHandler.cpp.o TestSensors.cpp.o \
+      compat.cpp.o pb_common.c.o pb_encode.c.o pb_decode.c.o proto.c.o Proto.cpp.o
 	@echo "Linking" `basename $@` "<" $?
-	$M$(CXX) $? -o $@ -lgcc
+	$M$(CXX) $? -o $@ -lgcc -lprotobuf
 
 run: test
 	@echo "Running tests.."
