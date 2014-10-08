@@ -1,6 +1,6 @@
-#include "Panic.hpp"
 #include "SensorDetector.hpp"
 
+#include "panic.hpp"
 #include "Sensors.hpp"
 #include "TestSensor.hpp"
 //#include "ADS1x9y.hpp"
