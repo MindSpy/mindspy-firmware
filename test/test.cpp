@@ -1,4 +1,4 @@
-#include "UnitTests.hpp"
+#include "test.hpp"
 
 #include "SensorTest.hpp"
 #include "ProtocolTest.hpp"

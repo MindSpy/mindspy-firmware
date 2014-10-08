@@ -37,7 +37,7 @@ Proto.cpp: ../lib/proto/regs.proto
 	$Mmkdir -p $(dir $@)
 	$M$(COMPILE.c) -o $@ $<
 
-test: UnitTests.cpp.o SensorTest.cpp.o ProtocolTest.cpp.o FileStream.cpp.o \
+test: test.cpp.o SensorTest.cpp.o ProtocolTest.cpp.o FileStream.cpp.o \
       ProtocolWrapper.cpp.o SensorHandler.cpp.o TestSensors.cpp.o \
       TestSensor.cpp.o compat.cpp.o Proto.cpp.o Subprocess.cpp.o TestServer.cpp.o \
       compat.cpp.o pb_common.c.o pb_encode.c.o pb_decode.c.o proto.c.o Proto.cpp.o
