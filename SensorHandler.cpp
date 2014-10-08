@@ -122,7 +122,7 @@ namespace sensor {
                 response.has_error_msg = true;
                 snprintf(response.error_msg,
                         DECLARED_ARRAY_ITEM_COUNT(response.error_msg),
-                        "Method setState of module #%u failed.",
+                        "Method setState of module #%lu failed.",
                         response.module);
                 return false;
             }
@@ -135,7 +135,7 @@ namespace sensor {
                 response.has_error_msg = true;
                 snprintf(response.error_msg,
                         DECLARED_ARRAY_ITEM_COUNT(response.error_msg),
-                        "Method getState of module #%u failed.",
+                        "Method getState of module #%lu failed.",
                         response.module);
                 return false;
             }
@@ -148,7 +148,7 @@ namespace sensor {
                 response.has_error_msg = true;
                 snprintf(response.error_msg,
                         DECLARED_ARRAY_ITEM_COUNT(response.error_msg),
-                        "Method getSamples of module #%u failed.",
+                        "Method getSamples of module #%lu failed.",
                         response.module);
                 return false;
             }
@@ -160,12 +160,13 @@ namespace sensor {
                 response.has_error_msg = true;
                 snprintf(response.error_msg,
                         DECLARED_ARRAY_ITEM_COUNT(response.error_msg),
-                        "Method getModelName of module #%u failed.",
+                        "Method getModelName of module #%lu failed.",
                         response.module);
                 return false;
             }
             response.has_modelName = true;
         }
+        return true;
     }
 
 } // namespace
