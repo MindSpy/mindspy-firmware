@@ -2,7 +2,8 @@
 #define ADS1X9Y_HPP
 
 #include <Arduino.h>
-#include "Sensor.h"
+#include "Sensor.hpp"
+#include "proto.h"
 
 /*!
  * TI ADS1x9y module.

@@ -2,7 +2,7 @@
 #define SENSORTEST_H
 
 #include <cpptest.h>
-#include "Sensor.h"
+#include "Sensor.hpp"
 
 #define COUNT_OF_ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
 
