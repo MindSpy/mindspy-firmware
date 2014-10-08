@@ -36,7 +36,7 @@ public:
      * \param idx
      * \return
      */
-    virtual sensor::Sensor*& operator[](size_t idx) = 0;
+    virtual sensor::Sensor*& operator[](const size_t idx) = 0;
 };
 
 #endif // SENSORS_H

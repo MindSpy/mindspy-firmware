@@ -19,7 +19,7 @@ SensorDetector::~SensorDetector() {
         delete (*s);
 }
 
-sensor::Sensor*& SensorDetector::operator[](size_t idx) {
+sensor::Sensor*& SensorDetector::operator[](const size_t idx)  {
     if (idx < 0 || idx >= sensors.size())
         panic();
     return sensors[idx];

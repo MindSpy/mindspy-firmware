@@ -28,7 +28,7 @@ public:
      * \param idx index of the memeber to access
      * \return idx-th memeber
      */
-    sensor::Sensor*& operator[](size_t idx);
+    sensor::Sensor*& operator[](const size_t idx);
 
     /*!
      * \brief begin
