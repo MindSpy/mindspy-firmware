@@ -11,8 +11,8 @@
 
 Stream* ProtocolWrapper::stream = NULL;
 
-ProtocolWrapper::ProtocolWrapper(SensorDetector* detector) :
-        handler(new sensor::SensorHandler(&stopStream, detector)) {
+ProtocolWrapper::ProtocolWrapper() {
+    handler.setStopCallback(ProtocolWrapper::stopStream);
 }
 
 ProtocolWrapper::~ProtocolWrapper() {
@@ -25,11 +25,14 @@ bool ProtocolWrapper::handle() {
     pb_ostream_t ostream = { &write_callback, NULL, SIZE_MAX, 0 };
 
     // Handle incomming request.
-    return handler->handle(&istream, &ostream);
+    return handler.handle(&istream, &ostream);
 }
 
 void ProtocolWrapper::setStream(Stream * s) {
     stream = s;
+}
+void ProtocolWrapper::setSensors(Sensors* sensors) {
+    handler.setSensors(sensors);
 }
 
 bool ProtocolWrapper::stopStream(void) {
@@ -49,7 +52,6 @@ bool ProtocolWrapper::read_callback(pb_istream_t *, uint8_t *buf, size_t count) 
         delayMicroseconds(1);
     }
 
-    size_t result = stream->readBytes((char*) buf,
-            avail > count ? count : avail);
+    size_t result = stream->readBytes((char*) buf, avail > count ? count : avail);
     return result == count;
 }

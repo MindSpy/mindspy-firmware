@@ -2,6 +2,7 @@
 #define PROTOCOLWRAPPER_HPP
 
 #include "SensorHandler.hpp"
+#include "Sensors.hpp"
 
 #ifndef _UNITTEST
 #include <Arduino.h>
@@ -9,39 +10,36 @@
 #include "compat.hpp"
 #endif
 
-#ifndef _UNITTEST
-
-#include <Arduino.h>
-
-#else
-
-#include <unistd.h>
-// delayMicroseconds for unit testing (wiring is not available)
-#define delayMicroseconds(us) usleep(us)
-// Stream interface to be implemented by unit test (wiring not available)
-
-#endif
-
 /*!
  * \brief The Main class
  */
 class ProtocolWrapper {
 public:
-
-    ProtocolWrapper(SensorDetector *);
+    /*!
+     * \brief ProtocolBuffersWrapper
+     */
+    ProtocolWrapper();      
     ~ProtocolWrapper();
-
     /*!
      * \brief handle
      * \return
      */
     bool handle();
 
+    /*!
+     * \brief setStream
+     * \param stream to set
+     */
     static void setStream(Stream*);
 
-private:
+    /*!
+     * \brief setSensors
+     * \param sensors collection to set
+     */
+    void setSensors(Sensors*);
 
-    sensor::SensorHandler* handler;
+private:
+    sensor::SensorHandler handler;
 
     static Stream* stream;
 

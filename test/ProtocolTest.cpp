@@ -5,7 +5,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <iostream>
+#include <sstream>
 #include "Subprocess.hpp"
+#include "TestServer.hpp"
 
 ProtocolTest::ProtocolTest()
 {
@@ -34,9 +36,8 @@ uint64_t ProtocolTest::reqid() {
 
 
 void ProtocolTest::communicate(void* req, void* res) {
-    Request* request = (Request*) req;
-    Response* response = (Response*) res;
-
+    protobufs::Request* request = (protobufs::Request*) req;
+    protobufs::Response* response = (protobufs::Response*) res;
 
     Subprocess sub("server");
 
@@ -50,6 +51,7 @@ void ProtocolTest::communicate(void* req, void* res) {
 }
 
 void ProtocolTest::testLocal() {
+
 }
 
 void ProtocolTest::testRemote() {
@@ -57,14 +59,22 @@ void ProtocolTest::testRemote() {
 
 void ProtocolTest::testHandle() {
 
-    Request req;
-    Response res;
+    protobufs::Request req;
+    protobufs::Response res;
+
+    std::stringstream str1;
+    std::stringstream str2;
+
+    TestServer server(&str1, &str2);
 
     req.Clear();
+    res.Clear();
+
     req.set_timestamp(timestamp());
     req.set_reqid(reqid());
     //req.set_has_getmodelname();
 
-    communicate(&req, &res);
-
+    req.SerializeToOstream(&str1);
+    server.handle();
+    res.ParseFromIstream(&str2);
 }

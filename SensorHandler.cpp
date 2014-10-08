@@ -2,7 +2,7 @@
 #include <pb_encode.h>
 #include <pb_decode.h>
 #include "proto.h"
-#include "Sensor.h"
+#include "Sensor.hpp"
 
 #ifndef _UNITTEST
 #include <Arduino.h>
@@ -12,11 +12,18 @@
 
 namespace sensor {
 
-    SensorHandler::SensorHandler(StopStreamCallbackType stop, SensorDetector* sensorDetector) :
-            stopStream(stop), sensors(sensorDetector) {
+    SensorHandler::SensorHandler() {
     }
 
     SensorHandler::~SensorHandler() {
+    }
+
+    void SensorHandler::setSensors(Sensors*s) {
+        sensors = s;
+    }
+
+    void SensorHandler::setStopCallback(StopStreamCallbackType s) {
+        stopStream = s;
     }
 
     bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {

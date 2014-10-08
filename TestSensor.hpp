@@ -1,7 +1,7 @@
 #ifndef TESTSENSOR_HPP
 #define TESTSENSOR_HPP
 
-#include "Sensor.h"
+#include "Sensor.hpp"
 #include "proto.h"
 
 /*!

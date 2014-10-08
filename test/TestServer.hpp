@@ -3,8 +3,8 @@
 
 #include "compat.hpp"
 #include "ProtocolWrapper.hpp"
-#include "SensorDetector.hpp"
-#include "Sensor.h"
+#include "Sensor.hpp"
+#include "TestSensors.hpp"
 #include <iostream>
 
 class TestServer
@@ -16,15 +16,9 @@ public:
 
 private:
     Stream * stream;
-    ProtocolWrapper* wrapper;
-    sensor::Sensor** sensors;
-    SensorDetector* detector;
+    ProtocolWrapper wrapper;
+    TestSensors sensors;
 };
 
-extern "C" {
-
-int main(int, char **);
-
-}
 
 #endif // PROTOCOLSOCKET_H

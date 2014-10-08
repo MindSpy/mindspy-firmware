@@ -1,6 +1,6 @@
 #include "SensorTest.hpp"
 
-#include "Sensor.h"
+#include "Sensor.hpp"
 #include "TestSensor.hpp"
 #include "FileStream.hpp"
 #include <stdlib.h>

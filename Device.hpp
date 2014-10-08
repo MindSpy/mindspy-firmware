@@ -1,11 +1,10 @@
 #ifndef DEVICE_HPP
 #define DEVICE_HPP
 
-#include <vector>
 #include "ADS1x9y.hpp"
 #include "ProtocolWrapper.hpp"
 #include "SensorDetector.hpp"
-#include "TestSensor.hpp"
+#include "Sensors.hpp"
 
 #define BLUETOOTH_STREAM Serial1
 #define USB_STREAM Serial
@@ -43,10 +42,8 @@ public:
      */
     void SetupBluetooth();
 
-    std::vector<sensor::Sensor*> sensor;
-
-    SensorDetector* detector;
-    ProtocolWrapper* protocol;
+    SensorDetector sensorDetector;
+    ProtocolWrapper protocolWrapper;
 
 private:
 

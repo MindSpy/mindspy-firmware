@@ -1,7 +1,7 @@
 #include <SPI.h>
 #include <Arduino.h>
 #include "ADS1x9y.hpp"
-#include "Sensor.h"
+#include "Sensor.hpp"
 
 // Sensor Pinout definition
 // SPI pins
@@ -97,7 +97,7 @@ bool ADS1x9y::getSamples(uint32_t count, Sample* result) {
 }
 
 bool ADS1x9y::getState(uint32_t* addresses, uint32_t addresses_count,
-        State* result) {
+    State* result) {
     uint8_t buffer = 0;
 
     for (uint32_t i = 0; i < addresses_count; i++) {

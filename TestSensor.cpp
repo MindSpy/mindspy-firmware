@@ -1,7 +1,9 @@
-#include <limits.h>
-#include "Sensor.h"
-#include "proto.h"
+
 #include "TestSensor.hpp"
+
+#include <limits.h>
+#include "Sensor.hpp"
+#include "proto.h"
 
 #ifndef _UNITTEST
 #include <Arduino.h>

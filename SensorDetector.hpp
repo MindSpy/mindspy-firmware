@@ -1,23 +1,27 @@
 #ifndef SENDORDETECTOR_HPP
 #define SENDORDETECTOR_HPP
 
+#include "Sensor.hpp"
+#include "Sensors.hpp"
 #include <vector>
-#include "Sensor.h"
 
 /*!
  * The SensorDetector class detection sensors.
  */
-class SensorDetector {
+class SensorDetector : public Sensors {
 public:
 
-    SensorDetector(std::vector<sensor::Sensor*> &sensors);
+    /*!
+     * \brief SensorDetector
+     */
+    SensorDetector();
     ~SensorDetector();
 
     /*!
      * \brief count
      * \return return number of sensors registered
      */
-    size_t count() const { return sensors.size(); }
+    size_t count();
 
     /*!
      * \brief operator [] acces the member
@@ -26,9 +30,23 @@ public:
      */
     sensor::Sensor*& operator[](size_t idx);
 
-private:
+    /*!
+     * \brief begin
+     * \return
+     */
+    iterator begin();
 
-    std::vector<sensor::Sensor*> &sensors;
+    /*!
+     * \brief end
+     * \return
+     */
+    iterator end();
+
+private:
+    /*!
+     * \brief sensors
+     */
+    container sensors;
 };
 
-#endif // SENDORDETECTOR_H
+#endif // SENDORDETECTOR_H
