@@ -65,6 +65,8 @@ namespace sensor {
          */
         Request request;
         Response response;
+
+        bool respond(Sensor*, Request, Response);
     };
 
 } // namespace

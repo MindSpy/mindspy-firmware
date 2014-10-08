@@ -45,109 +45,127 @@ namespace sensor {
         response.has_modelName = false;
         response.has_error_msg = false;
 
+        bool mustRespond = request.has_setState || request.has_getState ||
+                request.has_getSamples || request.has_getModelName;
+
         // issue response one or more times
         do {
             //defaults
             response.has_error_msg = false;
             response.has_module = false;
             response.reqid = request.reqid;
+            response.timestamp = micros();
 
-            uint8_t module = 0;
 
             // obtain module number from request
             if (request.has_module) {
-                module = request.module;
-            }
-
-            // invoke for each module - exit loop when module is explicitly specified in request
-            do {
-                response.has_module = true;
-                response.module = module;
-
-                response.timestamp = micros();
+                // invoke for single module
+                uint8_t module = request.module;
 
                 if (module >= sensors->count()) {
                     if (request.has_module) {
                         response.has_error_msg = true;
                         snprintf(response.error_msg,
                                 DECLARED_ARRAY_ITEM_COUNT(response.error_msg),
-                                "Requested module #%d is outside of interval [0, %zu].",
+                                "Requested module #%u is outside of interval [0, %zu].",
                                 module, sensors->count() - 1);
                         return false;
                     }
                 }
 
-                // invoke Sensor methods based on request
+                response.has_module = true;
+                response.module = module;
 
-                if (request.has_setState || request.has_getState
-                        || request.has_getSamples || request.has_getModelName) {
-
-                    sensor::Sensor* sensor = (*sensors)[module];
-
-                    if (request.has_setState) {
-                        if (!sensor->setState(request.setState.states,
-                                request.setState.states_count, NULL)) {
-                            response.has_error_msg = true;
-                            snprintf(response.error_msg,
-                                    DECLARED_ARRAY_ITEM_COUNT(response.error_msg),
-                                    "Method setState of module #%d failed.",
-                                    module);
-                            return false;
-                        }
-                    }
-
-                    if (request.has_getState) {
-                        if (!sensor->getState(request.getState.addresses,
-                                request.getState.addresses_count,
-                                response.states)) {
-                            response.has_error_msg = true;
-                            snprintf(response.error_msg,
-                                    DECLARED_ARRAY_ITEM_COUNT(response.error_msg),
-                                    "Method getState of module #%d failed.",
-                                    module);
-                            return false;
-                        }
-                        response.states_count =
-                                request.getState.addresses_count;
-                    }
-
-                    if (request.has_getSamples) {
-                        if (!sensor->getSamples(request.getSamples.count,
-                                response.samples)) {
-                            response.has_error_msg = true;
-                            snprintf(response.error_msg,
-                                    DECLARED_ARRAY_ITEM_COUNT(response.error_msg),
-                                    "Method getSamples of module #%d failed.",
-                                    module);
-                            return false;
-                        }
-                        response.samples_count = request.getSamples.count;
-                    }
-
-                    if (request.has_getModelName) {
-                        if (!sensor->getModelName(response.modelName)) {
-                            response.has_error_msg = true;
-                            snprintf(response.error_msg,
-                                    DECLARED_ARRAY_ITEM_COUNT(response.error_msg),
-                                    "Method getModelName of module #%d failed.",
-                                    module);
-                            return false;
-                        }
-                        response.has_modelName = true;
-                    }
+                if (mustRespond) {
+                    // invoke Sensor methods based on request
+                    if (!respond((*sensors)[module], request, response))
+                        return false;
                 }
 
                 // serialize response message
-
                 if (!pb_encode_delimited(ostream, Response_fields, &response)) {
                     return false;
                 }
+            } else {
+                // invoke for each module - exit loop when module is explicitly specified in request
+                for (Sensors::iterator is = sensors->begin();
+                            is != sensors->end(); is++) {
 
-            } while (!request.has_module && (++module < sensors->count()));
+                    response.has_module = true;
+                    response.module = is  - sensors->begin();
+
+                    if (mustRespond) {
+                        // invoke Sensor methods based on request
+                        if (!respond(*is, request, response))
+                            return false;
+                    }
+
+                    // serialize response message
+
+                    if (!pb_encode_delimited(ostream, Response_fields, &response)) {
+                        return false;
+                    }
+                }
+            }
+
         } while (request.stream && (!(*stopStream)()));
 
         return true;
 
+    }
+
+    bool SensorHandler::respond(Sensor* sensor, Request request, Response response ) {
+
+        if (request.has_setState) {
+            if (!sensor->setState(request.setState.states,
+                    request.setState.states_count, NULL)) {
+                response.has_error_msg = true;
+                snprintf(response.error_msg,
+                        DECLARED_ARRAY_ITEM_COUNT(response.error_msg),
+                        "Method setState of module #%u failed.",
+                        response.module);
+                return false;
+            }
+        }
+
+        if (request.has_getState) {
+            if (!sensor->getState(request.getState.addresses,
+                    request.getState.addresses_count,
+                    response.states)) {
+                response.has_error_msg = true;
+                snprintf(response.error_msg,
+                        DECLARED_ARRAY_ITEM_COUNT(response.error_msg),
+                        "Method getState of module #%u failed.",
+                        response.module);
+                return false;
+            }
+            response.states_count =
+                    request.getState.addresses_count;
+        }
+
+        if (request.has_getSamples) {
+            if (!sensor->getSamples(request.getSamples.count, response.samples)) {
+                response.has_error_msg = true;
+                snprintf(response.error_msg,
+                        DECLARED_ARRAY_ITEM_COUNT(response.error_msg),
+                        "Method getSamples of module #%u failed.",
+                        response.module);
+                return false;
+            }
+            response.samples_count = request.getSamples.count;
+        }
+
+        if (request.has_getModelName) {
+            if (!sensor->getModelName(response.modelName)) {
+                response.has_error_msg = true;
+                snprintf(response.error_msg,
+                        DECLARED_ARRAY_ITEM_COUNT(response.error_msg),
+                        "Method getModelName of module #%u failed.",
+                        response.module);
+                return false;
+            }
+            response.has_modelName = true;
+        }
     }
 
 } // namespace
