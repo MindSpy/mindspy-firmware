@@ -16,7 +16,6 @@ ProtocolWrapper::ProtocolWrapper() {
 }
 
 ProtocolWrapper::~ProtocolWrapper() {
-    delete handler;
 }
 
 bool ProtocolWrapper::handle() {
