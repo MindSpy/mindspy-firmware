@@ -1,10 +1,9 @@
 #ifndef DEVICE_HPP
 #define DEVICE_HPP
 
-#include "ADS1x9y.hpp"
 #include "ProtocolWrapper.hpp"
 #include "SensorDetector.hpp"
-#include "TestSensor.hpp"
+#include "Sensors.hpp"
 
 #define BLUETOOTH_STREAM Serial1
 #define USB_STREAM Serial
@@ -42,11 +41,8 @@ public:
      */
     void SetupBluetooth();
 
-    // array of pointers to sensor.
-    sensor::Sensor** sensors;
-
-    SensorDetector* detector;
-    ProtocolWrapper* protocolWrapper;
+    SensorDetector sensorDetector;
+    ProtocolWrapper protocolWrapper;
 
 private:
 

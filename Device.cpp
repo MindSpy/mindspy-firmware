@@ -1,17 +1,14 @@
 #include "Device.hpp"
 
-Device::Device() : sensors(NULL), detector(NULL), protocolWrapper(NULL) {
+#include "Arduino.h"
+
+Device::Device()  {
     SetupBluetooth();
     SetupUsb();
+    SetupDevice();
 }
 
 Device::~Device() {
-    for (unsigned int i = 0; i < SENSOR_COUNT; i++) {
-        delete sensors[i];
-    }
-    delete[] sensors;
-    delete detector;
-    delete protocolWrapper;
 }
 
 void Device::SetupBluetooth() {
@@ -50,11 +47,6 @@ void Device::SetupUsb() {
 }
 
 void Device::SetupDevice() {
-    // TODO this will be in SensorDetector once it is finished
-    sensors = new sensor::Sensor*[SENSOR_COUNT];
-    sensors[0] = new TestSensor("TestSensor", 128, 8);
-    sensors[1] = new ADS1x9y(0);
-    detector = new SensorDetector(sensors, SENSOR_COUNT);
-    protocolWrapper = new ProtocolWrapper(detector);
-    ProtocolWrapper::setStream(&PB_STREAM);
+    protocolWrapper.setStream(&PB_STREAM);
+    protocolWrapper.setSensors(&sensorDetector);
 }

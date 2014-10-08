@@ -2,8 +2,7 @@
 #define SENSORHANDLER_HPP
 
 #include <stdio.h>
-#include "Sensor.h"
-#include "SensorDetector.hpp"
+#include "Sensors.hpp"
 
 #define DECLARED_ARRAY_ITEM_COUNT(x) (sizeof(x)/sizeof(x[0]))
 
@@ -25,7 +24,7 @@ namespace sensor {
          * \param stopStream - callback for stop condition when in stream mode
          * \param sensors - sensor detector instance
          */
-        SensorHandler(StopStreamCallbackType, SensorDetector*);
+        SensorHandler();
 
         ~SensorHandler();
 
@@ -37,6 +36,18 @@ namespace sensor {
          */
         bool handle(pb_istream_t*, pb_ostream_t*);
 
+        /*!
+         * \brief setSensors
+         * \param sensors instance to set
+         */
+        void setSensors(Sensors*);
+
+        /*!
+         * \brief setStopCallback
+         * \param stop stream callback to set
+         */
+        void setStopCallback(StopStreamCallbackType);
+
     private:
 
         /*!
@@ -47,7 +58,7 @@ namespace sensor {
         /*!
          * \brief sensors
          */
-        SensorDetector* sensors;
+        Sensors* sensors;
 
         /*!
          * \brief Request and response structures.

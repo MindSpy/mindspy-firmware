@@ -12,11 +12,18 @@
 
 namespace sensor {
 
-    SensorHandler::SensorHandler(StopStreamCallbackType stop, Sensors* sensors) :
-            stopStream(stop), sensors(sensors) {
+    SensorHandler::SensorHandler() {
     }
 
     SensorHandler::~SensorHandler() {
+    }
+
+    void SensorHandler::setSensors(Sensors*s) {
+        sensors = s;
+    }
+
+    void SensorHandler::setStopCallback(StopStreamCallbackType s) {
+        stopStream = s;
     }
 
     bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {

@@ -1,25 +1,30 @@
 #include "SensorDetector.hpp"
 
-SensorDetector::SensorDetector(sensor::Sensor** sensors, size_t countOfSensors) :
-        sensors(sensors), countOfSensors(countOfSensors) {
-    for (size_t i = 0; i < countOfSensors; i++) {
-        sensors[i]->begin();
-    }
+#include "TestSensor.hpp"
+//#include "ADS1x9y.hpp"
+
+SensorDetector::SensorDetector() {
+    sensors.push_back(new TestSensor("TestSensor", 128, 8));
+    //sensors.push_back(new ADS1x9y(0));
 }
 
 SensorDetector::~SensorDetector() {
-
+    for (Sensors::iterator it = sensors.begin(); it != sensors.end(); ++it)
+        delete *it;
 }
 
 sensor::Sensor*& SensorDetector::operator[](size_t idx) {
-    if (idx < 0)
-        idx = 0;
-    if (idx >= countOfSensors)
-        idx = countOfSensors - 1;
-
     return sensors[idx];
 }
 
 size_t SensorDetector::count() {
-    return countOfSensors;
+    return sensors.size();
+}
+
+Sensors::iterator  SensorDetector::begin() {
+    return sensors.begin();
+}
+
+Sensors::iterator  SensorDetector::end() {
+    return sensors.end();
 }

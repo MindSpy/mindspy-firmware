@@ -13,8 +13,6 @@ void setup() {
 }
 
 void loop() {
-    if (device.protocolWrapper != NULL) {
-        device.protocolWrapper->handle();
-    }
+    device.protocolWrapper.handle();
 }
 

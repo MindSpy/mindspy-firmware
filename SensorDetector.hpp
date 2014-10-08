@@ -1,12 +1,14 @@
 #ifndef SENDORDETECTOR_HPP
 #define SENDORDETECTOR_HPP
 
-#include "Sensor.h"
+#include "Sensor.hpp"
+#include "Sensors.hpp"
+#include <vector>
 
 /*!
  * \brief The SensorDetector class
  */
-class SensorDetector {
+class SensorDetector : public Sensors {
 public:
 
     /*!
@@ -14,7 +16,7 @@ public:
      * \param sensors
      * \param count of sensors
      */
-    SensorDetector(sensor::Sensor**, size_t);
+    SensorDetector();
     ~SensorDetector();
 
     /*!
@@ -30,15 +32,23 @@ public:
      */
     sensor::Sensor*& operator[](size_t idx);
 
+    /*!
+     * \brief begin
+     * \return
+     */
+    iterator begin();
+
+    /*!
+     * \brief end
+     * \return
+     */
+    iterator end();
+
 private:
     /*!
      * \brief sensors
      */
-    sensor::Sensor** sensors;
-    /*!
-     * \brief countOfSensors
-     */
-    unsigned int countOfSensors;
+    container sensors;
 };
 
-#endif // SENDORDETECTOR_H
+#endif // SENDORDETECTOR_H
