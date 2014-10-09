@@ -12,7 +12,7 @@
 #endif
 
 TestSensor::TestSensor(const char* name, const uint8_t rate, const uint8_t chan) :
-        name(name), rate(rate), channels(chan), lastTime(ULONG_MAX) {
+        name(name), rate(rate), channels(chan), lastTime(ULONG_MAX), sequence(0) {
 }
 
 bool TestSensor::getSamples(uint32_t count, mindspy_protobufs_Sample* result) {
