@@ -113,7 +113,9 @@ namespace sensor {
 
     }
 
-    bool SensorHandler::respond(Sensor* sensor, mindspy_protobufs_Request& request, mindspy_protobufs_Response& response ) {
+    bool SensorHandler::respond(Sensor* sensor,
+                                mindspy_protobufs_Request& request,
+                                mindspy_protobufs_Response& response ) {
 
         uint8_t module = (uint8_t)response.module;
 
@@ -140,8 +142,7 @@ namespace sensor {
                         module);
                 return false;
             }
-            response.states_count =
-                    request.getState.addresses_count;
+            response.states_count = request.getState.addresses_count;
         }
 
         if (request.has_getSamples) {
