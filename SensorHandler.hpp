@@ -63,10 +63,10 @@ namespace sensor {
         /*!
          * \brief Request and response structures.
          */
-        Request request;
-        Response response;
+        mindspy_protobufs_Request request;
+        mindspy_protobufs_Response response;
 
-        bool respond(Sensor*, Request&, Response&);
+        bool respond(Sensor*, mindspy_protobufs_Request&, mindspy_protobufs_Response&);
     };
 
 } // namespace

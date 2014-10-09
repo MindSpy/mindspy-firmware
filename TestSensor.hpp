@@ -20,9 +20,9 @@ public:
     TestSensor(const char*, const uint8_t, const uint8_t);
 
     // override Sensor methods
-    bool getSamples(uint32_t, Sample*);
-    bool getState(uint32_t*, uint32_t, State*);
-    bool setState(State*, uint32_t, void*);
+    bool getSamples(uint32_t, mindspy_protobufs_Sample*);
+    bool getState(uint32_t*, uint32_t, mindspy_protobufs_State*);
+    bool setState(mindspy_protobufs_State*, uint32_t, void*);
     bool getModelName(char*);
     bool operator!(void);
     void begin();
@@ -37,7 +37,7 @@ private:
     unsigned long lastTime;
 
     uint8_t getState(uint32_t);
-    bool setState(State state);
+    bool setState(mindspy_protobufs_State state);
 
 };
 

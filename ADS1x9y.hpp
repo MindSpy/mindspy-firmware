@@ -20,9 +20,9 @@ public:
     ADS1x9y(uint8_t);
 
     // override ISensor methods
-    bool getSamples(uint32_t, Sample*);
-    bool getState(uint32_t*, uint32_t, State*);
-    bool setState(State*, uint32_t, void*);
+    bool getSamples(uint32_t, mindspy_protobufs_Sample*);
+    bool getState(uint32_t*, uint32_t, mindspy_protobufs_State*);
+    bool setState(mindspy_protobufs_State*, uint32_t, void*);
     bool getModelName(char*);
 
     /*!

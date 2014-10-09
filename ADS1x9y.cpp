@@ -63,7 +63,7 @@ ADS1x9y::ADS1x9y() :
         module(0), cs(SPI_CS(module)), channels(0), continous(true) {
 }
 
-bool ADS1x9y::getSamples(uint32_t count, Sample* result) {
+bool ADS1x9y::getSamples(uint32_t count, mindspy_protobufs_Sample* result) {
 
     uint8_t channels = this->getChannelCount();
     uint8_t bytes = this->getSampleBytes();
@@ -71,7 +71,7 @@ bool ADS1x9y::getSamples(uint32_t count, Sample* result) {
     uint8_t* buffer = (uint8_t*) malloc(bsize * sizeof(uint8_t));
 
     for (uint32_t i = 0; i < count; i++) {
-        Sample* samp = &(result[i]);
+        mindspy_protobufs_Sample* samp = &(result[i]);
 
         // wait for sample
         while (!this)
@@ -97,7 +97,7 @@ bool ADS1x9y::getSamples(uint32_t count, Sample* result) {
 }
 
 bool ADS1x9y::getState(uint32_t* addresses, uint32_t addresses_count,
-    State* result) {
+    mindspy_protobufs_State* result) {
     uint8_t buffer = 0;
 
     for (uint32_t i = 0; i < addresses_count; i++) {
@@ -110,7 +110,7 @@ bool ADS1x9y::getState(uint32_t* addresses, uint32_t addresses_count,
     return true;
 }
 
-bool ADS1x9y::setState(State* states, uint32_t states_count, void* result) {
+bool ADS1x9y::setState(mindspy_protobufs_State* states, uint32_t states_count, void* result) {
     uint8_t p;
     for (uint32_t i = 0; i < states_count; i++) {
         p = states[i].payload;

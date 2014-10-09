@@ -47,7 +47,7 @@ void SensorTest::testGetModelName()
 void SensorTest::testGetState()
 {
     uint32_t addresses[] = {0,1};
-    State states[2];
+    mindspy_protobufs_State states[2];
     sensor->getState(addresses, COUNT_OF_ARRAY_SIZE(addresses), states);
     TEST_ASSERT_EQUALS_MSG(SAMPLE_RATE, states[0].payload, "Sample rate mismatch.");
     TEST_ASSERT_EQUALS_MSG(CHANNEL_COUNT, states[1].payload, "Channel count mismatch.");
@@ -57,7 +57,7 @@ void SensorTest::testSetState() {
     const unsigned char NEW_RATE = 210;
     const unsigned char NEW_CHAN = 2;
     // set values
-    State states[] = {
+    mindspy_protobufs_State states[] = {
         { 0, NEW_RATE },
         { 1, NEW_CHAN }
     };
@@ -77,7 +77,7 @@ void SensorTest::testSetState() {
 
 void SensorTest::testGetSamples()
 {
-    Sample samples[10];
+    mindspy_protobufs_Sample samples[10];
     sensor->begin();
     for (int i = 0; i < 10; i++) {
         sensor->getSamples(10, samples);

@@ -15,7 +15,7 @@ namespace sensor {
          * \param count of samples to get
          * \return result
          */
-        virtual bool getSamples(uint32_t, Sample*) = 0;
+        virtual bool getSamples(uint32_t, mindspy_protobufs_Sample*) = 0;
 
         /*!
          * \brief Get State of the sensor (get the registers).
@@ -23,13 +23,13 @@ namespace sensor {
          * \param addresses count
          * \return result states
          */
-        virtual bool getState(uint32_t*, uint32_t, State*) = 0;
+        virtual bool getState(uint32_t*, uint32_t, mindspy_protobufs_State*) = 0;
 
         /*!
          * \brief Set State of the sensor (set the registers).
          * \param states to set up
          */
-        virtual bool setState(State*, uint32_t, void*) = 0;
+        virtual bool setState(mindspy_protobufs_State*, uint32_t, void*) = 0;
 
         /*!
          * \brief Get model name.

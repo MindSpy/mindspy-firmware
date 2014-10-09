@@ -29,7 +29,7 @@ namespace sensor {
     bool SensorHandler::handle(pb_istream_t* istream, pb_ostream_t* ostream) {
 
         // intercept request message
-        if (!pb_decode_delimited(istream, Request_fields, &request)) {
+        if (!pb_decode_delimited(istream, mindspy_protobufs_Request_fields, &request)) {
             response.has_error_msg = true;
             snprintf(response.error_msg,
                     DECLARED_ARRAY_ITEM_COUNT(response.error_msg),
@@ -83,7 +83,7 @@ namespace sensor {
                 }
 
                 // serialize response message
-                if (!pb_encode_delimited(ostream, Response_fields, &response)) {
+                if (!pb_encode_delimited(ostream, mindspy_protobufs_Response_fields, &response)) {
                     return false;
                 }
             } else {
@@ -101,7 +101,7 @@ namespace sensor {
 
                     // serialize response message
 
-                    if (!pb_encode_delimited(ostream, Response_fields, &response)) {
+                    if (!pb_encode_delimited(ostream, mindspy_protobufs_Response_fields, &response)) {
                         return false;
                     }
                 }
@@ -113,7 +113,7 @@ namespace sensor {
 
     }
 
-    bool SensorHandler::respond(Sensor* sensor, Request& request, Response& response ) {
+    bool SensorHandler::respond(Sensor* sensor, mindspy_protobufs_Request& request, mindspy_protobufs_Response& response ) {
 
         uint8_t module = (uint8_t)response.module;
 

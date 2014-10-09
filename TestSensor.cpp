@@ -15,7 +15,7 @@ TestSensor::TestSensor(const char* name, const uint8_t rate, const uint8_t chan)
         name(name), rate(rate), channels(chan), lastTime(ULONG_MAX) {
 }
 
-bool TestSensor::getSamples(uint32_t count, Sample* result) {
+bool TestSensor::getSamples(uint32_t count, mindspy_protobufs_Sample* result) {
     for (unsigned int i = 0; i < count; i++) {
         while (!(*this))
             delayMicroseconds(10);
@@ -44,7 +44,7 @@ uint8_t TestSensor::getState(uint32_t address) {
         return 0xff;
     }
 }
-bool TestSensor::setState(State state) {
+bool TestSensor::setState(mindspy_protobufs_State state) {
     switch (state.address) {
     case 0:  // deal with rate
         rate = state.payload;
@@ -57,7 +57,7 @@ bool TestSensor::setState(State state) {
     return true;
 }
 
-bool TestSensor::getState(uint32_t* addresses, uint32_t count, State* result) {
+bool TestSensor::getState(uint32_t* addresses, uint32_t count, mindspy_protobufs_State* result) {
     for (uint32_t i = 0; i < count; i++) {
         result[i].address = addresses[i];
         result[i].payload = getState(addresses[i]);
@@ -65,7 +65,7 @@ bool TestSensor::getState(uint32_t* addresses, uint32_t count, State* result) {
     return true;
 }
 
-bool TestSensor::setState(State* states, uint32_t count, void*result) {
+bool TestSensor::setState(mindspy_protobufs_State* states, uint32_t count, void*result) {
     for (uint32_t i = 0; i < count; i++) {
         setState(states[i]);
     }

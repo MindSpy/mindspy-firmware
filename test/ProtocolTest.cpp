@@ -11,6 +11,7 @@
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 
 using namespace google::protobuf;
+using namespace mindspy;
 
 bool ProtocolTest::writeDelimitedTo(const MessageLite* message, io::ZeroCopyOutputStream* rawOutput) {
     // We create a new coded stream for each message.  Don't worry, this is fast.

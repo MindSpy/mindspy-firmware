@@ -327,7 +327,7 @@ endif
 
 all: target  
 
-proto.c: lib/proto/regs.proto
+proto.c: lib/proto/mindspy.proto
 	$M$(MAKE) -C lib/proto $@
 	$Mmv lib/proto/proto.[hc] ./
 
