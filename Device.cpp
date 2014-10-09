@@ -8,7 +8,7 @@ Device::Device()  {
 Device::~Device() {
 }
 
-void Device::SetupBluetooth() {
+void Device::setupBluetooth() {
     // Initialize pins for bluetooth module
     pinMode(GREEN_LED, INPUT);
     pinMode(BLUE_LED, INPUT);
@@ -20,7 +20,7 @@ void Device::SetupBluetooth() {
     delay(20);
     digitalWrite(PB_2, HIGH);
 
-    // Setup bluetooth.
+    // setup bluetooth.
     digitalWrite(PB_3, HIGH);
     // Initialize speed
     BLUETOOTH_STREAM.begin(BLUETOOTH_STREAM_INIT_BAUD);
@@ -39,17 +39,17 @@ void Device::SetupBluetooth() {
     BLUETOOTH_STREAM.begin(BLUETOOTH_STREAM_BAUD); // max. 1382400=1.3Mbps
 }
 
-void Device::SetupUsb() {
+void Device::setupUsb() {
     USB_STREAM.begin(USB_STREAM_BAUD);
 }
 
-void Device::SetupDevice() {
+void Device::setupDevice() {
     protocolWrapper.setStream(&PB_STREAM);
     protocolWrapper.setSensors(&sensorDetector);
 }
 
-void Device::Setup() {
-    //SetupBluetooth();
-    SetupUsb();
-    SetupDevice();
+void Device::setup() {
+    //setupBluetooth();
+    setupUsb();
+    setupDevice();
 }

@@ -8,7 +8,7 @@
 Device device;
 
 void setup() {
-    device.Setup();
+    device.setup();
 }
 
 void loop() {
