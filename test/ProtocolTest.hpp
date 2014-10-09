@@ -23,7 +23,6 @@ private:
     std::iostream* in;
     std::iostream* out;
 
-    void testHandle();
     void testLocal();
     void testRemote();
 

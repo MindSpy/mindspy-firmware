@@ -59,7 +59,6 @@ ProtocolTest::ProtocolTest()
 {
     in = new std::stringstream;
     out = new std::stringstream;
-    TEST_ADD(ProtocolTest::testHandle);
     TEST_ADD(ProtocolTest::testLocal);
     TEST_ADD(ProtocolTest::testRemote);
 }
@@ -96,9 +95,6 @@ void ProtocolTest::communicate(void* req, void* res) {
     //response->ParseFromIstream(in);
 }
 
-void ProtocolTest::testLocal() {
-
-}
 
 void ProtocolTest::testRemote() {
 
@@ -121,7 +117,7 @@ void ProtocolTest::testRemote() {
     TEST_ASSERT_MSG((!readDelimitedFrom(is, &res)), "Read from stream failed.");
 }
 
-void ProtocolTest::testHandle() {
+void ProtocolTest::testLocal() {
 
     protobufs::Request req;
     protobufs::Response res;
