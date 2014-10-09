@@ -4,7 +4,12 @@
 #include <cpptest.h>
 #include <stdint.h>
 #include <iostream>
+#include <google/protobuf/io/coded_stream.h>
+#include <google/protobuf/io/zero_copy_stream.h>
+#include <google/protobuf/message.h>
+#include "Proto.hpp"
 
+using namespace google::protobuf;
 
 class ProtocolTest : public Test::Suite
 {
@@ -25,6 +30,8 @@ private:
     uint64_t timestamp();
     uint64_t reqid();
     void communicate(void*, void*);
+    bool writeDelimitedTo(const MessageLite*, io::ZeroCopyOutputStream*);
+    bool readDelimitedFrom(io::ZeroCopyInputStream*, MessageLite*);
 };
 
 
