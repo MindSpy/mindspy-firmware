@@ -325,14 +325,14 @@ endif
 
 .PHONY:	all target upload clean boards monitor size test
 
-all: target  test
+all: target  
 
 proto.c: lib/proto/regs.proto
 	$M$(MAKE) -C lib/proto $@
 	$Mmv lib/proto/proto.[hc] ./
 
 test:
-	$M$(MAKE) -C test
+	$M$(MAKE) clean run -C test
 
 target: $(OUTDIR)$(TARGET).bin
 
@@ -370,7 +370,7 @@ debug: $(OUTDIR)$(TARGET).elf
 
 $(OUTDIR)$(TARGET).elf: proto.c $(ENERGIALIB) $(OBJECTS)
 	@echo "Linking" `basename $@` "<" $(foreach obj, $(OBJECTS) $(ENERGIALIB), `basename $(obj)` )
-	$M$(CXX) $(LINKFLAGS) $(OBJECTS) $(ENERGIALIB) -o $@ -lgcc -lc -lgcc -lm -lrdimon
+	$M$(CXX) $(LINKFLAGS) $(OBJECTS) $(ENERGIALIB) -o $@ -lstdc++ -lgcc -lc -lgcc -lm -lrdimon
 
 $(OUTDIR)$(TARGET).bin: $(OUTDIR)$(TARGET).elf
 	@echo "Copying objects `basename $@` <" `basename $<`
