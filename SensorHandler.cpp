@@ -88,8 +88,7 @@ namespace sensor {
                 }
             } else {
                 // invoke for each module - exit loop when module is explicitly specified in request
-                for (Sensors::iterator is = sensors->begin();
-                            is != sensors->end(); is++) {
+                for (Sensors::iterator is = sensors->begin(); is != sensors->end(); is++) {
 
                     response.has_module = true;
                     response.module = is  - sensors->begin();
@@ -114,7 +113,9 @@ namespace sensor {
 
     }
 
-    bool SensorHandler::respond(Sensor* sensor, Request request, Response response ) {
+    bool SensorHandler::respond(Sensor* sensor, Request& request, Response& response ) {
+
+        uint8_t module = (uint8_t)response.module;
 
         if (request.has_setState) {
             if (!sensor->setState(request.setState.states,
@@ -122,8 +123,8 @@ namespace sensor {
                 response.has_error_msg = true;
                 snprintf(response.error_msg,
                         DECLARED_ARRAY_ITEM_COUNT(response.error_msg),
-                        "Method setState of module #%lu failed.",
-                        response.module);
+                        "Method setState of module #%u failed.",
+                        module);
                 return false;
             }
         }
@@ -135,8 +136,8 @@ namespace sensor {
                 response.has_error_msg = true;
                 snprintf(response.error_msg,
                         DECLARED_ARRAY_ITEM_COUNT(response.error_msg),
-                        "Method getState of module #%lu failed.",
-                        response.module);
+                        "Method getState of module #%u failed.",
+                        module);
                 return false;
             }
             response.states_count =
@@ -148,8 +149,8 @@ namespace sensor {
                 response.has_error_msg = true;
                 snprintf(response.error_msg,
                         DECLARED_ARRAY_ITEM_COUNT(response.error_msg),
-                        "Method getSamples of module #%lu failed.",
-                        response.module);
+                        "Method getSamples of module #%u failed.",
+                        module);
                 return false;
             }
             response.samples_count = request.getSamples.count;
@@ -160,8 +161,8 @@ namespace sensor {
                 response.has_error_msg = true;
                 snprintf(response.error_msg,
                         DECLARED_ARRAY_ITEM_COUNT(response.error_msg),
-                        "Method getModelName of module #%lu failed.",
-                        response.module);
+                        "Method getModelName of module #%u failed.",
+                        module);
                 return false;
             }
             response.has_modelName = true;
