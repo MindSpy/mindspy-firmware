@@ -3,9 +3,6 @@
 #include "Arduino.h"
 
 Device::Device()  {
-    SetupBluetooth();
-    SetupUsb();
-    SetupDevice();
 }
 
 Device::~Device() {
@@ -49,4 +46,10 @@ void Device::SetupUsb() {
 void Device::SetupDevice() {
     protocolWrapper.setStream(&PB_STREAM);
     protocolWrapper.setSensors(&sensorDetector);
+}
+
+void Device::Setup() {
+    //SetupBluetooth();
+    SetupUsb();
+    SetupDevice();
 }

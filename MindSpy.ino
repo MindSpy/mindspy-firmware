@@ -8,8 +8,7 @@
 Device device;
 
 void setup() {
-    // detect sensor
-    device.SetupDevice();
+    device.Setup();
 }
 
 void loop() {

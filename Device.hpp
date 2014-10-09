@@ -12,7 +12,7 @@
 /*!
  * Choose one stream for protocol buffers
  */
-#define PB_STREAM BLUETOOTH_STREAM
+#define PB_STREAM USB_STREAM
 
 class Device {
 public:
@@ -28,19 +28,24 @@ public:
     ~Device();
 
     /*!
+     * \brief setup the device
+     */
+    void setup();
+
+    /*!
      * Prepare all sensors.
      */
-    void SetupDevice();
+    void setupDevice();
 
     /*!
      * Prepare USB device.
      */
-    void SetupUsb();
+    void setupUsb();
 
     /*!
      * Prepare Bluetooth device.
      */
-    void SetupBluetooth();
+    void setupBluetooth();
 
     SensorDetector sensorDetector;
     ProtocolWrapper protocolWrapper;
