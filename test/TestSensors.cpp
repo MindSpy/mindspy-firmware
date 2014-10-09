@@ -4,6 +4,10 @@
 
 TestSensors::TestSensors() {
     sensors.push_back(new TestSensor("TestSensor", 128, 8));
+
+    for (Sensors::iterator s = sensors.begin(); s != sensors.end(); s++) {
+        (*s)->begin();
+    }
 }
 
 TestSensors::~TestSensors() {
