@@ -27,14 +27,7 @@
 class Device {
 public:
 
-    /*!
-     * Prepare all device and peripherals.
-     */
     Device();
-
-    /*!
-     * Destroy all create objects and instances.
-     */
     ~Device();
 
     /*!

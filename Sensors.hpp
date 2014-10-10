@@ -6,8 +6,11 @@
 
 class Sensors {
 protected:
+
     typedef std::vector<sensor::Sensor*> container;
+
 public:
+
     virtual ~Sensors() {
     }
 
