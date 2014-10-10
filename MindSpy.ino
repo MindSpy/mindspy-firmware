@@ -8,10 +8,13 @@
 Device device;
 
 void setup() {
-    device.setup();
+
+    /*!
+     * Setting device and initialize.
+     */
+    device.setupDevice();
 }
 
 void loop() {
     device.protocolWrapper.handle();
 }
-
