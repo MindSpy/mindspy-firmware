@@ -1,9 +1,10 @@
 #ifndef ADS1X9Y_HPP
 #define ADS1X9Y_HPP
 
-#include <Arduino.h>
 #include "Sensor.hpp"
 #include "proto.h"
+#include <Arduino.h>
+#include <SPI.h>
 
 /*!
  * TI ADS1x9y module.
@@ -14,7 +15,7 @@ public:
 
     /*!
      * \brief Constructor.
-     * \param module nnumber (CS pin)
+     * \param module number (CS pin)
      */
     ADS1x9y();
     ADS1x9y(uint8_t);
@@ -225,6 +226,7 @@ public:
     static void gpioWrite(uint8_t, int);
 
 private:
+    SPIClass spi;
 
     int module;
     int cs;
@@ -238,7 +240,7 @@ private:
     void pinSetup(void);
     void getDeviceId(void);
 
-    static void ssiSetup(uint8_t SSIModule);
-
+    void ssiSetup(uint8_t SSIModule);
 };
+
 #endif

@@ -1,7 +1,7 @@
-#include <SPI.h>
-#include <Arduino.h>
+
 #include "ADS1x9y.hpp"
 #include "Sensor.hpp"
+#include <Arduino.h>
 
 // Sensor Pinout definition
 // SPI pins
@@ -56,11 +56,13 @@ int ADS1x9y::active = -1;
 int ADS1x9y::sequence = 0;
 
 ADS1x9y::ADS1x9y(uint8_t module) :
-        module(constrain(module, 0, SPI_CS_PIN_COUNT - 1)), cs(SPI_CS(module)), channels(0), continous(true) {
+    module(constrain(module, 0, SPI_CS_PIN_COUNT - 1)), cs(SPI_CS(module)), channels(0), continous(true)
+{
 }
 
 ADS1x9y::ADS1x9y() :
-        module(0), cs(SPI_CS(module)), channels(0), continous(true) {
+    module(0), cs(SPI_CS(module)), channels(0), continous(true)
+{
 }
 
 bool ADS1x9y::getSamples(uint32_t count, mindspy_protobufs_Sample* result) {
@@ -96,8 +98,7 @@ bool ADS1x9y::getSamples(uint32_t count, mindspy_protobufs_Sample* result) {
     return true;
 }
 
-bool ADS1x9y::getState(uint32_t* addresses, uint32_t addresses_count,
-    mindspy_protobufs_State* result) {
+bool ADS1x9y::getState(uint32_t* addresses, uint32_t addresses_count, mindspy_protobufs_State* result) {
     uint8_t buffer = 0;
 
     for (uint32_t i = 0; i < addresses_count; i++) {
@@ -137,7 +138,7 @@ void ADS1x9y::begin() {
 }
 
 void ADS1x9y::end() {
-    SPI.end();
+    spi.end();
     active = -1;
 }
 
@@ -244,7 +245,7 @@ uint8_t ADS1x9y::transfer(uint8_t data, bool hold) {
     if (!isActive()) {
         activate();
     }
-    register uint8_t r = SPI.transfer(data);
+    register uint8_t r = spi.transfer(data);
     if (!hold) {
         deactivate();
     }
@@ -394,9 +395,8 @@ uint16_t ADS1x9y::getTotalBytes(void) {
 }
 
 void ADS1x9y::ssiSetup(uint8_t SSIModule) {
-    SPI.setModule(SSIModule);
-    SPI.begin();
-    //SPI.setClockDivider(SPI_CLOCK_DIV2);
-    SPI.setDataMode(SPI_MODE1);
-
+    spi.setModule(SSIModule);
+    //spi.setClockDivider(SPI_CLOCK_DIV2);
+    spi.setDataMode(SPI_MODE1);
+    spi.begin();
 }
