@@ -49,7 +49,7 @@ namespace sensor {
                 request.has_getSamples || request.has_getModelName;
 
         // issue response one or more times
-        do {
+        for(;;) {
             //defaults
             response.has_error_msg = false;
             response.has_module = false;
@@ -107,7 +107,9 @@ namespace sensor {
                 }
             }
 
-        } while (request.stream && (!(*stopStream)()));
+            if (!request.stream || (*stopStream)())
+                break;
+        }
 
         return true;
 
