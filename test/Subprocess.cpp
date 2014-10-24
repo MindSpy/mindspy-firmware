@@ -17,8 +17,8 @@ Subprocess::Subprocess(const char* fn) {
 
 void Subprocess::setStreams() {
     // create filebuffers of file descriptor
-    ibuf = new __gnu_cxx::stdio_filebuf<char>(fds[0], std::ios_base::in);
-    obuf = new __gnu_cxx::stdio_filebuf<char>(fds[1], std::ios_base::out);
+    ibuf = new __gnu_cxx::stdio_filebuf<char>(fds[0], std::ios::in);
+    obuf = new __gnu_cxx::stdio_filebuf<char>(fds[1], std::ios::out);
     // create istreams of filebuffers
     in = new std::istream(ibuf);
     out = new std::ostream(obuf);
@@ -55,8 +55,11 @@ pid_t Subprocess::pcreate(const char* fn, char*const* args) {
 
     /* Warning: I'm not handling possible errors in pipe/fork */
 
-    pipe(&pipes[0]); /* Parent read/child write pipe */
-    pipe(&pipes[2]); /* Child read/parent write pipe */
+    if (pipe(&pipes[0]) < 0) /* Parent read/child write pipe */
+        exit(1); // ERROR
+
+    if (pipe(&pipes[2]) < 0) /* Child read/parent write pipe */
+        exit(1); // ERROR
 
     if ((pid = fork()) > 0) {
         /* Parent process */
@@ -73,13 +76,13 @@ pid_t Subprocess::pcreate(const char* fn, char*const* args) {
         close(pipes[3]);
 
         // duplicate file descriptors and spawn process
-        if (dup2( STDIN_FILENO, pipes[2] ) == -1)
+        if (dup2( STDIN_FILENO, pipes[2] ) < 0)
             exit(1); // ERROR
 
-        if (dup2( STDOUT_FILENO, pipes[1] ) == -1)
+        if (dup2( STDOUT_FILENO, pipes[1] ) < 0)
             exit(1); // ERROR
 
-        if (execv( fn, args ) == -1)
+        if (execv( fn, args ) < 0)
             exit(1); // ERROR
 
         exit(0);
