@@ -1,7 +1,10 @@
-
 #include "ADS1x9y.hpp"
 #include "Sensor.hpp"
 #include <Arduino.h>
+
+namespace mindspy {
+
+namespace sensor {
 
 // Sensor Pinout definition
 // SPI pins
@@ -400,3 +403,7 @@ void ADS1x9y::ssiSetup(uint8_t SSIModule) {
     spi.setDataMode(SPI_MODE1);
     spi.begin();
 }
+
+} // namespace
+
+} // namespace

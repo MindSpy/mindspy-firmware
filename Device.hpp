@@ -6,6 +6,8 @@
 #include "SensorDetector.hpp"
 #include "Sensors.hpp"
 
+namespace mindspy {
+
 /*!
  * Stream data from bluetooth device.
  */
@@ -50,7 +52,7 @@ public:
      */
     void setupBluetooth();
 
-    SensorDetector sensorDetector;
+    mindspy::sensor::SensorDetector sensorDetector;
     ProtocolWrapper protocolWrapper;
 
 private:
@@ -71,4 +73,7 @@ private:
      */
     const static int USB_STREAM_BAUD = 115200;
 };
+
+} // namespace
+
 #endif // DEVICE_H

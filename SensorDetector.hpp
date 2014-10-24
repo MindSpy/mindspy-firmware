@@ -1,9 +1,13 @@
 #ifndef SENDORDETECTOR_HPP
 #define SENDORDETECTOR_HPP
 
+#include <vector>
 #include "Sensor.hpp"
 #include "Sensors.hpp"
-#include <vector>
+
+namespace mindspy {
+
+namespace sensor {
 
 /*!
  * The SensorDetector detection sensors.
@@ -34,7 +38,7 @@ public:
      * \param idx index of the memeber to access.
      * \return idx-th memeber.
      */
-    sensor::Sensor*& operator[](const size_t idx);
+    mindspy::sensor::Sensor*& operator[](const size_t idx);
 
     /*!
      * Begin iterate item.
@@ -55,5 +59,9 @@ private:
      */
     container sensors;
 };
+
+} // namespace
+
+} // namespace
 
 #endif // SENDORDETECTOR_H

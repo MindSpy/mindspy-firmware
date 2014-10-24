@@ -10,11 +10,14 @@
 #include "compat.hpp"
 #endif
 
+namespace mindspy {
+
 /*!
  * \brief The Main class
  */
 class ProtocolWrapper {
 public:
+
     /*!
      * \brief ProtocolBuffersWrapper
      */
@@ -36,9 +39,10 @@ public:
      * \brief setSensors
      * \param sensors collection to set
      */
-    void setSensors(Sensors*);
+    void setSensors(mindspy::sensor::Sensors*);
 
 private:
+
     sensor::SensorHandler handler;
 
     static Stream* stream;
@@ -59,5 +63,7 @@ private:
      */
     static bool stopStream(void);
 };
+
+} // namespace
 
 #endif // PROTOCOLWRAPPER_H

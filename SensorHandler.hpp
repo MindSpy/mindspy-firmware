@@ -10,6 +10,8 @@ typedef bool (*ResponseEncoderCallbackType)(pb_ostream_t*, const pb_field_t[], c
 typedef bool (*RequestDecoderCallbackType)(pb_istream_t*, const pb_field_t[], void *);
 typedef bool (*StopStreamCallbackType)(void);
 
+namespace mindspy {
+
 namespace sensor {
 
     /*!
@@ -40,7 +42,7 @@ namespace sensor {
          * \brief setSensors
          * \param sensors instance to set
          */
-        void setSensors(Sensors*);
+        void setSensors(mindspy::sensor::Sensors*);
 
         /*!
          * \brief setStopCallback
@@ -58,7 +60,7 @@ namespace sensor {
         /*!
          * \brief sensors
          */
-        Sensors* sensors;
+        mindspy::sensor::Sensors* sensors;
 
         /*!
          * \brief Request and response structures.
@@ -66,9 +68,11 @@ namespace sensor {
         mindspy_protobufs_Request request;
         mindspy_protobufs_Response response;
 
-        bool respond(Sensor*, mindspy_protobufs_Request&,
+        bool respond(mindspy::sensor::Sensor*, mindspy_protobufs_Request&,
                 mindspy_protobufs_Response&);
     };
+
+} // namespace
 
 } // namespace
 

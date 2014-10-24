@@ -1,11 +1,14 @@
 #include "Device.hpp"
-
 #include "Arduino.h"
 
+namespace mindspy {
+
 Device::Device()  {
+
 }
 
 Device::~Device() {
+
 }
 
 void Device::setupBluetooth() {
@@ -58,3 +61,5 @@ void Device::setup() {
     setupUsb();
     setupDevice();
 }
+
+} // namespace

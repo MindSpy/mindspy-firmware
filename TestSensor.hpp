@@ -4,10 +4,14 @@
 #include "Sensor.hpp"
 #include "proto.h"
 
+namespace mindspy {
+
+namespace sensor {
+
 /*!
  * \brief TestSensor for unit tests
  */
-class TestSensor : public sensor::Sensor {
+class TestSensor : public mindspy::sensor::Sensor {
 
 public:
 
@@ -41,4 +45,7 @@ private:
 
 };
 
+} // namespace
+
+} // namespace
 #endif

@@ -1,7 +1,5 @@
-
-#include "TestSensor.hpp"
-
 #include <limits.h>
+#include "TestSensor.hpp"
 #include "Sensor.hpp"
 #include "proto.h"
 
@@ -10,6 +8,10 @@
 #else
 #include "compat.hpp"
 #endif
+
+namespace mindspy {
+
+namespace sensor {
 
 TestSensor::TestSensor(const char* name, const uint8_t rate, const uint8_t chan) :
         name(name), sequence(0), rate(rate), channels(chan), lastTime(ULONG_MAX) {
@@ -91,3 +93,7 @@ void TestSensor::begin() {
 void TestSensor::end() {
     lastTime = ULONG_MAX;
 }
+
+} // namespace
+
+} // namespace

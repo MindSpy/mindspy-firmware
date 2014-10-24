@@ -4,6 +4,10 @@
 #include <vector>
 #include "Sensor.hpp"
 
+namespace mindspy {
+
+namespace sensor {
+
 class Sensors {
 protected:
 
@@ -39,7 +43,11 @@ public:
      * \param idx
      * \return
      */
-    virtual sensor::Sensor*& operator[](const size_t idx) = 0;
+    virtual mindspy::sensor::Sensor*& operator[](const size_t idx) = 0;
 };
+
+} // namespace
+
+} // namespace
 
 #endif // SENSORS_H

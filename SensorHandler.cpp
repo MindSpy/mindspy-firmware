@@ -10,6 +10,8 @@
 #include "compat.hpp"
 #endif
 
+namespace mindspy {
+
 namespace sensor {
 
     SensorHandler::SensorHandler() {
@@ -18,7 +20,7 @@ namespace sensor {
     SensorHandler::~SensorHandler() {
     }
 
-    void SensorHandler::setSensors(Sensors*s) {
+    void SensorHandler::setSensors(mindspy::sensor::Sensors*s) {
         sensors = s;
     }
 
@@ -88,7 +90,7 @@ namespace sensor {
                 }
             } else {
                 // invoke for each module - exit loop when module is explicitly specified in request
-                for (Sensors::iterator is = sensors->begin(); is != sensors->end(); is++) {
+                for (mindspy::sensor::Sensors::iterator is = sensors->begin(); is != sensors->end(); is++) {
 
                     response.has_module = true;
                     response.module = is  - sensors->begin();
@@ -115,7 +117,7 @@ namespace sensor {
 
     }
 
-    bool SensorHandler::respond(Sensor* sensor,
+    bool SensorHandler::respond(mindspy::sensor::Sensor* sensor,
                                 mindspy_protobufs_Request& request,
                                 mindspy_protobufs_Response& response ) {
 
@@ -172,5 +174,7 @@ namespace sensor {
         }
         return true;
     }
+
+} // namespace
 
 } // namespace

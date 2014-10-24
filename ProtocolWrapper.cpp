@@ -9,6 +9,8 @@
 #include "compat.hpp"
 #endif
 
+namespace mindspy {
+
 Stream* ProtocolWrapper::stream = NULL;
 
 ProtocolWrapper::ProtocolWrapper() {
@@ -30,7 +32,7 @@ bool ProtocolWrapper::handle() {
 void ProtocolWrapper::setStream(Stream * s) {
     stream = s;
 }
-void ProtocolWrapper::setSensors(Sensors* sensors) {
+void ProtocolWrapper::setSensors(mindspy::sensor::Sensors* sensors) {
     handler.setSensors(sensors);
 }
 
@@ -54,3 +56,5 @@ bool ProtocolWrapper::read_callback(pb_istream_t *, uint8_t *buf, size_t count) 
     size_t result = stream->readBytes((char*) buf, avail > count ? count : avail);
     return result == count;
 }
+
+} // namespace

@@ -3,6 +3,8 @@
 
 #include "proto.h"
 
+namespace mindspy {
+
 namespace sensor {
 
     class Sensor {
@@ -52,6 +54,8 @@ namespace sensor {
          */
         virtual void end() = 0;
     };
+
+} // namespace
 
 } // namespace
 

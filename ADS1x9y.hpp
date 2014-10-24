@@ -6,11 +6,15 @@
 #include <Arduino.h>
 #include <SPI.h>
 
+namespace mindspy {
+
+namespace sensor {
+
 /*!
  * TI ADS1x9y module.
- * See <a href="http://www.ti.com/lit/ds/symlink/ads1298.pdf">ADS1298</a> for details.
+ * @see http://www.ti.com/lit/ds/symlink/ads1298.pdf for details.
  */
-class ADS1x9y : public sensor::Sensor {
+class ADS1x9y : public mindspy::sensor::Sensor {
 public:
 
     /*!
@@ -242,5 +246,9 @@ private:
 
     void ssiSetup(uint8_t SSIModule);
 };
+
+} // namespace
+
+} // namespace
 
 #endif

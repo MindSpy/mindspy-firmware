@@ -1,9 +1,13 @@
 #include "SensorDetector.hpp"
-
 #include "panic.hpp"
 #include "Sensors.hpp"
 #include "TestSensor.hpp"
 #include "ADS1x9y.hpp"
+
+namespace mindspy {
+
+namespace sensor {
+
 
 SensorDetector::SensorDetector() {
     sensors.push_back(new TestSensor("TestSensor", 128, 8));
@@ -36,3 +40,7 @@ Sensors::iterator  SensorDetector::begin() {
 Sensors::iterator  SensorDetector::end() {
     return sensors.end();
 }
+
+} // namespace
+
+} // namespace

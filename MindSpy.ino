@@ -5,7 +5,7 @@
 #include <pb_decode.h>
 #include "Device.hpp"
 
-Device device;
+mindspy::Device device;
 
 void setup() {
 
