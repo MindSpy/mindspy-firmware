@@ -1,7 +1,7 @@
-#include "test.hpp"
-
 #include "SensorTest.hpp"
 #include "ProtocolTest.hpp"
+
+#include <cpptest.h>
 
 int main( int argc, char **argv)
 {
