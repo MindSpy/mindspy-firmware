@@ -3,3 +3,5 @@ monitor reset halt
 load
 monitor reset init
 skip function Timer5IntHandler
+b NmiSR
+b FaultISR
