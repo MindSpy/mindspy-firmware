@@ -41,9 +41,12 @@ void Device::setupBluetooth() {
 
 void Device::setupUsb() {
     USB_STREAM.begin(USB_STREAM_BAUD);
+    while (USB_STREAM.available())
+        USB_STREAM.read();
 }
 
 void Device::setupDevice() {
+    pinMode(RED_LED, OUTPUT); // panic
     protocolWrapper.setStream(&PB_STREAM);
     protocolWrapper.setSensors(&sensorDetector);
 }
