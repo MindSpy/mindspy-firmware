@@ -1,5 +1,5 @@
-#ifndef Sensor_h
-#define Sensor_h
+#ifndef SENSOR_HPP
+#define SENSOR_HPP
 
 #include "proto.h"
 

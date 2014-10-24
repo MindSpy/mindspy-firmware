@@ -22,8 +22,10 @@ void Device::setupBluetooth() {
 
     // setup bluetooth.
     digitalWrite(PB_3, HIGH);
+
     // Initialize speed
     BLUETOOTH_STREAM.begin(BLUETOOTH_STREAM_INIT_BAUD);
+
     // Set new speed
     BLUETOOTH_STREAM.print("AT+UART=");
     BLUETOOTH_STREAM.print(BLUETOOTH_STREAM_BAUD);

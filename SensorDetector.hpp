@@ -6,47 +6,54 @@
 #include <vector>
 
 /*!
- * The SensorDetector class detection sensors.
+ * The SensorDetector detection sensors.
  */
 class SensorDetector : public Sensors {
 public:
 
     /*!
-     * \brief SensorDetector
+     * Prepare all sensors in container and
+     * allocate memory for sensor.
      */
     SensorDetector();
+
+    /*!
+     * Remove all sensors in container and
+     * deallocate memory for sensor.
+     */
     ~SensorDetector();
 
     /*!
-     * \brief count
-     * \return return number of sensors registered
+     * Count register sensors.
+     * \return return number of sensors registered.
      */
     size_t count();
 
     /*!
-     * \brief operator [] acces the member
-     * \param idx index of the memeber to access
-     * \return idx-th memeber
+     * This operator [] acces the member.
+     * \param idx index of the memeber to access.
+     * \return idx-th memeber.
      */
     sensor::Sensor*& operator[](const size_t idx);
 
     /*!
-     * \brief begin
-     * \return
+     * Begin iterate item.
+     * \return iterator for first item.
      */
     iterator begin();
 
     /*!
-     * \brief end
-     * \return
+     * End iterate item.
+     * \return iterator for last item.
      */
     iterator end();
 
 private:
+
     /*!
-     * \brief sensors
+     * Container for sensors.
      */
     container sensors;
 };
 
-#endif // SENDORDETECTOR_H
+#endif // SENDORDETECTOR_H

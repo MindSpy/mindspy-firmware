@@ -6,25 +6,28 @@
 #include "SensorDetector.hpp"
 #include "Sensors.hpp"
 
+/*!
+ * Stream data from bluetooth device.
+ */
 #define BLUETOOTH_STREAM Serial1
+
+/*!
+ * Stream data from serial interface.
+ */
 #define USB_STREAM Serial
 
 /*!
- * Choose one stream for protocol buffers
+ * Choose one stream for protocol buffers.
  */
 #define PB_STREAM USB_STREAM
 
+/*!
+ * Setting and inicialize all device and peripheral.
+ */
 class Device {
 public:
 
-    /*!
-     * Prepare all device and peripherals.
-     */
     Device();
-
-    /*!
-     * Destroy all create objects and instances.
-     */
     ~Device();
 
     /*!
