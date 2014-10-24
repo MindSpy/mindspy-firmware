@@ -3,11 +3,11 @@
 #include "panic.hpp"
 #include "Sensors.hpp"
 #include "TestSensor.hpp"
-//#include "ADS1x9y.hpp"
+#include "ADS1x9y.hpp"
 
 SensorDetector::SensorDetector() {
     sensors.push_back(new TestSensor("TestSensor", 128, 8));
-    //sensors.push_back(new ADS1x9y(0));
+    sensors.push_back(new ADS1x9y(0));
     
     for (Sensors::iterator s = sensors.begin(); s != sensors.end(); s++) {
         (*s)->begin();
