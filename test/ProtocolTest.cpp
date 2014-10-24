@@ -20,6 +20,8 @@ bool ProtocolTest::writeDelimitedTo(const MessageLite* message, io::ZeroCopyOutp
     // Write the size.
     const uint64_t size = message->ByteSize();
     output.WriteVarint64(size);
+    if (output.HadError())
+        return false;
 
     message->SerializeToCodedStream(&output);
     if (output.HadError())
@@ -60,7 +62,6 @@ ProtocolTest::ProtocolTest()
     in = new std::stringstream;
     out = new std::stringstream;
     TEST_ADD(ProtocolTest::testLocal);
-    TEST_ADD(ProtocolTest::testRemote);
 }
 
 void ProtocolTest::setup()
@@ -79,24 +80,7 @@ uint64_t ProtocolTest::reqid() {
     return rand();
 }
 
-
-void ProtocolTest::communicate(void* req, void* res) {
-    protobufs::Request* request = (protobufs::Request*) req;
-    protobufs::Response* response = (protobufs::Response*) res;
-
-    Subprocess sub("server");
-
-    //pid_t pid = sub.pid();
-    std::istream* in = sub.istream();
-    std::ostream* out = sub.ostream();
-
-    // TODO read and write delimited
-    //request->SerializeAsString()  ->SerializePartialToOstream(out);
-    //response->ParseFromIstream(in);
-}
-
-
-void ProtocolTest::testRemote() {
+void ProtocolTest::testLocal() {
 
     protobufs::Request req;
     protobufs::Response res;
@@ -115,31 +99,4 @@ void ProtocolTest::testRemote() {
 
     TEST_ASSERT_MSG((!writeDelimitedTo(&req, os)), "Write to stream failed.");
     TEST_ASSERT_MSG((!readDelimitedFrom(is, &res)), "Read from stream failed.");
-}
-
-void ProtocolTest::testLocal() {
-
-    protobufs::Request req;
-    protobufs::Response res;
-
-    std::stringstream cosi;
-    std::stringstream ciso;
-
-    TestServer server(&cosi, &ciso);
-
-    req.Clear();
-    res.Clear();
-
-    req.set_timestamp(timestamp());
-    req.set_reqid(reqid());
-    //req.set_has_getmodelname();
-
-    io::ZeroCopyInputStream* is = new io::IstreamInputStream(&ciso);
-    io::ZeroCopyOutputStream* os = new io::OstreamOutputStream(&cosi);
-
-    TEST_ASSERT_MSG((!writeDelimitedTo(&req, os)), "Write to stream failed.");
-    server.handle();
-    TEST_ASSERT_MSG((!readDelimitedFrom(is, &res)), "Read from stream failed.");
-
-    // TODO check res
 }
