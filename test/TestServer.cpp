@@ -6,6 +6,8 @@
 #include <unistd.h>
 
 
+namespace mindspy {
+namespace test {
 
 TestServer::TestServer(const char* in, const char* out) {
     stream =  new FileStream(in, out);
@@ -20,3 +22,6 @@ TestServer::~TestServer() {
 void TestServer::handle() {
     wrapper.handle();
 }
+
+}
+} // namespace

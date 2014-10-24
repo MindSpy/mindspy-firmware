@@ -7,6 +7,9 @@
 #define COUNT_OF_ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
 
 
+namespace mindspy {
+namespace test {
+
 class SensorTest : public Test::Suite
 {
 public:
@@ -28,5 +31,8 @@ private:
     void testGetState();
     void testSetState();
 };
+
+}
+} // namspace
 
 #endif // SENSORTEST_H

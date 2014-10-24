@@ -2,6 +2,10 @@
 
 #include <cstring>
 
+
+namespace mindspy {
+namespace test {
+
 MemoryStream::MemoryStream(char* i, char* o, const size_t il, const size_t ol) :
    olen(ol), ilen(il), in(i), out(o), iptr(0), optr(0) {}
 
@@ -28,3 +32,6 @@ size_t MemoryStream::write(const uint8_t *buff, size_t l)
     optr += a;
     return a;
 }
+
+}
+} // namespace

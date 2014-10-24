@@ -5,6 +5,9 @@
 #include <iostream>
 #include <ext/stdio_filebuf.h>
 
+namespace mindspy {
+namespace test {
+
 Subprocess::Subprocess(const char* fn, char*const* args) {
     _pid = pcreate(fn, args);
     setStreams();
@@ -91,3 +94,5 @@ pid_t Subprocess::pcreate(const char* fn, char*const* args) {
     return -1; /* ? */
 }
 
+}
+} // namespace

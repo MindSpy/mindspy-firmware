@@ -4,6 +4,8 @@
 #include <cstdio>
 #include <unistd.h>
 
+using namespace mindspy::test;
+
 int main(int argc, char **argv) {
     char *infn = NULL;
     char *outfn = NULL;

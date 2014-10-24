@@ -5,13 +5,18 @@
 #include "Sensor.hpp"
 #include <vector>
 
-class TestSensors : public Sensors
+
+namespace mindspy {
+namespace test {
+
+
+class TestSensors : public sensor::Sensors
 {
 public:
     TestSensors();
     ~TestSensors();
 
-    iterator begin() ;
+    iterator begin();
     iterator end();
     size_t count();
     sensor::Sensor*& operator[](size_t idx);
@@ -19,5 +24,8 @@ public:
 private:
     container  sensors;
 };
+
+}
+} // namespace
 
 #endif // TESTSENSORS_HPP

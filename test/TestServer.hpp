@@ -7,6 +7,9 @@
 #include "TestSensors.hpp"
 #include <iostream>
 
+namespace mindspy {
+namespace test {
+
 class TestServer
 {
 public:
@@ -20,5 +23,8 @@ private:
     TestSensors sensors;
 };
 
+
+}
+} // namespace
 
 #endif // PROTOCOLSOCKET_H

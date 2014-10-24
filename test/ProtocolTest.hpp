@@ -9,6 +9,9 @@
 #include <google/protobuf/message.h>
 #include "Proto.hpp"
 
+namespace mindspy {
+namespace test {
+
 using namespace google::protobuf;
 
 class ProtocolTest : public Test::Suite
@@ -33,5 +36,7 @@ private:
     bool readDelimitedFrom(io::ZeroCopyInputStream*, MessageLite*);
 };
 
+}
+} // namespace
 
 #endif // PROTOCOLTEST_HPP

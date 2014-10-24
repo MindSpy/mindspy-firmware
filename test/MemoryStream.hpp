@@ -3,6 +3,9 @@
 
 #include "compat.hpp"
 
+namespace mindspy {
+namespace test {
+
 class MemoryStream : public Stream
 {
 public:
@@ -19,5 +22,8 @@ private:
     size_t iptr;
     size_t optr;
 };
+
+}
+} // namespace
 
 #endif // MEMORYSTREAM_H

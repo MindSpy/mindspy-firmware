@@ -3,6 +3,8 @@
 
 #include <cpptest.h>
 
+using namespace mindspy::test;
+
 int main( int argc, char **argv)
 {
     Test::Suite ts;

@@ -5,6 +5,10 @@
 #include <fcntl.h>
 #include <errno.h>
 
+
+namespace mindspy {
+namespace test {
+
 FileStream::FileStream(const char*i , const char*o ) {
     if (i == NULL) {
         infd =  fileno(stdin);
@@ -52,3 +56,6 @@ size_t FileStream::write(const uint8_t *buff, size_t l) {
     fsync(outfd);
     return size;
 }
+
+}
+} // namespace

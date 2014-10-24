@@ -6,6 +6,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+
+namespace mindspy {
+namespace test {
+
 SensorTest::SensorTest()
 {
     TEST_ADD(SensorTest::testBoolOperator);
@@ -17,7 +21,7 @@ SensorTest::SensorTest()
 
 void SensorTest::setup()
 {
-    sensor = new TestSensor(SENSOR_NAME, SAMPLE_RATE, CHANNEL_COUNT);
+    sensor = new sensor::TestSensor(SENSOR_NAME, SAMPLE_RATE, CHANNEL_COUNT);
 }
 
 void SensorTest::tear_down()
@@ -90,3 +94,6 @@ void SensorTest::testGetSamples()
     }
     sensor->end();
 }
+
+}
+} // namespace

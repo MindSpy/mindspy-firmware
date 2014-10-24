@@ -6,6 +6,10 @@
 
 typedef int pfunc_t (int rfd, int wfd);
 
+
+namespace mindspy {
+namespace test {
+
 class Subprocess
 {
 public:
@@ -27,5 +31,8 @@ private:
     pid_t pcreate(const char* fn, char*const*);
     void setStreams();
 };
+
+}
+} // namespace
 
 #endif // SUBPROCESS_HPP

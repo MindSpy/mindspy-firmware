@@ -10,8 +10,10 @@
 
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 
+namespace mindspy {
+namespace test {
+
 using namespace google::protobuf;
-using namespace mindspy;
 
 bool ProtocolTest::writeDelimitedTo(const MessageLite* message, io::ZeroCopyOutputStream* rawOutput) {
     // We create a new coded stream for each message.  Don't worry, this is fast.
@@ -100,3 +102,6 @@ void ProtocolTest::testLocal() {
     TEST_ASSERT_MSG((!writeDelimitedTo(&req, os)), "Write to stream failed.");
     TEST_ASSERT_MSG((!readDelimitedFrom(is, &res)), "Read from stream failed.");
 }
+
+}
+} // namespace

@@ -5,6 +5,9 @@
 #include <cstdio>
 #include <sstream>
 
+namespace mindspy {
+namespace test {
+
 class FileStream : public Stream
 {
 public:
@@ -20,5 +23,8 @@ private:
 
     void rdsync();
 };
+
+}
+} // namespace
 
 #endif // FILESTREAM_H
