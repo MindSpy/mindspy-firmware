@@ -2,20 +2,23 @@
 #define FILESTREAM_H
 
 #include "compat.hpp"
-#include <istream>
-#include <ostream>
+#include <cstdio>
+#include <sstream>
 
 class FileStream : public Stream
 {
 public:
-    FileStream(std::istream* , std::ostream*);
+    FileStream(const char* , const char*);
     ~FileStream();
     int available();
     size_t readBytes( char *, size_t );
     size_t write(const uint8_t *, size_t );
 private:
-    std::istream* in;
-    std::ostream* out;
+    int infd;
+    int outfd;
+    std::stringbuf rdbuf;
+
+    void rdsync();
 };
 
 #endif // FILESTREAM_H

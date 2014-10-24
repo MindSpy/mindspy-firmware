@@ -1,30 +1,29 @@
 
 #include "TestServer.hpp"
 
-#include <fstream>
+#include <cstdio>
 #include <unistd.h>
 
 int main(int argc, char **argv) {
-    std::ifstream* in = NULL;
-    std::ofstream* out = NULL;
+    char *infn = NULL;
+    char *outfn = NULL;
 
     if (argc >= 2) {
-        in = new std::ifstream(argv[1]);
+        infn = argv[1];
     }
 
     if (argc >= 3) {
-        out = new std::ofstream(argv[2], std::ios::trunc);
+        outfn = argv[2];
     }
 
-    TestServer server(in==NULL?&std::cin:in, out==NULL?&std::cout:out);
-    server.handle();
+    TestServer server(infn, outfn);
+
+    while (1) {
+        server.handle();
+        //usleep(1000);
+    }
 
     usleep(10000);
-
-    if (in!=NULL)
-        delete in;
-    if (out!=NULL)
-        delete out;
 
     exit(0);
 }

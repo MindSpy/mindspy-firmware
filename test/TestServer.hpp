@@ -10,7 +10,7 @@
 class TestServer
 {
 public:
-    TestServer(std::istream* , std::ostream* );
+    TestServer(const char* , const char* );
     ~TestServer();
     void handle();
 

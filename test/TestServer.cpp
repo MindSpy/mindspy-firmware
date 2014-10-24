@@ -5,8 +5,10 @@
 #include "FileStream.hpp"
 #include <unistd.h>
 
-TestServer::TestServer(std::istream* in, std::ostream* out) {
-    stream = new FileStream(in, out);
+
+
+TestServer::TestServer(const char* in, const char* out) {
+    stream =  new FileStream(in, out);
     wrapper.setStream(stream);
     wrapper.setSensors(&sensors);
 }
