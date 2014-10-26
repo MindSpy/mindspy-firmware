@@ -8,6 +8,7 @@ MILESTONE 0:
   1. ~~Loggin - skopirujeme do projektug ~~
 
 MILESTONE 1:
+
 1. QT demo pro WINDOWS && LINUX && OSX && ANDROID
 
 
