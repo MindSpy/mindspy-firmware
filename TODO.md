@@ -9,7 +9,10 @@ MILESTONE 0:
 
 MILESTONE 1:
 
-1. QT demo pro WINDOWS && LINUX && OSX && ANDROID
+1. QT demo run for android, linux, windows 
+ - ~~WINDOWS  ~~
+ - ~~LINUX  ~~
+ - ~~ANDROID ~~
 
 
 MILSTONE X - Client:
