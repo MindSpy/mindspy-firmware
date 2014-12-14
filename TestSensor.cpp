@@ -14,7 +14,7 @@ namespace mindspy {
 namespace sensor {
 
 TestSensor::TestSensor(const char* name, const uint8_t rate, const uint8_t chan) :
-        name(name), sequence(0), rate(rate), channels(chan), lastTime(ULONG_MAX) {
+        name(name), sequence(0), rate(rate), srate(rate), channels(chan), amplitude(4096), lastTime(ULONG_MAX) {
 }
 
 bool TestSensor::getSamples(uint32_t count, mindspy_protobufs_Sample* result) {
@@ -25,23 +25,27 @@ bool TestSensor::getSamples(uint32_t count, mindspy_protobufs_Sample* result) {
         result[i].sequence = sequence++;
         result[i].payload_count = channels;
         for (uint8_t j = 0; j < channels; j++) {
-            result[i].payload[j] = (result[i].sequence & 0xff) - 0x80 + j;
+            result[i].payload[j] = ((amplitude * rate * lastTime / 1000) % amplitude) - amplitude/2;
         }
 
-        lastTime += 1000 / rate;
+        lastTime += 1000 / srate;
 
         delayMicroseconds(10);
     }
     return true;
 }
 
-uint8_t TestSensor::getState(uint32_t address) {
+uint32_t TestSensor::getState(uint32_t address) {
     delayMicroseconds(10);
     switch (address) {
     case 0:  // deal with rate
-        return rate;
+        return srate;
     case 1:
         return channels;
+    case 2:
+        return rate;
+    case 3:
+        return amplitude;
     default:
         return 0xff;
     }
@@ -49,10 +53,18 @@ uint8_t TestSensor::getState(uint32_t address) {
 bool TestSensor::setState(mindspy_protobufs_State state) {
     switch (state.address) {
     case 0:  // deal with rate
-        rate = state.payload;
+        srate = state.payload;
         break;
     case 1:
         channels = state.payload;
+        break;
+    case 2:
+        rate = state.payload;
+        break;
+    case 3:
+        amplitude = state.payload;
+        break;
+    default:
         break;
     }
     delayMicroseconds(10);
@@ -83,7 +95,7 @@ bool TestSensor::operator!(void) {
     delayMicroseconds(1);
     if (lastTime == ULONG_MAX)
         return true;
-    return (lastTime + 1000 / rate) > millis();
+    return (lastTime + 1000 / srate) > millis();
 }
 
 void TestSensor::begin() {

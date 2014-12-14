@@ -36,11 +36,13 @@ private:
 
     const char * name;
     uint64_t sequence;
-    uint8_t rate;
-    uint8_t channels;
+    uint32_t rate;
+    uint32_t srate;
+    uint32_t channels;
+    uint32_t amplitude;
     unsigned long lastTime;
 
-    uint8_t getState(uint32_t);
+    uint32_t getState(uint32_t);
     bool setState(mindspy_protobufs_State state);
 
 };
